@@ -1,4 +1,5 @@
+# lines starting with # are comments
+# the folder names and paths not starting with # will not be tracked remotely
 
-./build/*
-./libs/*
-./libs/*/*
+build/*
+libs/*
