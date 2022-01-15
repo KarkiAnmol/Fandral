@@ -1,3 +1,0 @@
-E:/Fandral Editor/build/CMakeFiles/Editor.dir
-E:/Fandral Editor/build/CMakeFiles/edit_cache.dir
-E:/Fandral Editor/build/CMakeFiles/rebuild_cache.dir
