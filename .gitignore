@@ -2,4 +2,4 @@
 # the folder names and paths not starting with # will not be tracked remotely
 
 build/*
-libs/*
+libs/wxWidgets-3.0
