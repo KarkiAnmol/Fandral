@@ -40,6 +40,8 @@
     #include "../sample.xpm"
 #endif
 
+#include <AppConfig.h>
+
 // ----------------------------------------------------------------------------
 // private classes
 // ----------------------------------------------------------------------------
@@ -125,7 +127,10 @@ bool App::OnInit()
         return false;
 
     // create the main application window
-    MyFrame *frame = new MyFrame("Fandral Editor");
+
+    MyFrame *frame = new MyFrame(wxString::Format("Fandral Editor\t\t V %d.%d",
+    (int)Editor_VERSION_MAJOR,
+    (int)Editor_VERSION_MINOR));
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
