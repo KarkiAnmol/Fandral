@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #set g++ as compiler
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_BUILD_TYPE debug)
+set(wxWidgets_CONFIGURATION mswud)
 
 # set the project name
 project(Editor VERSION 0.1)
