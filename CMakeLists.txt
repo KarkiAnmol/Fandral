@@ -16,6 +16,10 @@ project(Editor VERSION 0.1)
 # add the executable
 add_executable(${PROJECT_NAME} src/App.cpp)
 
+configure_file(include/AppConfig.h.in AppConfig.h)
+
+target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}")
+
 #Uncomment this after you have found a way to include wxWidgets library
 find_package(wxWidgets REQUIRED gl core base OPTIONAL_COMPONENTS net)
 
