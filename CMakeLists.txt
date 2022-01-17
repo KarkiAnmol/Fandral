@@ -19,5 +19,5 @@ add_executable(${PROJECT_NAME} src/App.cpp)
 #Uncomment this after you have found a way to include wxWidgets library
 find_package(wxWidgets REQUIRED gl core base OPTIONAL_COMPONENTS net)
 
-include(include/app.h ${wxWidgets_USE_FILE})
+include(${wxWidgets_USE_FILE} include/app.h)
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})

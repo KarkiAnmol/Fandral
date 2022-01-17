@@ -125,7 +125,7 @@ bool App::OnInit()
         return false;
 
     // create the main application window
-    MyFrame *frame = new MyFrame("Minimal wxWidgets App");
+    MyFrame *frame = new MyFrame("Fandral Editor");
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -170,7 +170,7 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
     CreateStatusBar(2);
-    SetStatusText("Welcome to wxWidgets!");
+    SetStatusText("Here goes nothing");
 #endif // wxUSE_STATUSBAR
 }
 
