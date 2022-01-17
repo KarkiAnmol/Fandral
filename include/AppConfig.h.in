@@ -1,0 +1,3 @@
+
+#define Editor_VERSION_MAJOR @Editor_VERSION_MAJOR@
+#define Editor_VERSION_MINOR @Editor_VERSION_MINOR@
