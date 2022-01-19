@@ -34,12 +34,12 @@
 #define FULL_HEIGHT DISPLAY_DIMENSIONS.GetHeight()
 
 //For size of the main window
-#define WIDTH FULL_WIDTH/2
-#define HEIGHT FULL_HEIGHT/2
+#define MAIN_WINDOW_WIDTH FULL_WIDTH/2
+#define MAIN_WINDOW_HEIGHT FULL_HEIGHT/2
 
 //For postion of main window
-#define POS_X FULL_WIDTH/2 - WIDTH/2
-#define POS_Y FULL_HEIGHT/2 - HEIGHT/2
+#define MAIN_WINDOW_POS_X FULL_WIDTH/2 - MAIN_WINDOW_WIDTH/2
+#define MAIN_WINDOW_POS_Y FULL_HEIGHT/2 - MAIN_WINDOW_HEIGHT/2
 
 //For the text box
 #include <wx/textctrl.h>
@@ -55,8 +55,18 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnNew(wxCommandEvent& event);
+    void OnOpen(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
+    void OnSaveAs(wxCommandEvent& event);
+
+    //the main text box of the editor
     wxTextCtrl *mainTextBox;
+
+    /** Let's create array to keep track of open files for now 
+     * we will be handeling this through object oriented approach in the future 
+    **/
+    wxArrayString* openedFiles = new wxArrayString();
+    int currentlyOpenFileIndex = -2;
 
 private:
     // any class wishing to process wxWidgets events must use this macro
@@ -78,8 +88,8 @@ enum
             Editor_Quit = wxID_EXIT,
 
         //Edit menu
-            Find_item = wxID_FIND,
-            Find_And_Replace = wxID_REPLACE,
+            Find_Item = wxID_FIND,
+            Find_And_Replace_Item = wxID_REPLACE,
 
 
         //Help Menu
