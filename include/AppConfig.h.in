@@ -1,3 +1,10 @@
 
+/**This file is for inputing version number and other informations 
+   * to the app through header file and cmake.
+   * 
+   * cmake will take this file as input and produce *.h header file as output in build folder.
+   * which will be used as header file the the app.
+**/
+
 #define Editor_VERSION_MAJOR @Editor_VERSION_MAJOR@
 #define Editor_VERSION_MINOR @Editor_VERSION_MINOR@
