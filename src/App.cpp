@@ -2,18 +2,10 @@
 #include "app.h"
 #include "mainwindow.h"
 
-
-// Create a new application object: this macro will allow wxWidgets to create
-// the application object during program execution (it's better than using a
-// static object for many reasons) and also implements the accessor function
-// wxGetApp() which will return the reference of the right type (i.e. App and
-// not wxApp)
-IMPLEMENT_APP(App)
-
 // ============================================================================
 // implementation
 // ============================================================================
-
+IMPLEMENT_APP(App)
 // ----------------------------------------------------------------------------
 // the application class
 // ----------------------------------------------------------------------------
@@ -26,13 +18,15 @@ bool App::OnInit()
     if ( !wxApp::OnInit() )
         return false;
 
+    wxString title;
+    title = wxString::Format("Fandral Editor  V %d.%d    ",
+        (int)Editor_VERSION_MAJOR,
+        (int)Editor_VERSION_MINOR);
+    
     // create the main application window
+    MyFrame *frame = new MyFrame(title);
 
-    MyFrame *frame = new MyFrame(wxString::Format("Fandral Editor  V %d.%d",
-    (int)Editor_VERSION_MAJOR,
-    (int)Editor_VERSION_MINOR));
-
-    // and show it (the frames, unlike simple controls, are not shown when
+    // show the application window (the frames, unlike simple controls, are not shown when
     // created initially)
     frame->Show(true);
 
