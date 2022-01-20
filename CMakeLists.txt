@@ -15,14 +15,28 @@ set(wxWidgets_CONFIGURATION mswud)
 # set the project name
 project(Editor VERSION 0.1)
 
+# hack for buggy CMake's FindwxWidgets script
+if (DEFINED ENV_WX_CONFIG)
+    set (ENV{WX_CONFIG} ${ENV_WX_CONFIG})
+endif()
+
 #create a list to keep source files in a place
 set(SRCS "src/App.cpp")
 
 #append lists to add files for main window
 list(APPEND SRCS "src/MainWindow.cpp")  
 
-# add the executable
-add_executable(${PROJECT_NAME} ${SRCS})
+if (APPLE)
+    # create bundle on apple compiles
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} )
+    # Set a custom plist file for the app bundle - needed for Mac OS Retina display
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_DIR}/Info.plist)
+else()
+    # the WIN32 is needed for Windows in order for it to look for WinMain
+    # instead of the main function. This is ignored on other systems,
+    # so it works on all platforms
+    add_executable(${PROJECT_NAME} WIN32 ${SRCS})
+endif()
 
 configure_file(include/AppConfig.h.in AppConfig.h)
 
