@@ -8,17 +8,23 @@
 MyFrame::MyFrame(const wxString &title)
     : wxFrame(NULL, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT))
 {
-    // set the frame icon
-    SetIcon(wxICON(sample));
 
 #if wxUSE_MENUS
 
     mainTextBox = new wxTextCtrl(this, TEXT_Main, "", wxDefaultPosition, wxDefaultSize,
                                  wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
-    mainTextBox->SetBackgroundColour(wxColour(8, 0, 23, 0.77));
-    mainTextBox->SetForegroundColour(wxColour(134, 188, 123, 0.77));
+    //mainTextBox->SetBackgroundColour(mainTextBoxBackgroundColor);  //Doesn't work properly on linux
+    mainTextBox->SetForegroundColour(mainTextBoxForegroundColor);
 
-    // create file menu
+    /**For menu items first parameter is the id of the menu item,
+     * second paramater is the text shown
+     * adding & infront of any character will create
+     *  an accelerator for it meaning Alt + that character will be the shortcut to open it
+     * Ctrl + char will add control shortcut for particular menu item
+     * and the last paramater is the paramater to change status message while mouse is hovered
+     **/
+
+    //create file menu
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(New_File, "&New\tCtrl-N", "Open new text file");
     fileMenu->Append(Open_File, "&Open", "Open saved text files");
@@ -41,7 +47,7 @@ MyFrame::MyFrame(const wxString &title)
     menuBar->Append(editMenu, "&Edit");
     menuBar->Append(helpMenu, "&Help");
 
-    // ... and attach this menu bar to the frame
+    //and attach this menu bar to the frame
     SetMenuBar(menuBar);
 #endif // wxUSE_MENUS
 
@@ -98,27 +104,33 @@ void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
-    //Wildcard example for file selection
-    //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
 
     wxString openLocation = wxLoadFileSelector(
+        
         "a text",
+        /**Wildcard example for file selection
+          *"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
+          *Remember to put spaces between different extensions and keep the same extensions together.
+          *correct:   PNG files (*.png)|*.png
+          *incorrect: PNG files (*.png)| *.png
+         **/
         "txt files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
         "Fandral",
         this);
 
-    bool append = true;
-
+    //For checking if the new location is already in the openedFiles array
     int index = openedFiles->Index(openLocation);
 
     if (index == wxNOT_FOUND)
     {
+        //If it's not there then the new location is added.
         openedFiles->Add(openLocation);
+
+        //for the saving purpose below.
         index = openedFiles->Index(openLocation);
     }
 
-    std::cout << openLocation;
-
+    //Appending class variable to keep track of currently open file.
     currentlyOpenFileIndex = index;
     
     mainTextBox->LoadFile(openLocation);
@@ -126,7 +138,12 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
+    
     wxString saveLocation;
+
+    /**Opens native file explorer dialog box to select saving location
+     * if the file isn't saved previously or new file is open 
+     **/
     if(currentlyOpenFileIndex < 0)
     {
         saveLocation = wxSaveFileSelector(
@@ -136,15 +153,22 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
             this);
     }
     else{
+        //sets saveLocation to currently open file save location if it's known.
         saveLocation = openedFiles->Item(currentlyOpenFileIndex);
     }
 
     mainTextBox->SaveFile(saveLocation);
+
+    //Show status for completion of save operation
+    PushStatusText("Saved File successfully", 0);
+    sleep(5);
+    PopStatusText();
 }
 
 
 void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
+    //Opens native file explorer dialog box to select saving location
     wxString saveLocation = wxSaveFileSelector(
             "the current text",
             "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
@@ -152,6 +176,11 @@ void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
             this);
 
     mainTextBox->SaveFile(saveLocation);
+
+    //Show status for completion of save operation
+    PushStatusText("Saved File successfully", 0);
+    sleep(5);
+    PopStatusText();
 }
 
 
