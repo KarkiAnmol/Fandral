@@ -10,7 +10,6 @@ MyFrame::MyFrame(const wxString &title)
 {
 
 #if wxUSE_MENUS
-
     mainTextBox = new wxTextCtrl(this, TEXT_Main, "", wxDefaultPosition, wxDefaultSize,
                                  wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
     //mainTextBox->SetBackgroundColour(mainTextBoxBackgroundColor);  //Doesn't work properly on linux
@@ -77,11 +76,9 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Open_File, MyFrame::OnOpen)
     EVT_MENU(Save_File_As, MyFrame::OnSaveAs)
 wxEND_EVENT_TABLE()
-
-    
 // event handlers
 
-void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
+    void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
     // true is to force the frame to close
     Close(true);
@@ -106,7 +103,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
 
     wxString openLocation = wxLoadFileSelector(
-        
+
         "a text",
         /**Wildcard example for file selection
           *"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
@@ -132,19 +129,19 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
     //Appending class variable to keep track of currently open file.
     currentlyOpenFileIndex = index;
-    
+
     mainTextBox->LoadFile(openLocation);
 }
 
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
-    
+
     wxString saveLocation;
 
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open 
      **/
-    if(currentlyOpenFileIndex < 0)
+    if (currentlyOpenFileIndex < 0)
     {
         saveLocation = wxSaveFileSelector(
             "the current text",
@@ -152,7 +149,8 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
             "Fandral",
             this);
     }
-    else{
+    else
+    {
         //sets saveLocation to currently open file save location if it's known.
         saveLocation = openedFiles->Item(currentlyOpenFileIndex);
     }
@@ -165,15 +163,14 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
     PopStatusText();
 }
 
-
 void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
     //Opens native file explorer dialog box to select saving location
     wxString saveLocation = wxSaveFileSelector(
-            "the current text",
-            "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
-            "Fandral",
-            this);
+        "the current text",
+        "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
+        "Fandral",
+        this);
 
     mainTextBox->SaveFile(saveLocation);
 
@@ -182,7 +179,6 @@ void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
     sleep(5);
     PopStatusText();
 }
-
 
 void MyFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
