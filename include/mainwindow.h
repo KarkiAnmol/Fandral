@@ -42,7 +42,7 @@
 class MyFrame : public wxFrame
 {
 public:
-    // ctor(s)
+    // constructor(s)
     MyFrame(const wxString& title);
 
     // event handlers (these functions should _not_ be virtual)
@@ -53,14 +53,26 @@ public:
     void OnSave(wxCommandEvent& event);
     void OnSaveAs(wxCommandEvent& event);
 
-    //the main text box of the editor
+    /**the main text box of the editor
+     * For now wxTextCtrl is used as it provides features and is
+     * supported nativerly. We may decide to use other widgets as required.
+     * So, make it as object oriented as possilbe and keep the implementation independent.
+     **/
+    
     wxTextCtrl *mainTextBox;
 
     /** Let's create array to keep track of open files for now 
      * we will be handeling this through object oriented approach in the future 
     **/
     wxArrayString* openedFiles = new wxArrayString();
-    int currentlyOpenFileIndex = -2;
+    int currentlyOpenFileIndex = -2;  //Initially setting this to negative to signify no file has been opened.
+
+    //For the background color of main text box
+    wxColour mainTextBoxBackgroundColor = wxColour(8, 0, 23, 0.77);
+    
+    //For the text color of the text inside main text box 
+    //For dark background:   wxColour(134, 188, 123, 0.77);
+    wxColour mainTextBoxForegroundColor = *wxWHITE;
 
 private:
     // any class wishing to process wxWidgets events must use this macro
