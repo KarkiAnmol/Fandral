@@ -1,21 +1,18 @@
-#!/bin/sh
+#! /bin/sh
 
-#Uncomment the below two lines if running for the first time and replace MinGW Makefiles to whichever build generator you're using
+#If building for the first time with minGw uncomment the following lines
 #mkdir build
-#MAKEFILE_TYPE="MinGW Makefiles"
-#cmake -B ./build -S . -G "$MAKEFILE_TYPE"
+#makefile-type="MinGW Makefiles"
+#cmake -B ./build -S . -G ${makefile-type}
 
+#Changing to build directory
 cd build
 
+#Running cmake command there
 cmake ../
 
-cmake --build .
+#building the app and launching the app if the builing succeeds
+cmake --build . && ./Editor
 
-if [ $? ] 
-then 
-    ./Editor
-else
-    echo "Error occured during compilation. \n"
-fi
-
+#Returning to project main directory
 cd ..
