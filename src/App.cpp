@@ -29,7 +29,12 @@ bool App::OnInit()
 
     //For splash screen on startup
     wxBitmap bitmap;
-    if (bitmap.LoadFile("../resources/fandralSplash.png", wxBITMAP_TYPE_PNG))
+    if (bitmap.LoadFile(
+        wxString::Format(PROJECT_ABSOLUTE_PATH
+        "/resources"
+        "/fandralSplash.png"
+        ),
+        wxBITMAP_TYPE_PNG))
     {
         wxSplashScreen* splash = new wxSplashScreen(bitmap,
             wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
