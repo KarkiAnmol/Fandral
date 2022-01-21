@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #set g++ as compiler
 set(CMAKE_CXX_COMPILER g++)
 
+#For getting absolute path to the project directory inside of the app
+get_filename_component(PROJECT_ABSOLUTE_PATH "${PROJECT_DIR}" ABSOLUTE CACHE)
+
 #set build type as debug
 set(CMAKE_BUILD_TYPE Debug)
 set(wxWidgets_CONFIGURATION mswud)
