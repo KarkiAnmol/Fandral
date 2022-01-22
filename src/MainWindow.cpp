@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 
 // frame constructor
-MyFrame::MyFrame(const wxString &title)
-    : wxFrame(NULL, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
+MyFrame::MyFrame(wxWindow* parent, const wxString &title)
+    : wxFrame(parent, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
 
 #if wxUSE_MENUS
@@ -76,6 +76,7 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Save_File, MyFrame::OnSave)
     EVT_MENU(Open_File, MyFrame::OnOpen)
     EVT_MENU(Save_File_As, MyFrame::OnSaveAs)
+    EVT_CLOSE(MyFrame::OnClose)
 wxEND_EVENT_TABLE()
 
 
@@ -119,21 +120,21 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
         this);
 
     //For checking if the new location is already in the openedFiles array
-    int index = openedFiles->Index(openLocation);
+    int index = MyFrame::openedFiles->Index(openLocation);
 
     if (index == wxNOT_FOUND)
     {
         //If it's not there then the new location is added.
-        openedFiles->Add(openLocation);
+        MyFrame::openedFiles->Add(openLocation);
 
         //for the saving purpose below.
         index = openedFiles->Index(openLocation);
     }
 
     //Appending class variable to keep track of currently open file.
-    currentlyOpenFileIndex = index;
+    MyFrame::currentlyOpenFileIndex = index;
 
-    mainTextBox->LoadFile(openLocation);
+    MyFrame::mainTextBox->LoadFile(openLocation);
 }
 
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
@@ -144,25 +145,66 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open 
      **/
-    if(currentlyOpenFileIndex < 0)
+    if(MyFrame::currentlyOpenFileIndex < 0)
     {
         saveLocation = wxSaveFileSelector(
             "the current text",
             "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
             "Fandral",
             this);
+        MyFrame::openedFiles->Add(saveLocation);
     }
     else
     {
         //sets saveLocation to currently open file save location if it's known.
-        saveLocation = openedFiles->Item(currentlyOpenFileIndex);
+        saveLocation = MyFrame::openedFiles->Item(MyFrame::currentlyOpenFileIndex);
     }
 
-    mainTextBox->SaveFile(saveLocation);
+    //Keeping track of accessed locations.
+    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
+    MyFrame::mainTextBox->SaveFile(saveLocation);
 
     //Show status for completion of save operation
     PushStatusText("Saved File successfully", 0);
-    sleep(5);
+
+    //sleep(5);     k//Need to figure another way to keep status message for some time.
+    PopStatusText();
+}
+
+//Overloading for taking without arugements 
+/*************************************************************************
+ *********** Please figure out any other way to do this ******************
+ * ***********************************************************************/
+void MyFrame::OnSave()
+{
+    wxString saveLocation;
+
+    /**Opens native file explorer dialog box to select saving location
+     * if the file isn't saved previously or new file is open 
+     **/
+    if(MyFrame::currentlyOpenFileIndex < 0)
+    {
+        saveLocation = wxSaveFileSelector(
+            "the current text",
+            "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
+            "Fandral",
+            this);
+        MyFrame::openedFiles->Add(saveLocation);
+    }
+    else
+    {
+        //sets saveLocation to currently open file save location if it's known.
+        saveLocation = MyFrame::openedFiles->Item(MyFrame::currentlyOpenFileIndex);
+    }
+
+    //Keeping track of accessed locations.
+    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
+    MyFrame::mainTextBox->SaveFile(saveLocation);
+
+    //Show status for completion of save operation
+    PushStatusText("Saved File successfully", 0);
+
+    //sleep(5);     k//Need to figure another way to keep status message for some time.
     PopStatusText();
 }
 
@@ -175,19 +217,78 @@ void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
         "Fandral",
         this);
 
-    mainTextBox->SaveFile(saveLocation);
+    //Keeping track of accessed locations.
+    MyFrame::openedFiles->Add(saveLocation);
+    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
+
+    MyFrame::mainTextBox->SaveFile(saveLocation);
 
     //Show status for completion of save operation
     PushStatusText("Saved File successfully", 0);
-    sleep(5);
+    //sleep(5);
     PopStatusText();
 }
 
-void MyFrame::OnNew(wxCommandEvent &WXUNUSED(event))
+void MyFrame::OnNew(wxCommandEvent &event)
 {
-    MyFrame *secondaryWindow = new MyFrame(wxString::Format("New Window"));
 
-    Close(true);
+    MyFrame *secondaryWindow = new MyFrame(NULL, wxString::Format("New Window"));
 
     secondaryWindow->Show(true);
+}
+
+//For taking close events
+/*************************************************************************
+ *********** Please figure out any other way to do this ******************
+ * ***********************************************************************/
+void MyFrame::OnSaveAs()
+{
+    //Opens native file explorer dialog box to select saving location
+    wxString saveLocation = wxSaveFileSelector(
+        "the current text",
+        "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
+        "Fandral",
+        this);
+
+    //Keeping track of accessed locations.
+    MyFrame::openedFiles->Add(saveLocation);
+    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
+
+    MyFrame::mainTextBox->SaveFile(saveLocation);
+
+    //Show status for completion of save operation
+    PushStatusText("Saved File successfully", 0);
+    //sleep(5);
+    PopStatusText();
+}
+
+void MyFrame::OnClose(wxCloseEvent &event)
+{
+    if(MyFrame::currentlyOpenFileIndex < 0)
+    {
+        if(event.CanVeto()){event.Veto();}
+        int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
+                 "Confirm",
+                 wxYES_NO|wxICON_INFORMATION,
+                 this);
+
+        /*****************************************************
+        ** For some reason the return value of wxMessageBox **
+        ** is 2 for yes, 8 for no and 16 for cancel         **
+        *****************************************************/
+
+        if(confirm == 2)  
+        {
+            this->Destroy();
+        }
+        else{
+            this->OnSaveAs();
+        }
+    }
+    else
+    {
+        this->OnSave();
+
+        this->Destroy();
+    }
 }
