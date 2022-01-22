@@ -6,14 +6,15 @@
 
 // frame constructor
 MyFrame::MyFrame(const wxString &title)
-    : wxFrame(NULL, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT))
+    : wxFrame(NULL, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
 
 #if wxUSE_MENUS
+
     mainTextBox = new wxTextCtrl(this, TEXT_Main, "", wxDefaultPosition, wxDefaultSize,
                                  wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
     //mainTextBox->SetBackgroundColour(mainTextBoxBackgroundColor);  //Doesn't work properly on linux
-    mainTextBox->SetForegroundColour(mainTextBoxForegroundColor);
+    //mainTextBox->SetForegroundColour(mainTextBoxForegroundColor);
 
     /**For menu items first parameter is the id of the menu item,
      * second paramater is the text shown
@@ -76,6 +77,8 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Open_File, MyFrame::OnOpen)
     EVT_MENU(Save_File_As, MyFrame::OnSaveAs)
 wxEND_EVENT_TABLE()
+
+
 // event handlers
 
     void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
@@ -141,7 +144,7 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open 
      **/
-    if (currentlyOpenFileIndex < 0)
+    if(currentlyOpenFileIndex < 0)
     {
         saveLocation = wxSaveFileSelector(
             "the current text",
