@@ -1,9 +1,8 @@
 #! /bin/sh
 
-#If building for the first time with minGw uncomment the following lines
+#If building for the first time,  uncomment the following lines
 #mkdir build
-#makefile-type="MinGW Makefiles"
-#cmake -B ./build -S . -G ${makefile-type}
+#cmake -B ./build -S .
 
 #Changing to build directory
 cd build
