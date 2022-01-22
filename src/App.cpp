@@ -25,7 +25,7 @@ bool App::OnInit()
         (int)Editor_VERSION_MINOR);
 
     // create the main application window
-    MyFrame *frame = new MyFrame(title);
+    MyFrame *frame = new MyFrame(NULL, title);
 
     /*For splash screen on startup
     wxBitmap bitmap;

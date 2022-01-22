@@ -43,7 +43,7 @@ class MyFrame : public wxFrame
 {
 public:
     // constructor(s)
-    MyFrame(const wxString& title);
+    MyFrame(wxWindow* parent, const wxString &title);
 
     // event handlers (these functions should _not_ be virtual)
     void OnQuit(wxCommandEvent& event);
@@ -51,7 +51,10 @@ public:
     void OnNew(wxCommandEvent& event);
     void OnOpen(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
+    void OnSave();           //Overloading for taking close and other events manually
+    void OnSaveAs();         //Overloading for taking close events and other events
     void OnSaveAs(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
 
     /**the main text box of the editor
      * For now wxTextCtrl is used as it provides features and is
@@ -101,7 +104,7 @@ enum
         //Help Menu
             Editor_About = wxID_ABOUT,
 
-    //Text bos
+    //Text box
         TEXT_Main = wxID_ANY
 
 };
