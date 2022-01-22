@@ -27,7 +27,7 @@ bool App::OnInit()
     // create the main application window
     MyFrame *frame = new MyFrame(title);
 
-    //For splash screen on startup
+    /*For splash screen on startup
     wxBitmap bitmap;
     if (bitmap.LoadFile(
         wxString::Format(PROJECT_ABSOLUTE_PATH
@@ -41,7 +41,7 @@ bool App::OnInit()
             1500, frame, -1, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT),
             wxBORDER_SIMPLE|wxSTAY_ON_TOP);
     }
-    wxYield();
+    wxYield();*/
 
     // show the application window (the frames, unlike simple controls, are not shown when
     // created initially)
