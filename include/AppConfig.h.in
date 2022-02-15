@@ -6,6 +6,11 @@
    * which will be used as header file the the app.
 **/
 
+#if defined _APP_CONFIG_H_==0 // _APP_CONFIG_H_
+#define _APP_CONFIG_H_ 1
+
 #define Editor_VERSION_MAJOR @Editor_VERSION_MAJOR@
 #define Editor_VERSION_MINOR @Editor_VERSION_MINOR@
 #define PROJECT_ABSOLUTE_PATH "@PROJECT_ABSOLUTE_PATH@"
+
+#endif // _APP_CONFIG_H_

@@ -1,4 +1,7 @@
-/**Header file for app.cpp **/
+//Header file for app.cpp
+
+#if defined _APP_H_==0
+#define _APP_H_ 1
 
 // Define a new application type, each program should derive a class from wxApp
 
@@ -28,3 +31,5 @@ public:
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
 };
+
+#endif //_APP_H_

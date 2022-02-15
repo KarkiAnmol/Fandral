@@ -1,7 +1,8 @@
-/** 
- * Header file for MainWindow.cpp 
-**/
+//Header file for MainWindow.cpp 
 
+
+#if defined _MAIN_WINDOW_H_==0 //_MAIN_WINDOW_H_
+#define _MAIN_WINDOW_H_ 1
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
@@ -109,3 +110,4 @@ enum
 
 };
 
+#endif //_MAIN_WINDOW_H_
