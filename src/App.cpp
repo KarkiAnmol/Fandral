@@ -1,7 +1,7 @@
 
 #include "app.h"
 #include "mainwindow.h"     //For MyFrame class
-#include <wx/splash.h>      //For wxSplashScreen
+#include "wx/splash.h"
 
 // ============================================================================
 // implementation
@@ -25,7 +25,7 @@ bool App::OnInit()
         (int)Editor_VERSION_MINOR);
 
     // create the main application window
-    MyFrame *frame = new MyFrame(NULL, title);
+    MyFrame *frame = new MyFrame(title);
 
     /*For splash screen on startup
     wxBitmap bitmap;
