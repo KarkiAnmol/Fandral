@@ -5,9 +5,6 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-#set g++ as compiler
-set(CMAKE_CXX_COMPILER g++)
-
 #For getting absolute path to the project directory inside of the app
 get_filename_component(PROJECT_ABSOLUTE_PATH "${PROJECT_DIR}" ABSOLUTE CACHE)
 
