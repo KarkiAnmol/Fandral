@@ -9,12 +9,14 @@ MyFrame::MyFrame(wxWindow* parent, const wxString &title)
     : wxFrame(parent, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
 
-#if wxUSE_MENUS
 
     mainTextBox = new wxTextCtrl(this, TEXT_Main, "", wxDefaultPosition, wxDefaultSize,
                                  wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
     //mainTextBox->SetBackgroundColour(mainTextBoxBackgroundColor);  //Doesn't work properly on linux
     //mainTextBox->SetForegroundColour(mainTextBoxForegroundColor);
+
+
+#if wxUSE_MENUS
 
     /**For menu items first parameter is the id of the menu item,
      * second paramater is the text shown
@@ -82,7 +84,7 @@ wxEND_EVENT_TABLE()
 
 // event handlers
 
-    void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
+void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
     // true is to force the frame to close
     Close(true);
