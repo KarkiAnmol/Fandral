@@ -13,7 +13,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(wxWidgets_CONFIGURATION mswud)
 
 # set the project name
-project(Editor VERSION 0.1)
+project(Editor VERSION 0.1 LANGUAGES CXX C)
 
 # hack for buggy CMake's FindwxWidgets script
 if (DEFINED ENV_WX_CONFIG)
