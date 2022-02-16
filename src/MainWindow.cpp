@@ -1,20 +1,39 @@
 #include "mainwindow.h"
+#include "wx/notebook.h"
+#include "tab.h"
+#include "memory"
+#include <string>
 
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
 
 // frame constructor
-MyFrame::MyFrame(wxWindow* parent, const wxString &title)
-    : wxFrame(parent, Main_Window, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
+MyFrame::MyFrame(const wxString &title)
+    : wxFrame(NULL, wxID_ANY, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
+    //The main panel on top of the main window
+    wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT, MAIN_WINDOW_HEIGHT), 0l,  "Main Panel");
+    
+    //This is make it possible to change colors of child widgets properly in all platforms
+    mainPanel->SetBackgroundColour(wxColor(100, 100, 100));
 
+    //Notebook for managing windows with tabs
+    this->mainNotebook = new wxNotebook(mainPanel, wxID_ANY);
 
-    mainTextBox = new wxTextCtrl(this, TEXT_Main, "", wxDefaultPosition, wxDefaultSize,
-                                 wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
-    //mainTextBox->SetBackgroundColour(mainTextBoxBackgroundColor);  //Doesn't work properly on linux
-    //mainTextBox->SetForegroundColour(mainTextBoxForegroundColor);
+    std::shared_ptr<Tab> firstTab(new Tab(mainNotebook, "First Tab", 0, *this));
+    firstTab->addToActiveTabs();
 
+    //sizer for notebook
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(mainNotebook, 1, wxEXPAND);
+    mainPanel->SetSizer(sizer);
+
+    // Set up the sizer for the frame and resize the frame
+    // according to its contents
+    wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
+    topSizer->Add(mainPanel, 1, wxEXPAND);
+    SetSizerAndFit(topSizer);
 
 #if wxUSE_MENUS
 
@@ -28,6 +47,7 @@ MyFrame::MyFrame(wxWindow* parent, const wxString &title)
 
     //create file menu
     wxMenu *fileMenu = new wxMenu;
+    fileMenu->Append(New_Window, "New Window", "Open New Window");
     fileMenu->Append(New_File, "&New\tCtrl-N", "Open new text file");
     fileMenu->Append(Open_File, "&Open", "Open saved text files");
     fileMenu->Append(Save_File, "Save\tCtrl-S", "Save the current file");
@@ -74,6 +94,7 @@ MyFrame::MyFrame(wxWindow* parent, const wxString &title)
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Editor_Quit, MyFrame::OnQuit)
     EVT_MENU(Editor_About, MyFrame::OnAbout)
+    EVT_MENU(New_Window, MyFrame::OnNewWindow)
     EVT_MENU(New_File, MyFrame::OnNew)
     EVT_MENU(Save_File, MyFrame::OnSave)
     EVT_MENU(Open_File, MyFrame::OnOpen)
@@ -136,7 +157,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //Appending class variable to keep track of currently open file.
     MyFrame::currentlyOpenFileIndex = index;
 
-    MyFrame::mainTextBox->LoadFile(openLocation);
+    this->getCurrentlyActiveTextBox().LoadFile(openLocation);
 }
 
 //Overloading for event handeling
@@ -169,7 +190,7 @@ void MyFrame::OnSave()
 
     //Keeping track of accessed locations.
     MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
-    MyFrame::mainTextBox->SaveFile(saveLocation);
+    this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
 
     //Show status for completion of save operation
     PushStatusText("Saved File successfully", 0);
@@ -184,12 +205,19 @@ void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
     this->OnSaveAs();
 }
 
-void MyFrame::OnNew(wxCommandEvent &event)
+void MyFrame::OnNewWindow(wxCommandEvent &event)
 {
-
-    MyFrame *secondaryWindow = new MyFrame(NULL, wxString::Format("New Window"));
+    MyFrame *secondaryWindow = new MyFrame(wxString::Format("New Window"));
 
     secondaryWindow->Show(true);
+}
+
+void MyFrame::OnNew(wxCommandEvent &event)
+{
+    int newTabNumber = Tab::getActiveTabsVector().size() + 1;
+    Tab* newTab = new Tab(this->mainNotebook,
+    std::string("Tab") + std::to_string(newTabNumber), *this);
+    newTab->addToActiveTabs();
 }
 
 void MyFrame::OnSaveAs()
@@ -205,7 +233,7 @@ void MyFrame::OnSaveAs()
     MyFrame::openedFiles->Add(saveLocation);
     MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
 
-    MyFrame::mainTextBox->SaveFile(saveLocation);
+    this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
 
     //Show status for completion of save operation
     PushStatusText("Saved File successfully", 0);
@@ -241,5 +269,23 @@ void MyFrame::OnClose(wxCloseEvent &event)
         this->OnSave();
 
         this->Destroy();
+    }
+}
+
+wxTextCtrl& MyFrame::getCurrentlyActiveTextBox()
+{
+    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!=nullptr)
+    {
+        return *(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox());
+    }
+    else
+    {
+         wxMessageBox(wxString::Format("Couldn't complete the desired operation."),
+                 "Confirm",
+                 wxOK|wxICON_INFORMATION,
+                 this);
+
+        std::shared_ptr<wxTextCtrl> dummyOne(new wxTextCtrl(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0L, wxDefaultValidator, "Dummy One"));
+        return *dummyOne;
     }
 }

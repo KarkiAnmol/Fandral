@@ -21,7 +21,12 @@
 // resources
 // ----------------------------------------------------------------------------
 
-#include <AppConfig.h>
+#include "AppConfig.h"
+
+#include "wx/notebook.h"
+
+//For the text box
+#include <wx/textctrl.h>
 
 //For position of main window
 #define DISPLAY_DIMENSIONS wxGetDisplaySize()
@@ -29,27 +34,25 @@
 #define FULL_HEIGHT DISPLAY_DIMENSIONS.GetHeight()
 
 //For size of the main window
-#define MAIN_WINDOW_WIDTH FULL_WIDTH/2
-#define MAIN_WINDOW_HEIGHT FULL_HEIGHT/2
+#define MAIN_WINDOW_WIDTH FULL_WIDTH*0.75
+#define MAIN_WINDOW_HEIGHT FULL_HEIGHT*0.75
 
 //For postion of main window
 #define MAIN_WINDOW_POS_X FULL_WIDTH/2 - MAIN_WINDOW_WIDTH/2
 #define MAIN_WINDOW_POS_Y FULL_HEIGHT/2 - MAIN_WINDOW_HEIGHT/2
-
-//For the text box
-#include <wx/textctrl.h>
 
 // Define a new frame type: this is going to be our main frame/window
 class MyFrame : public wxFrame
 {
 public:
     // constructor(s)
-    MyFrame(wxWindow* parent, const wxString &title);
+    MyFrame(const wxString &title);
 
     // event handlers (these functions should _not_ be virtual)
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnNew(wxCommandEvent& event);
+    void OnNewWindow(wxCommandEvent &event);
     void OnOpen(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
     void OnSave();           //Overloading for taking close and other events manually
@@ -57,13 +60,7 @@ public:
     void OnSaveAs(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
-    /**the main text box of the editor
-     * For now wxTextCtrl is used as it provides features and is
-     * supported nativerly. We may decide to use other widgets as required.
-     * So, make it as object oriented as possilbe and keep the implementation independent.
-     **/
-    
-    wxTextCtrl *mainTextBox;
+    wxNotebook* mainNotebook;
 
     /** Let's create array to keep track of open files for now 
      * we will be handeling this through object oriented approach in the future 
@@ -72,11 +69,17 @@ public:
     int currentlyOpenFileIndex = -2;  //Initially setting this to negative to signify no file has been opened.
 
     //For the background color of main text box
-    wxColour mainTextBoxBackgroundColor = wxColour(8, 0, 23, 0.77);
+    wxColour textBoxBackgroundColor = wxColour(30, 30, 30, 0.77);
     
     //For the text color of the text inside main text box 
-    //For dark background:   wxColour(134, 188, 123, 0.77);
-    wxColour mainTextBoxForegroundColor = *wxWHITE;
+    wxColour textBoxForegroundColor =  wxColour(134, 150, 123, 0.77);
+
+    //For setting the font style and size for text inside text control
+    wxFont myFont = wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+    //To remove nullptr and get a valid text box.
+    //Returns reference to currently active text box or a dummy one.
+    wxTextCtrl& getCurrentlyActiveTextBox();
 
 private:
     // any class wishing to process wxWidgets events must use this macro
@@ -90,6 +93,7 @@ enum
 
     //menu items
         //File Menu
+            New_Window,
             New_File = wxID_NEW,
             Open_File = wxID_OPEN,
             Save_File = wxID_SAVE,
@@ -104,9 +108,6 @@ enum
 
         //Help Menu
             Editor_About = wxID_ABOUT,
-
-    //Text box
-        TEXT_Main = wxID_ANY
 
 };
 
