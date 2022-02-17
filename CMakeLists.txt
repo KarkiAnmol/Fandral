@@ -24,7 +24,8 @@ endif()
 set(SRCS "src/App.cpp")
 
 #append lists to add files for main window
-list(APPEND SRCS "src/MainWindow.cpp")  
+list(APPEND SRCS "src/MainWindow.cpp")
+list(APPEND SRCS "src/Tab.cpp")  
 
 if (APPLE)
     # create bundle on apple compiles
