@@ -21,7 +21,7 @@ MyFrame::MyFrame(const wxString &title)
     //Notebook for managing windows with tabs
     this->mainNotebook = new wxNotebook(mainPanel, wxID_ANY);
 
-    std::shared_ptr<Tab> firstTab(new Tab(mainNotebook, "First Tab", 0, *this));
+    std::shared_ptr<Tab> firstTab(new Tab(mainNotebook, "First Tab", *this));
     firstTab->addToActiveTabs();
 
     //sizer for notebook
@@ -138,26 +138,45 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
           *correct:   PNG files (*.png)|*.png
           *incorrect: PNG files (*.png)| *.png
          **/
-        "txt files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
+        "txt files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md",
         "Fandral",
         this);
 
-    //For checking if the new location is already in the openedFiles array
-    int index = MyFrame::openedFiles->Index(openLocation);
-
-    if (index == wxNOT_FOUND)
+    //For checking if the file is already open in one of the tabs
+    bool alreadyOpened=0;
+    wxString path;
+    for(Tab& t: Tab::getActiveTabsVector())
     {
-        //If it's not there then the new location is added.
-        MyFrame::openedFiles->Add(openLocation);
+        if(t.getFilePath().Cmp(openLocation)==0)
+        {
+            alreadyOpened=1;
+            path = t.getFilePath().Clone();
 
-        //for the saving purpose below.
-        index = openedFiles->Index(openLocation);
+            //This will set the matching tab as active. Useful for loading text in the same text box below.
+            t.setAsActive();
+            break;
+        }
     }
 
-    //Appending class variable to keep track of currently open file.
-    MyFrame::currentlyOpenFileIndex = index;
+    if (alreadyOpened)
+    {
+        int confirm = wxMessageBox(wxString::Format("The selected file is already open in other tab.\nDo you wish to override it ?"),
+                 "Confirm",
+                 wxYES_NO|wxICON_INFORMATION,
+                 this);
+        if(confirm==2)
+        {
+            //The condition to check if the file is already open would already have set the matching textctrl as
+            //the active one. So, this will override that tab not the other ones.
+            this->getCurrentlyActiveTextBox().LoadFile(path);
+        }
+    }
+    else
+    {   
+        std::shared_ptr<Tab> tab(new Tab(mainNotebook,  _("Tab") + std::to_string(Tab::getActiveTabsVector().size() + 1), *this, openLocation, 1));
+        tab->addToActiveTabs();
+    }
 
-    this->getCurrentlyActiveTextBox().LoadFile(openLocation);
 }
 
 //Overloading for event handeling
@@ -173,29 +192,28 @@ void MyFrame::OnSave()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open 
      **/
-    if(MyFrame::currentlyOpenFileIndex < 0)
+    if((Tab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
     {
         saveLocation = wxSaveFileSelector(
             "the current text",
             "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
             "Fandral",
             this);
-        MyFrame::openedFiles->Add(saveLocation);
+         //Modifying the filepath of the tab object
+        (Tab::getCurrentlySelectedTab())->setFilePath(saveLocation);
     }
     else
     {
         //sets saveLocation to currently open file save location if it's known.
-        saveLocation = MyFrame::openedFiles->Item(MyFrame::currentlyOpenFileIndex);
+        saveLocation = Tab::getCurrentlyActiveFilePath().Clone();
     }
 
-    //Keeping track of accessed locations.
-    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
     this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
 
     //Show status for completion of save operation
     PushStatusText("Saved File successfully", 0);
 
-    //sleep(5);     k//Need to figure another way to keep status message for some time.
+    //sleep(5);     //Need to figure out another way to keep status message for some time.
     PopStatusText();
 }
 
@@ -229,9 +247,8 @@ void MyFrame::OnSaveAs()
         "Fandral",
         this);
 
-    //Keeping track of accessed locations.
-    MyFrame::openedFiles->Add(saveLocation);
-    MyFrame::currentlyOpenFileIndex=openedFiles->Index(saveLocation);
+    //Modifying the filepath of the tab object
+    (Tab::getCurrentlySelectedTab())->setFilePath(saveLocation);
 
     this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
 
@@ -243,7 +260,7 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-    if(MyFrame::currentlyOpenFileIndex < 0)
+    if((Tab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
     {
         if(event.CanVeto()){event.Veto();}
         int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),

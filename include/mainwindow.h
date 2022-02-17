@@ -62,20 +62,14 @@ public:
 
     wxNotebook* mainNotebook;
 
-    /** Let's create array to keep track of open files for now 
-     * we will be handeling this through object oriented approach in the future 
-    **/
-    wxArrayString* openedFiles = new wxArrayString();
-    int currentlyOpenFileIndex = -2;  //Initially setting this to negative to signify no file has been opened.
-
     //For the background color of main text box
-    wxColour textBoxBackgroundColor = wxColour(30, 30, 30, 0.77);
+    wxColour textBoxBackgroundColor = wxColour(0.11, 0.11, 0.12, 1.0);
     
     //For the text color of the text inside main text box 
-    wxColour textBoxForegroundColor =  wxColour(134, 150, 123, 0.77);
+    wxColour textBoxForegroundColor =  wxColour("#F2F2F7FF");
 
     //For setting the font style and size for text inside text control
-    wxFont myFont = wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    wxFont myFont = wxFont(14, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
     //To remove nullptr and get a valid text box.
     //Returns reference to currently active text box or a dummy one.
