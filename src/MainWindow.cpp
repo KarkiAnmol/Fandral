@@ -153,7 +153,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
             path = t.getFilePath().Clone();
 
             //This will set the matching tab as active. Useful for loading text in the same text box below.
-            t.setAsActive();
+            t.setAsActive(*this);
             break;
         }
     }
@@ -184,7 +184,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
-    this->OnSave();
+    MyFrame::OnSave();
 }
 
 
@@ -195,7 +195,7 @@ void MyFrame::OnSave()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open 
      **/
-    if((Tab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
+    if(Tab::getCurrentlySelectedTab(*this)->getFilePath().Cmp(wxString(" "))==0)
     {
         saveLocation = wxSaveFileSelector(
             "the current text",
@@ -203,12 +203,12 @@ void MyFrame::OnSave()
             "Fandral",
             this);
          //Modifying the filepath of the tab object
-        Tab::getCurrentlySelectedTab()->setFilePath(saveLocation);
+        Tab::getCurrentlySelectedTab(*this)->setFilePath(saveLocation);
     }
     else
     {
         //sets saveLocation to currently open file save location if it's known.
-        saveLocation = Tab::getCurrentlyActiveFilePath().Clone();
+        saveLocation = Tab::getCurrentlyActiveFilePath(*this).Clone();
     }
 
     this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
@@ -250,7 +250,7 @@ void MyFrame::OnSaveAs()
         this);
 
     //Modifying the filepath of the tab object
-    (Tab::getCurrentlySelectedTab())->setFilePath(saveLocation);
+    Tab::getCurrentlySelectedTab(*this)->setFilePath(saveLocation);
 
     this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
 
@@ -262,7 +262,7 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-    if((Tab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
+    if((Tab::getCurrentlySelectedTab(*this)->getFilePath()).Cmp(wxString(" "))==0)
     {
         if(event.CanVeto()){event.Veto();}
         int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
@@ -276,7 +276,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
         *****************************************************/
 
         if(confirm == 2)  
-        {
+        { 
             this->Destroy();
         }
         else{
@@ -293,9 +293,9 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 wxTextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
-    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!= nullptr)
+    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this)!= nullptr)
     {
-        return *(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox());
+        return *(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this));
     }
     else
     {

@@ -52,7 +52,7 @@ public:
     wxString getFilePath();
     wxString getTabName();
     int getIndex();
-    const wxNotebook* getNotebook();
+    wxNotebook* getNotebook();
     static std::vector<Tab>& getActiveTabsVector();
 
     //setters
@@ -69,19 +69,19 @@ public:
     //here pointer is returned to make it possible to return nullptr 
     //if by any chance no tab is selected
     //(filter this behaviour accordingly).
-    static Tab* getCurrentlySelectedTab();
+    static Tab* getCurrentlySelectedTab(MyFrame& frame);
 
     //method to return the currently active text area (text ctrl)
     //here pointer is returned to make it possible to return nullptr 
     //if by any chance no text box is active(consequence of being no tab active)
     //(filter this behaviour accordingly)
-    wxTextCtrl* getCurrentlyActiveTextBox();
+    wxTextCtrl* getCurrentlyActiveTextBox(MyFrame& frame);
 
     //static method to return the filepath of the currently active text area (text ctrl)
-    static wxString getCurrentlyActiveFilePath();
+    static wxString getCurrentlyActiveFilePath(MyFrame& frame);
 
     //sets the given tab as active one
-    void setAsActive();
+    void setAsActive(MyFrame& frame);
 };
 
 #endif //_TAB_H_

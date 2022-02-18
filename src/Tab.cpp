@@ -35,7 +35,7 @@ Tab::Tab(wxNotebook *notebook, const wxString& tabName, const MyFrame& frame)
 wxString Tab::getFilePath() { return filePath.Clone(); }
 wxString Tab::getTabName() { return tabName.Clone(); }
 int Tab::getIndex() { return index; }
-const wxNotebook *Tab::getNotebook() { return notebook; }
+wxNotebook* Tab::getNotebook() { return this->notebook; }
 std::vector<Tab>& Tab::getActiveTabsVector(){ return activeTabs;}
 
 // setters
@@ -48,9 +48,9 @@ void Tab::addToActiveTabs()
     Tab::activeTabs.push_back(*this);
 }
 
-Tab* Tab::getCurrentlySelectedTab()
+Tab* Tab::getCurrentlySelectedTab(MyFrame& frame)
 {
-    int selection = Tab::getActiveTabsVector().front().notebook->GetSelection();
+    int selection = frame.mainNotebook->GetSelection();
     if(selection != wxNOT_FOUND)
     {
         for(Tab& t: Tab::getActiveTabsVector())
@@ -64,21 +64,21 @@ Tab* Tab::getCurrentlySelectedTab()
     return nullptr;
 }
 
-wxTextCtrl* Tab::getCurrentlyActiveTextBox()
+wxTextCtrl* Tab::getCurrentlyActiveTextBox(MyFrame& frame)
 {
-    if(Tab::getCurrentlySelectedTab()!=nullptr)
+    if(Tab::getCurrentlySelectedTab(frame)!=nullptr)
     {
-        return Tab::getCurrentlySelectedTab()->textCtrl;
+        return Tab::getCurrentlySelectedTab(frame)->textCtrl;
     }
     return nullptr;
 }
 
-wxString Tab::getCurrentlyActiveFilePath()
+wxString Tab::getCurrentlyActiveFilePath(MyFrame& frame)
 {
-    return Tab::getCurrentlySelectedTab()->getFilePath();
+    return Tab::getCurrentlySelectedTab(frame)->getFilePath();
 }
 
-void Tab::setAsActive()
+void Tab::setAsActive(MyFrame& frame)
 {
-    this->notebook->SetSelection(this->index);
+    frame.mainNotebook->SetSelection(this->getIndex());
 }
