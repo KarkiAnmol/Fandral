@@ -158,19 +158,22 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
         }
     }
 
+    //if the file is already open then asks to ovveride it with old contents
     if (alreadyOpened)
     {
         int confirm = wxMessageBox(wxString::Format("The selected file is already open in other tab.\nDo you wish to override it ?"),
                  "Confirm",
                  wxYES_NO|wxICON_INFORMATION,
                  this);
+        //if confirmed the open file will be overidden by the file in the path
         if(confirm==2)
         {
-            //The condition to check if the file is already open would already have set the matching textctrl as
-            //the active one. So, this will override that tab not the other ones.
+            //The condition to check if the file is already open would already have set the matching textctrl as the active one.
+            //So, this will override that tab(text area) not the other ones.
             this->getCurrentlyActiveTextBox().LoadFile(path);
         }
     }
+    //else new tab is opened providing the new location as the file path of that tab
     else
     {   
         std::shared_ptr<Tab> tab(new Tab(mainNotebook,  _("Tab") + std::to_string(Tab::getActiveTabsVector().size() + 1), *this, openLocation, 1));
@@ -179,11 +182,11 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
 }
 
-//Overloading for event handeling
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
     this->OnSave();
 }
+
 
 void MyFrame::OnSave()
 {
@@ -200,7 +203,7 @@ void MyFrame::OnSave()
             "Fandral",
             this);
          //Modifying the filepath of the tab object
-        (Tab::getCurrentlySelectedTab())->setFilePath(saveLocation);
+        Tab::getCurrentlySelectedTab()->setFilePath(saveLocation);
     }
     else
     {
@@ -217,7 +220,6 @@ void MyFrame::OnSave()
     PopStatusText();
 }
 
-//Overloading for event handeling
 void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
     this->OnSaveAs();
@@ -291,7 +293,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 wxTextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
-    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!=nullptr)
+    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!= nullptr)
     {
         return *(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox());
     }
