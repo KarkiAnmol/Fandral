@@ -48,18 +48,52 @@ public:
     // constructor(s)
     MyFrame(const wxString &title);
 
-    // event handlers (these functions should _not_ be virtual)
+    //for exiting the app
     void OnQuit(wxCommandEvent& event);
+
+    //Displays about dialog box
     void OnAbout(wxCommandEvent& event);
+
+    //Creates a new tab with a text area (tab) inside it without a file or filepath
     void OnNew(wxCommandEvent& event);
+
+    //Creates a new instace of MyFrame which is independent of previous (parent) instance
     void OnNewWindow(wxCommandEvent &event);
+
+    //For opening a editable file using native file selector dialog.
+    //Also checks if the same file is alrady open in other tab
+    //and performs operation as per user's response.
     void OnOpen(wxCommandEvent& event);
+
+    //Performs save as behaviour if the file hasn't been saved before
+    //else saves the current content.
+    //
+    //Only called by event handelers
     void OnSave(wxCommandEvent& event);
-    void OnSave();           //Overloading for taking close and other events manually
-    void OnSaveAs();         //Overloading for taking close events and other events
+
+    //Performs save as behaviour if the file hasn't been saved before
+    //else saves the current content.
+    //
+    //Overloading for taking close event and other function calls
+    void OnSave();
+
+    //Performs save as behaviour even if the file was saved before
+    //Meaning it will open a save dialog and ask for name and extension.
+    //
+    //Overloaded for taking close event and other function calls
+    void OnSaveAs();
+
+    //Performs save as behaviour even if the file was saved before
+    //Meaning it will open a save dialog and ask for name and extension
+    //
+    //Only called by event handelers
     void OnSaveAs(wxCommandEvent& event);
+
+    //For capturing close event and performing some pre-close actions
     void OnClose(wxCloseEvent& event);
 
+    //Setting one frame (app window) to use only one notebook
+    //For now one frame will have only one notebook
     wxNotebook* mainNotebook;
 
     //For the background color of main text box
@@ -71,7 +105,7 @@ public:
     //For setting the font style and size for text inside text control
     wxFont myFont = wxFont(14, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-    //To remove nullptr and get a valid text box.
+    //To handel nullptr properly and get a valid text box.
     //Returns reference to currently active text box or a dummy one.
     wxTextCtrl& getCurrentlyActiveTextBox();
 
