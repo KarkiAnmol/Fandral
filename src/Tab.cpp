@@ -5,7 +5,7 @@ std::vector<Tab> Tab::activeTabs;
 
 Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
 {
-    textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
+    this->textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
                               wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, tabName);
     textCtrl->SetFont(frame.myFont);
     textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
@@ -21,7 +21,7 @@ Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wx
 
 Tab::Tab(wxNotebook *notebook, const wxString& tabName, const MyFrame& frame)
 {
-    textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
+    this->textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
                               wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, tabName);
     textCtrl->SetFont(frame.myFont);
     textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
@@ -32,11 +32,11 @@ Tab::Tab(wxNotebook *notebook, const wxString& tabName, const MyFrame& frame)
 }
 
 // getters
-wxString Tab::getFilePath() { return filePath; }
-wxString Tab::getTabName() { return tabName; }
+wxString Tab::getFilePath() { return filePath.Clone(); }
+wxString Tab::getTabName() { return tabName.Clone(); }
 int Tab::getIndex() { return index; }
 const wxNotebook *Tab::getNotebook() { return notebook; }
-std::vector<Tab> Tab::getActiveTabsVector(){ return activeTabs;}
+std::vector<Tab>& Tab::getActiveTabsVector(){ return activeTabs;}
 
 // setters
 void Tab::setFilePath(const wxString& filePath) { this->filePath = filePath.Clone(); }
@@ -51,11 +51,14 @@ void Tab::addToActiveTabs()
 Tab* Tab::getCurrentlySelectedTab()
 {
     int selection = Tab::getActiveTabsVector().front().notebook->GetSelection();
-    for(Tab& t: Tab::getActiveTabsVector())
+    if(selection != wxNOT_FOUND)
     {
-        if(t.index==selection)
+        for(Tab& t: Tab::getActiveTabsVector())
         {
-            return &t;
+            if(t.index==selection)
+            {
+                return &t;
+            }
         }
     }
     return nullptr;
