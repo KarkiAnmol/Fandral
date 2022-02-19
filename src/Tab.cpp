@@ -1,6 +1,10 @@
 #include "tab.h"
 #include "memory"
 
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
+
 std::vector<Tab> Tab::activeTabs;
 
 Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
