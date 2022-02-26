@@ -3,6 +3,7 @@
 
 #include "mainwindow.h"
 #include "memory"
+#include "wx/stc/stc.h"
 
 //Class Tab
 //The tab here is to mimic a particular tab in any app.
@@ -32,7 +33,7 @@ private:
     wxNotebook* notebook;
 
     //text area which is inside the particular tab
-    wxTextCtrl* textCtrl;
+    wxStyledTextCtrl* textCtrl;
 
 public:
     //constructors
@@ -75,7 +76,7 @@ public:
     //here pointer is returned to make it possible to return nullptr 
     //if by any chance no text box is active(consequence of being no tab active)
     //(filter this behaviour accordingly)
-    wxTextCtrl* getCurrentlyActiveTextBox(MyFrame& frame);
+    wxStyledTextCtrl* getCurrentlyActiveTextBox(MyFrame& frame);
 
     //static method to return the filepath of the currently active text area (text ctrl)
     static wxString getCurrentlyActiveFilePath(MyFrame& frame);

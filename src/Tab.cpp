@@ -9,8 +9,8 @@ std::vector<Tab> Tab::activeTabs;
 
 Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
 {
-    this->textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, tabName);
+    this->textCtrl = new wxStyledTextCtrl(notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                              wxTE_MULTILINE | wxTE_RICH, tabName);
     textCtrl->SetFont(frame.myFont);
     textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
     textCtrl->SetBackgroundColour(frame.textBoxBackgroundColor);
@@ -25,8 +25,8 @@ Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wx
 
 Tab::Tab(wxNotebook *notebook, const wxString& tabName, const MyFrame& frame)
 {
-    this->textCtrl = new wxTextCtrl(notebook, wxID_ANY, "", wxDefaultPosition, wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, tabName);
+    this->textCtrl = new wxStyledTextCtrl(notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                              wxTE_MULTILINE | wxTE_RICH, tabName);
     textCtrl->SetFont(frame.myFont);
     textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
     textCtrl->SetBackgroundColour(frame.textBoxBackgroundColor);
@@ -68,7 +68,7 @@ Tab* Tab::getCurrentlySelectedTab(MyFrame& frame)
     return nullptr;
 }
 
-wxTextCtrl* Tab::getCurrentlyActiveTextBox(MyFrame& frame)
+wxStyledTextCtrl* Tab::getCurrentlyActiveTextBox(MyFrame& frame)
 {
     if(Tab::getCurrentlySelectedTab(frame)!=nullptr)
     {

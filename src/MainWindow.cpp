@@ -295,7 +295,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
     }
 }
 
-wxTextCtrl& MyFrame::getCurrentlyActiveTextBox()
+wxStyledTextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
     if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this)!= nullptr)
     {
@@ -308,7 +308,7 @@ wxTextCtrl& MyFrame::getCurrentlyActiveTextBox()
                  wxOK|wxICON_INFORMATION,
                  this);
 
-        std::shared_ptr<wxTextCtrl> dummyOne(new wxTextCtrl(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0L, wxDefaultValidator, "Dummy One"));
+        std::shared_ptr<wxStyledTextCtrl> dummyOne(new wxStyledTextCtrl(NULL, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0L, "Dummy One"));
         return *dummyOne;
     }
 }
