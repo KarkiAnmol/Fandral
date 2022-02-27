@@ -1,7 +1,7 @@
 #if defined _TAB_H_==0  //_TAB_H_
 #define _TAB_H_ 1
 
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "memory"
 #include "wx/stc/stc.h"
 

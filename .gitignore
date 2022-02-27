@@ -63,3 +63,10 @@ _deps
 # Built Visual Studio Code Extensions
 *.vsix
 .vscode/settings.json
+/.vscode
+/.vs
+/aui
+/out/build/x64-Debug
+/CMakeSettings.json
+wxstyledtextctrl
+out

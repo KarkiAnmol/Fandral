@@ -1,4 +1,4 @@
-#include "app.h"
+#include "app.hpp"
 
 #include "wx/stc/stc.h"
 

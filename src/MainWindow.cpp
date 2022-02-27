@@ -1,6 +1,6 @@
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "wx/notebook.h"
-#include "tab.h"
+#include "tab.hpp"
 #include "memory"
 #include <string>
 

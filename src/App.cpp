@@ -1,6 +1,6 @@
 
-#include "app.h"
-#include "mainwindow.h"     //For MyFrame class
+#include "app.hpp"
+#include "mainwindow.hpp"     //For MyFrame class
 #include "wx/splash.h"
 
 #ifdef __WXMSW__
