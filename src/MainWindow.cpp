@@ -16,6 +16,8 @@
 MyFrame::MyFrame(const wxString &title)
     : wxFrame(NULL, wxID_ANY, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
+    this->Center(wxBOTH);
+
     //The main panel on top of the main window
     wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT, MAIN_WINDOW_HEIGHT), 0l,  "Main Panel");
     
