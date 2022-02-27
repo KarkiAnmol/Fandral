@@ -1,5 +1,6 @@
 #include "tab.h"
 #include "memory"
+#include "textctrl.hpp"
 
 #ifdef __WXMSW__
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
@@ -9,11 +10,7 @@ std::vector<Tab> Tab::activeTabs;
 
 Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
 {
-    this->textCtrl = new wxStyledTextCtrl(notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_RICH, tabName);
-    textCtrl->SetFont(frame.myFont);
-    textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
-    textCtrl->SetBackgroundColour(frame.textBoxBackgroundColor);
+    this->textCtrl = new TextCtrl(notebook, wxID_ANY, tabName);
 
     notebook->AddPage(textCtrl, tabName, true);
     this->index = this->activeTabs.size();
@@ -25,11 +22,7 @@ Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wx
 
 Tab::Tab(wxNotebook *notebook, const wxString& tabName, const MyFrame& frame)
 {
-    this->textCtrl = new wxStyledTextCtrl(notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_RICH, tabName);
-    textCtrl->SetFont(frame.myFont);
-    textCtrl->SetForegroundColour(frame.textBoxForegroundColor);
-    textCtrl->SetBackgroundColour(frame.textBoxBackgroundColor);
+    this->textCtrl = new TextCtrl(notebook, wxID_ANY, tabName);
 
     notebook->AddPage(textCtrl, tabName, true);
     this->index = this->activeTabs.size();
