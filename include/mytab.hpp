@@ -1,12 +1,12 @@
-#if defined _TAB_H_==0  //_TAB_H_
-#define _TAB_H_ 1
+#if defined _MY_TAB_H_==0  //_TAB_H_
+#define _MY_TAB_H_ 1
 
 #include "mainwindow.hpp"
 #include "memory"
 
 #include "wx/notebook.h"
 
-//Class Tab
+//Class MyTab
 //The tab here is to mimic a particular tab in any app.
 //it only contains a text contorl (text area) for now
 //tab has the filepath of the file loaded in it,
@@ -15,11 +15,13 @@
 //The notebook which it belongs to
 //(here we only use single notebook in a frame, so this maybe useful in future but not for now)
 //and finally a static vector to store the loaded tabs. this is useful for saving and loading purposes
-class Tab
+class MyTab
 {
-private:
+public:
+    //data members
+
     //Static vector to store all the tabs
-    static std::vector<Tab> activeTabs;
+    static std::vector<MyTab> activeTabs;
 
     //path of the loaded file
     wxString filePath=_(" ");
@@ -36,22 +38,21 @@ private:
     //text area which is inside the particular tab
     TextCtrl* textCtrl;
 
-public:
     //constructors
 
     //Creates a tab in the frame with name and without any file path.
-    Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame);
+    MyTab(wxNotebook* notebook, const wxString& tabName);
 
     //For creating a tab in the frame with file path and
     //also provides option to load the file present in the filepath into tab
-    Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wxString filePath, bool load);
+    MyTab(wxNotebook* notebook, const wxString& tabName, wxString filePath, bool load);
 
     //getters
     wxString getFilePath();
     wxString getTabName();
     int getIndex();
     wxNotebook* getNotebook();
-    static std::vector<Tab>& getActiveTabsVector();
+    static std::vector<MyTab>& getActiveTabsVector();
 
     //setters
     void setFilePath(const wxString& filePath);
@@ -67,20 +68,20 @@ public:
     //here pointer is returned to make it possible to return nullptr 
     //if by any chance no tab is selected
     //(filter this behaviour accordingly).
-    static Tab* getCurrentlySelectedTab(MyFrame& frame);
+    static MyTab* getCurrentlySelectedTab();
 
     //method to return the currently active text area (text ctrl)
     //here pointer is returned to make it possible to return nullptr 
     //if by any chance no text box is active(consequence of being no tab active)
     //(filter this behaviour accordingly)
-    TextCtrl* getCurrentlyActiveTextBox(MyFrame& frame);
+    TextCtrl* getCurrentlyActiveTextBox();
 
     //static method to return the filepath of the currently active text area (text ctrl)
-    static wxString getCurrentlyActiveFilePath(MyFrame& frame);
+    static wxString getCurrentlyActiveFilePath();
 
     //sets the given tab as active one
-    void setAsActive(MyFrame& frame);
+    void setAsActive();
 
 };
 
-#endif //_TAB_H_
+#endif //_MY_TAB_H_

@@ -25,7 +25,7 @@ set(SRCS "src/App.cpp")
 
 #append lists to add files for main window
 list(APPEND SRCS "src/MainWindow.cpp")
-list(APPEND SRCS "src/Tab.cpp")
+list(APPEND SRCS "src/MyTab.cpp")
 list(APPEND SRCS "src/TextCtrl.cpp")
 
 if (APPLE)
