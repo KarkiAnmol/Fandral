@@ -19,11 +19,7 @@
 
 #include "AppConfig.h"
 
-#include "wx/notebook.h"
-
-//For the text box
-#include <wx/textctrl.h>
-#include "wx/stc/stc.h"
+#include "textctrl.hpp"
 
 //For position of main window
 #define DISPLAY_DIMENSIONS wxGetDisplaySize()
@@ -104,7 +100,7 @@ public:
 
     //To handel nullptr properly and get a valid text box.
     //Returns reference to currently active text box or a dummy one.
-    wxStyledTextCtrl& getCurrentlyActiveTextBox();
+    TextCtrl& getCurrentlyActiveTextBox();
 
 private:
     // any class wishing to process wxWidgets events must use this macro
