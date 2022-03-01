@@ -144,7 +144,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
           *correct:   PNG files (*.png)|*.png
           *incorrect: PNG files (*.png)| *.png
          **/
-        "txt files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md",
+        "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md",
         "Fandral",
         this);
 
@@ -182,10 +182,10 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //else new tab is opened providing the new location as the file path of that tab
     else
     {   
-        std::shared_ptr<Tab> tab(new Tab(mainNotebook,  _("Tab") + std::to_string(Tab::getActiveTabsVector().size() + 1), *this, openLocation, 1));
+        std::shared_ptr<Tab> tab(new Tab(mainNotebook,  _T("Untitled"), *this, openLocation, 1));
         tab->addToActiveTabs();
+        this->getCurrentlyActiveTextBox().updateNameLabel(openLocation);
     }
-
 }
 
 void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
@@ -193,37 +193,9 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
     MyFrame::OnSave();
 }
 
-
 void MyFrame::OnSave()
 {
-    wxString saveLocation;
-
-    /**Opens native file explorer dialog box to select saving location
-     * if the file isn't saved previously or new file is open 
-     **/
-    if(Tab::getCurrentlySelectedTab(*this)->getFilePath().Cmp(wxString(" "))==0)
-    {
-        saveLocation = wxSaveFileSelector(
-            "the current text",
-            "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
-            "Fandral",
-            this);
-         //Modifying the filepath of the tab object
-        Tab::getCurrentlySelectedTab(*this)->setFilePath(saveLocation);
-    }
-    else
-    {
-        //sets saveLocation to currently open file save location if it's known.
-        saveLocation = Tab::getCurrentlyActiveFilePath(*this).Clone();
-    }
-
-    this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
-
-    //Show status for completion of save operation
-    PushStatusText("Saved File successfully", 0);
-
-    //sleep(5);     //Need to figure out another way to keep status message for some time.
-    PopStatusText();
+    this->getCurrentlyActiveTextBox()._SaveFile();
 }
 
 void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
@@ -248,22 +220,7 @@ void MyFrame::OnNew(wxCommandEvent &event)
 
 void MyFrame::OnSaveAs()
 {
-    //Opens native file explorer dialog box to select saving location
-    wxString saveLocation = wxSaveFileSelector(
-        "the current text",
-        "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
-        "Fandral",
-        this);
-
-    //Modifying the filepath of the tab object
-    Tab::getCurrentlySelectedTab(*this)->setFilePath(saveLocation);
-
-    this->getCurrentlyActiveTextBox().SaveFile(saveLocation);
-
-    //Show status for completion of save operation
-    PushStatusText("Saved File successfully", 0);
-    //sleep(5);
-    PopStatusText();
+    this->getCurrentlyActiveTextBox()._SaveFileAs();
 }
 
 void MyFrame::OnClose(wxCloseEvent &event)
@@ -297,7 +254,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
     }
 }
 
-wxStyledTextCtrl& MyFrame::getCurrentlyActiveTextBox()
+TextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
     if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this)!= nullptr)
     {
@@ -310,7 +267,7 @@ wxStyledTextCtrl& MyFrame::getCurrentlyActiveTextBox()
                  wxOK|wxICON_INFORMATION,
                  this);
 
-        std::shared_ptr<wxStyledTextCtrl> dummyOne(new wxStyledTextCtrl(NULL, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0L, "Dummy One"));
+        std::shared_ptr<TextCtrl> dummyOne(new TextCtrl(NULL, wxID_ANY, "Dummy one"));
         return *dummyOne;
     }
 }
