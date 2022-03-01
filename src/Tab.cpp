@@ -14,6 +14,7 @@ Tab::Tab(wxNotebook* notebook, const wxString& tabName, const MyFrame& frame, wx
 
     notebook->AddPage(textCtrl, tabName, true);
     this->index = this->activeTabs.size();
+
     if(load)
     {
         textCtrl->LoadFile(filePath);
@@ -61,7 +62,7 @@ Tab* Tab::getCurrentlySelectedTab(MyFrame& frame)
     return nullptr;
 }
 
-wxStyledTextCtrl* Tab::getCurrentlyActiveTextBox(MyFrame& frame)
+TextCtrl* Tab::getCurrentlyActiveTextBox(MyFrame& frame)
 {
     if(Tab::getCurrentlySelectedTab(frame)!=nullptr)
     {
