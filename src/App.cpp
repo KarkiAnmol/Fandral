@@ -20,8 +20,8 @@ bool App::OnInit()
 {
     // call the base class initialization method, currently it only parses a
     // few common command-line options but it could be do more in the future
-    if ( !wxApp::OnInit() )
-        return false;
+    /*if ( !wxApp::OnInit() )
+        return false;*/
 
     wxString title;
     title = wxString::Format("Fandral Editor  V %d.%d    ",
