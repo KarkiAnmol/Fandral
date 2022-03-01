@@ -44,7 +44,6 @@ configure_file(include/AppConfig.h.in AppConfig.h)
 
 target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}" PUBLIC include)
 
-#Uncomment this after you have found a way to include wxWidgets library
 find_package(wxWidgets REQUIRED gl core base stc OPTIONAL_COMPONENTS net)
 
 include(${wxWidgets_USE_FILE})
