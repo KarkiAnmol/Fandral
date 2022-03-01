@@ -4,7 +4,7 @@
 
 #include "textctrl.hpp"
 
-#include "tab.hpp"
+#include "mytab.hpp"
 
 TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
     : wxStyledTextCtrl(parentNotebook, wx_ID, wxDefaultPosition, wxDefaultSize,
@@ -166,14 +166,13 @@ wxString TextCtrl::updateNameLabel(const wxString &fileLocation)
 
 bool TextCtrl::updateTabFilePaths()
 {
-    for(Tab& t: Tab::getActiveTabsVector())
+    for(MyTab& t: MyTab::getActiveTabsVector())
     {
-        if(t.getCurrentlyActiveTextBox() == *this)
+        if(t.getCurrentlyActiveTextBox() == this)
         {
             t.setFilePath(this->filePath);
-            break;
+            return 1;
         }
     }
-
-    return 1;
+    return 0;
 }

@@ -1,6 +1,6 @@
 #include "mainwindow.hpp"
 #include "wx/notebook.h"
-#include "tab.hpp"
+#include "mytab.hpp"
 #include "memory"
 #include <string>
 
@@ -27,7 +27,7 @@ MyFrame::MyFrame(const wxString &title)
     //Notebook for managing windows with tabs
     this->mainNotebook = new wxNotebook(mainPanel, wxID_ANY);
 
-    std::shared_ptr<Tab> firstTab(new Tab(mainNotebook, "First Tab", *this));
+    std::shared_ptr<MyTab> firstTab(new MyTab(mainNotebook, "Untitled"));
     firstTab->addToActiveTabs();
 
     //sizer for notebook
@@ -151,7 +151,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //For checking if the file is already open in one of the tabs
     bool alreadyOpened=0;
     wxString path;
-    for(Tab& t: Tab::getActiveTabsVector())
+    for(MyTab& t: MyTab::getActiveTabsVector())
     {
         if(t.getFilePath().Cmp(openLocation)==0)
         {
@@ -159,7 +159,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
             path = t.getFilePath().Clone();
 
             //This will set the matching tab as active. Useful for loading text in the same text box below.
-            t.setAsActive(*this);
+            t.setAsActive();
             break;
         }
     }
@@ -182,7 +182,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //else new tab is opened providing the new location as the file path of that tab
     else
     {   
-        std::shared_ptr<Tab> tab(new Tab(mainNotebook,  _T("Untitled"), *this, openLocation, 1));
+        std::shared_ptr<MyTab> tab(new MyTab(mainNotebook,  _T("Untitled"), openLocation, 1));
         tab->addToActiveTabs();
         this->getCurrentlyActiveTextBox().updateNameLabel(openLocation);
     }
@@ -212,9 +212,9 @@ void MyFrame::OnNewWindow(wxCommandEvent &event)
 
 void MyFrame::OnNew(wxCommandEvent &event)
 {
-    int newTabNumber = Tab::getActiveTabsVector().size() + 1;
-    Tab* newTab = new Tab(this->mainNotebook,
-    std::string("Tab") + std::to_string(newTabNumber), *this);
+    int newTabNumber = MyTab::getActiveTabsVector().size() + 1;
+    MyTab* newTab = new MyTab(this->mainNotebook,
+    std::string("Tab") + std::to_string(newTabNumber));
     newTab->addToActiveTabs();
 }
 
@@ -225,7 +225,7 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-    if((Tab::getCurrentlySelectedTab(*this)->getFilePath()).Cmp(wxString(" "))==0)
+    if((MyTab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
     {
         if(event.CanVeto()){event.Veto();}
         int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
@@ -256,9 +256,9 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 TextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
-    if(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this)!= nullptr)
+    if(MyTab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!= nullptr)
     {
-        return *(Tab::getActiveTabsVector().front().getCurrentlyActiveTextBox(*this));
+        return *(MyTab::getActiveTabsVector().front().getCurrentlyActiveTextBox());
     }
     else
     {
