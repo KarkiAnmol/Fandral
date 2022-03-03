@@ -16,6 +16,7 @@
 MyFrame::MyFrame(const wxString &title)
     : wxFrame(NULL, wxID_ANY, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
 {
+
     this->Center(wxBOTH);
 
     //The main panel on top of the main window
@@ -59,7 +60,7 @@ MyFrame::MyFrame(const wxString &title)
     fileMenu->Append(Save_File, "Save\tCtrl-S", "Save the current file");
     fileMenu->Append(Save_File_As, "Save As", "Save the file as");
     fileMenu->Append(Editor_Quit, "E&xit\tAlt-X", "Quit this program");
-
+    fileMenu->Append(Editor_Quit, "Settings", "Open Settings");
     // create edit menu
     wxMenu *editMenu = new wxMenu;
     editMenu->Append(Find_Item, "&Find\tCtrl-F", "Find Items");
