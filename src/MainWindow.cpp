@@ -144,7 +144,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
           *correct:   PNG files (*.png)|*.png
           *incorrect: PNG files (*.png)| *.png
          **/
-        "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md",
+        "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md| CPP files (*.cpp)|*.cpp",
         "Fandral",
         this);
 
