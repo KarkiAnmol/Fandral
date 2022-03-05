@@ -213,8 +213,7 @@ void MyFrame::OnNewWindow(wxCommandEvent &event)
 void MyFrame::OnNew(wxCommandEvent &event)
 {
     int newTabNumber = MyTab::getActiveTabsVector().size() + 1;
-    MyTab* newTab = new MyTab(this->mainNotebook,
-    std::string("Tab") + std::to_string(newTabNumber));
+    MyTab* newTab = new MyTab(this->mainNotebook, _T("Untitled"));
     newTab->addToActiveTabs();
 }
 
