@@ -104,6 +104,23 @@ void TextCtrl::KeyEvent(wxKeyEvent &event)
     else // No Unicode equivalent.
     {
         // It's a special key, deal with all the known ones:
+
+        int keyCode = event.GetKeyCode();
+        switch(keyCode)
+        {
+            case WXK_LEFT: // Left arrow key
+                this->CharLeft();
+                break;
+            case WXK_RIGHT: // Right arrow key
+                this->CharRight();
+                break;
+            case WXK_UP:    // Up arrow key
+                this->LineUp();
+                break;
+            case WXK_DOWN:  // Down arrow key
+                this->LineDown();
+                break;
+        }
     }
     return;
 };
