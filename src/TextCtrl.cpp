@@ -17,18 +17,60 @@ TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString 
     // Initially setting it to be editable
     this->SetEditable(true);
 
-    // setting the initial styles
+    // Setting the default style, this will also be set when all styles are cleared
 
+    //background color of the text area
+    this->StyleSetBackground(wxSTC_STYLE_DEFAULT, wxColour(21, 21, 24, 0.2));
+
+    //foreground color of the text area
+    this->StyleSetForeground(wxSTC_STYLE_DEFAULT, wxColor("#F2F2F7FF"));
+
+    //foreground color of the caret
+    this->SetCaretForeground(wxColor("#F2F2F7FF"));
+
+    //font of the text inside text area
+    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(13, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+
+    //clearing previous styles and setting to default ones
     this->StyleClearAll();
 
-    // line numbers
+    // creating line numbers margin to the left
+    // and setting up it's styles
 
     this->SetMarginWidth(MARGIN_LINE_NUMBERS, 25);
 
-    this->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(75, 75, 75));
-    this->StyleSetBackground(wxSTC_STYLE_LINENUMBER, wxColour(220, 220, 220));
+    this->StyleSetForeground(wxSTC_STYLE_LINENUMBER, this->StyleGetForeground(wxSTC_STYLE_DEFAULT));
+    this->StyleSetBackground(wxSTC_STYLE_LINENUMBER, this->StyleGetBackground(wxSTC_STYLE_DEFAULT));
+    this->StyleSetFont(wxSTC_STYLE_LINENUMBER, this->StyleGetFont(wxSTC_STYLE_DEFAULT));
+    this->StyleSetSize(wxSTC_STYLE_LINENUMBER, 9);
 
     this->SetMarginType(MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
+
+
+    //code highlighting
+
+    //setting initially as cpp
+    this->SetLexer(wxSTC_LEX_CPP);
+    
+        this->StyleSetForeground (wxSTC_C_STRING,            wxColour("YELLOW"));
+        this->StyleSetForeground (wxSTC_C_PREPROCESSOR,      wxColour("PINK"));
+        this->StyleSetForeground (wxSTC_C_IDENTIFIER,        wxColour("GREEN"));
+        this->StyleSetForeground (wxSTC_C_NUMBER,            wxColour("CYAN"));
+        this->StyleSetForeground (wxSTC_C_CHARACTER,         wxColour(150,242,89));
+        this->StyleSetForeground (wxSTC_C_WORD,              wxColour("BROWN"));
+        this->StyleSetForeground (wxSTC_C_WORD2,             wxColour(124, 124, 0));
+        this->StyleSetForeground (wxSTC_C_COMMENT,           wxColour(150,150,150));
+        this->StyleSetForeground (wxSTC_C_COMMENTLINE,       wxColour(150,150,150));
+        this->StyleSetForeground (wxSTC_C_COMMENTDOC,        wxColour(150,150,150));
+        this->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORD, wxColour(240,0,200));
+        this->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORDERROR, wxColour("RED"));
+        this->StyleSetBold(wxSTC_C_WORD, true);
+        this->StyleSetBold(wxSTC_C_WORD2, true);
+        this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
+
+        // sample list of keywords, I haven't included them all to keep it short...
+        this->SetKeyWords(0, wxT("return for while break continue"));
+        this->SetKeyWords(1, wxT("const int float void char double class struct static friend main"));
 }
 
 TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
