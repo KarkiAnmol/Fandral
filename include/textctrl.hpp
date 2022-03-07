@@ -4,7 +4,7 @@
 #include "app.hpp"
 
 #include "wx/stc/stc.h"
-#include "wx/notebook.h"
+#include <wx/aui/auibook.h>
 
 class TextCtrl: public wxStyledTextCtrl{
 public:
@@ -14,14 +14,14 @@ public:
     wxString filePath=_T("");
 
     //Keeping track of the notebook which it belongs to
-    wxNotebook* parentNotebook;
+    wxAuiNotebook* parentNotebook;
 
     //constructors
     TextCtrl();
 
-    TextCtrl(wxNotebook* notebook, wxWindowID wx_ID, const wxString name);
+    TextCtrl(wxAuiNotebook* notebook, wxWindowID wx_ID, const wxString name);
 
-    TextCtrl(wxNotebook* notebook, wxWindowID wx_ID, const wxString filePath, const wxString name);
+    TextCtrl(wxAuiNotebook* notebook, wxWindowID wx_ID, const wxString filePath, const wxString name);
 
     //methods
 

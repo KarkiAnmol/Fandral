@@ -6,7 +6,7 @@
 
 #include "mytab.hpp"
 
-TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
+TextCtrl::TextCtrl(wxAuiNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
     : wxStyledTextCtrl(parentNotebook, wx_ID, wxDefaultPosition, wxDefaultSize,
                        wxTE_MULTILINE | wxTE_RICH, name), parentNotebook(parentNotebook)
 {
@@ -73,7 +73,7 @@ TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString 
         this->SetKeyWords(1, wxT("const int float void char double class struct static friend main"));
 }
 
-TextCtrl::TextCtrl(wxNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
+TextCtrl::TextCtrl(wxAuiNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
     : TextCtrl(parentNotebook, wx_ID, name)
 {
     this->filePath = filePath;

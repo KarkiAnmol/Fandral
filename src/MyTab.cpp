@@ -8,7 +8,7 @@
 
 std::vector<MyTab> MyTab::activeTabs;
 
-MyTab::MyTab(wxNotebook* notebook, const wxString& tabName, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
+MyTab::MyTab(wxAuiNotebook* notebook, const wxString& tabName, wxString filePath, bool load): notebook(notebook), tabName(tabName), filePath(filePath)
 {
     this->textCtrl = new TextCtrl(notebook, wxID_ANY, filePath, tabName);
 
@@ -21,7 +21,7 @@ MyTab::MyTab(wxNotebook* notebook, const wxString& tabName, wxString filePath, b
     }
 }
 
-MyTab::MyTab(wxNotebook *notebook, const wxString& tabName): notebook(notebook), tabName(tabName)
+MyTab::MyTab(wxAuiNotebook *notebook, const wxString& tabName): notebook(notebook), tabName(tabName)
 {
     this->textCtrl = new TextCtrl(notebook, wxID_ANY, tabName);
 
@@ -33,7 +33,7 @@ MyTab::MyTab(wxNotebook *notebook, const wxString& tabName): notebook(notebook),
 wxString MyTab::getFilePath() { return filePath.Clone(); }
 wxString MyTab::getTabName() { return tabName.Clone(); }
 int MyTab::getIndex() { return index; }
-wxNotebook* MyTab::getNotebook() { return this->notebook; }
+wxAuiNotebook* MyTab::getNotebook() { return this->notebook; }
 std::vector<MyTab>& MyTab::getActiveTabsVector(){ return activeTabs;}
 
 // setters
