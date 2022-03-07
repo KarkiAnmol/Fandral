@@ -8,6 +8,8 @@
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
+#include "modifiednotebook.hpp"
+
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
@@ -25,7 +27,7 @@ MyFrame::MyFrame(const wxString &title)
     mainPanel->SetBackgroundColour(wxColor(100, 100, 100));
 
     //Notebook for managing windows with tabs
-    this->mainNotebook = new wxAuiNotebook(mainPanel, wxID_ANY);
+    this->mainNotebook = new ModifiedNotebook(mainPanel, wxID_ANY);
 
     std::shared_ptr<MyTab> firstTab(new MyTab(mainNotebook, "Untitled"));
     firstTab->addToActiveTabs();

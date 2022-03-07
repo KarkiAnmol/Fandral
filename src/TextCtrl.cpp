@@ -6,7 +6,13 @@
 
 #include "mytab.hpp"
 
-TextCtrl::TextCtrl(wxAuiNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
+#include "modifiednotebook.hpp"
+
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
+
+TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
     : wxStyledTextCtrl(parentNotebook, wx_ID, wxDefaultPosition, wxDefaultSize,
                        wxTE_MULTILINE | wxTE_RICH, name), parentNotebook(parentNotebook)
 {
@@ -73,7 +79,7 @@ TextCtrl::TextCtrl(wxAuiNotebook* parentNotebook, wxWindowID wx_ID, const wxStri
         this->SetKeyWords(1, wxT("const int float void char double class struct static friend main"));
 }
 
-TextCtrl::TextCtrl(wxAuiNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
+TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
     : TextCtrl(parentNotebook, wx_ID, name)
 {
     this->filePath = filePath;

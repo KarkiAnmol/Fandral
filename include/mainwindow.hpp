@@ -21,6 +21,8 @@
 
 #include "textctrl.hpp"
 
+#include "modifiednotebook.hpp"
+
 //For position of main window
 #define DISPLAY_DIMENSIONS wxGetDisplaySize()
 #define FULL_WIDTH DISPLAY_DIMENSIONS.GetWidth()
@@ -87,7 +89,7 @@ public:
 
     //Setting one frame (app window) to use only one notebook
     //For now one frame will have only one notebook
-    wxAuiNotebook* mainNotebook;
+    ModifiedNotebook* mainNotebook;
 
     //For the background color of main text box
     wxColour textBoxBackgroundColor = wxColour(0.11, 0.11, 0.12, 1.0);

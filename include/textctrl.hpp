@@ -6,6 +6,8 @@
 #include "wx/stc/stc.h"
 #include <wx/aui/auibook.h>
 
+#include "modifiednotebook.hpp"
+
 class TextCtrl: public wxStyledTextCtrl{
 public:
     //Data members
@@ -14,14 +16,14 @@ public:
     wxString filePath=_T("");
 
     //Keeping track of the notebook which it belongs to
-    wxAuiNotebook* parentNotebook;
+    ModifiedNotebook* parentNotebook;
 
     //constructors
     TextCtrl();
 
-    TextCtrl(wxAuiNotebook* notebook, wxWindowID wx_ID, const wxString name);
+    TextCtrl(ModifiedNotebook* notebook, wxWindowID wx_ID, const wxString name);
 
-    TextCtrl(wxAuiNotebook* notebook, wxWindowID wx_ID, const wxString filePath, const wxString name);
+    TextCtrl(ModifiedNotebook* notebook, wxWindowID wx_ID, const wxString filePath, const wxString name);
 
     //methods
 

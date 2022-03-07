@@ -5,6 +5,7 @@
 #include "memory"
 
 #include <wx/aui/auibook.h>
+#include "modifiednotebook.hpp"
 
 //Class MyTab
 //The tab here is to mimic a particular tab in any app.
@@ -33,7 +34,7 @@ public:
     int index;
 
     //the wxNotebook control which the tab is associated to
-    wxAuiNotebook* notebook;
+    ModifiedNotebook* notebook;
 
     //text area which is inside the particular tab
     TextCtrl* textCtrl;
@@ -41,17 +42,17 @@ public:
     //constructors
 
     //Creates a tab in the frame with name and without any file path.
-    MyTab(wxAuiNotebook* notebook, const wxString& tabName);
+    MyTab(ModifiedNotebook* notebook, const wxString& tabName);
 
     //For creating a tab in the frame with file path and
     //also provides option to load the file present in the filepath into tab
-    MyTab(wxAuiNotebook* notebook, const wxString& tabName, wxString filePath, bool load);
+    MyTab(ModifiedNotebook* notebook, const wxString& tabName, wxString filePath, bool load);
 
     //getters
     wxString getFilePath();
     wxString getTabName();
     int getIndex();
-    wxAuiNotebook* getNotebook();
+    ModifiedNotebook* getNotebook();
     static std::vector<MyTab>& getActiveTabsVector();
 
     //setters
