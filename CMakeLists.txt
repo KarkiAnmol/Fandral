@@ -27,6 +27,7 @@ set(SRCS "src/App.cpp")
 list(APPEND SRCS "src/MainWindow.cpp")
 list(APPEND SRCS "src/MyTab.cpp")
 list(APPEND SRCS "src/TextCtrl.cpp")
+list(APPEND SRCS "src/ModifiedNotebook.cpp")
 
 if (APPLE)
     # create bundle on apple compiles
