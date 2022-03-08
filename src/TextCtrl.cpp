@@ -8,6 +8,8 @@
 
 #include "modifiednotebook.hpp"
 
+#include "codehighliter.hpp"
+
 #ifdef __WXMSW__
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -52,37 +54,16 @@ TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxS
 
     this->SetMarginType(MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
 
+    this->codehighliter = new CodeHighliter(this); 
 
-    //code highlighting
-
-    //setting initially as cpp
-    this->SetLexer(wxSTC_LEX_CPP);
-    
-        this->StyleSetForeground (wxSTC_C_STRING,            wxColour("YELLOW"));
-        this->StyleSetForeground (wxSTC_C_PREPROCESSOR,      wxColour("PINK"));
-        this->StyleSetForeground (wxSTC_C_IDENTIFIER,        wxColour("GREEN"));
-        this->StyleSetForeground (wxSTC_C_NUMBER,            wxColour("CYAN"));
-        this->StyleSetForeground (wxSTC_C_CHARACTER,         wxColour(150,242,89));
-        this->StyleSetForeground (wxSTC_C_WORD,              wxColour("BROWN"));
-        this->StyleSetForeground (wxSTC_C_WORD2,             wxColour(124, 124, 0));
-        this->StyleSetForeground (wxSTC_C_COMMENT,           wxColour(150,150,150));
-        this->StyleSetForeground (wxSTC_C_COMMENTLINE,       wxColour(150,150,150));
-        this->StyleSetForeground (wxSTC_C_COMMENTDOC,        wxColour(150,150,150));
-        this->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORD, wxColour(240,0,200));
-        this->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORDERROR, wxColour("RED"));
-        this->StyleSetBold(wxSTC_C_WORD, true);
-        this->StyleSetBold(wxSTC_C_WORD2, true);
-        this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
-
-        // sample list of keywords, I haven't included them all to keep it short...
-        this->SetKeyWords(0, wxT("return for while break continue"));
-        this->SetKeyWords(1, wxT("const int float void char double class struct static friend main"));
 }
 
 TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
     : TextCtrl(parentNotebook, wx_ID, name)
 {
     this->filePath = filePath;
+
+    this->updateNameLabel(filePath);
 }
 
 void TextCtrl::KeyEvent(wxKeyEvent &event)
@@ -226,6 +207,9 @@ wxString TextCtrl::updateNameLabel(const wxString &fileLocation)
 
     this->parentNotebook->SetPageText(this->parentNotebook->GetSelection(), fileNameWithExtension);
 
+    //Updating the highliter after each label update
+    this->codehighliter->setLex_Language(this->getAppropriateHighliter(this->filePath));
+
     return fileNameWithExtension;
 }
 
@@ -240,4 +224,34 @@ bool TextCtrl::updateTabFilePaths()
         }
     }
     return 0;
+}
+
+wxString TextCtrl::getFileExtension()
+{
+    wxString fileExtension = this->filePath.AfterLast(_T('.'));
+
+    return fileExtension;
+}
+
+int TextCtrl::getAppropriateHighliter(const wxString& fileExtension)
+{
+    wxString lowercaseFileExtension = fileExtension.AfterLast(_T('.'));
+    lowercaseFileExtension.LowerCase();
+
+    if(lowercaseFileExtension.compare(_T("cpp"))==0)
+    {
+        return wxSTC_LEX_CPP;
+    }
+    else if((lowercaseFileExtension.compare(_T("py"))==0))
+    {
+        return wxSTC_LEX_PYTHON;
+    }
+    else if((lowercaseFileExtension.compare(_T("c"))==0))
+    {
+        return wxSTC_LEX_CPP;
+    }
+    else
+    {
+        return -5;
+    }
 }

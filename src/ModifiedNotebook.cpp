@@ -14,6 +14,7 @@ ModifiedNotebook::ModifiedNotebook(wxWindow *parent, wxWindowID id)
 {
     this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &ModifiedNotebook::OnClose, this);
     this->SetMeasuringFont(wxFont(16, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    this->SetAutoLayout(true);
 }
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)

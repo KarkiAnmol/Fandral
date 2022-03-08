@@ -8,6 +8,8 @@
 
 #include "modifiednotebook.hpp"
 
+#include "codehighliter.hpp"
+
 class TextCtrl: public wxStyledTextCtrl{
 public:
     //Data members
@@ -40,6 +42,16 @@ public:
     //Taking the correct one from textctrl
     //this is done after each save and saveas operation
     bool updateTabFilePaths();
+
+    //for syntax highliting with one highliter object in each textctrl
+    CodeHighliter* codehighliter;
+
+    //Returns the extension of currently open file (if path is set)
+    wxString getFileExtension();
+
+    //This will return the appropriate syntax highliter if available
+    //The highliting is done according to fileExtension
+    int getAppropriateHighliter(const wxString& fileExtension);
 
 private:
     //Event handlers
