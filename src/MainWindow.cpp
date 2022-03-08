@@ -186,7 +186,6 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     {   
         std::shared_ptr<MyTab> tab(new MyTab(mainNotebook,  _T("Untitled"), openLocation, 1));
         tab->addToActiveTabs();
-        this->getCurrentlyActiveTextBox().updateNameLabel(openLocation);
     }
 }
 
