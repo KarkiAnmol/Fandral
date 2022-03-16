@@ -25,6 +25,10 @@ TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxS
     // Initially setting it to be editable
     this->SetEditable(true);
 
+    // Setting tabs spacing equal to 4 spaces
+    // This should be handled as per user's requirement in the future
+    this->SetTabWidth(4);
+
     // Setting the default style, this will also be set when all styles are cleared
 
     //background color of the text area
@@ -37,7 +41,7 @@ TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxS
     this->SetCaretForeground(wxColor("#F2F2F7FF"));
 
     //font of the text inside text area
-    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(13, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(11, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
     //clearing previous styles and setting to default ones
     this->StyleClearAll();
