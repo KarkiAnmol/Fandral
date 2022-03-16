@@ -98,7 +98,7 @@ public:
     wxColour textBoxForegroundColor =  wxColour("#F2F2F7FF");
 
     //For setting the font style and size for text inside text control
-    wxFont myFont = wxFont(14, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    //wxFont myFont = wxFont(MAIN_WINDOW_FONT_SIZE, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
     //To handel nullptr properly and get a valid text box.
     //Returns reference to currently active text box or a dummy one.
