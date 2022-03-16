@@ -1,4 +1,4 @@
-#include "CodeHighliter.hpp"
+#include "codehighliter.hpp"
 
 CodeHighliter::CodeHighliter(wxStyledTextCtrl* textctrl): textctrl(textctrl){};
 
