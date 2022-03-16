@@ -174,7 +174,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
                  wxYES_NO|wxICON_INFORMATION,
                  this);
         //if confirmed the open file will be overidden by the file in the path
-        if(confirm==2)
+        if(confirm==wxYES)
         {
             //The condition to check if the file is already open would already have set the matching textctrl as the active one.
             //So, this will override that tab(text area) not the other ones.
@@ -237,8 +237,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
         ** For some reason the return value of wxMessageBox **
         ** is 2 for yes, 8 for no and 16 for cancel         **
         *****************************************************/
-
-        if(confirm == 2)  
+        if(confirm == wxYES)   
         { 
             this->Destroy();
         }
