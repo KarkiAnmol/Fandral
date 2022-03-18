@@ -1,6 +1,4 @@
-#include "mainwindow.hpp"
 #include "wx/notebook.h"
-#include "mytab.hpp"
 #include "memory"
 #include <string>
 
@@ -8,9 +6,11 @@
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
-#include "modifiednotebook.hpp"
+#include "mainwindow.hpp"
 
+#include "modifiednotebook.hpp"
 #include "textctrl.hpp"
+#include "mytab2.hpp"
 
 // ----------------------------------------------------------------------------
 // main frame
@@ -32,7 +32,6 @@ MyFrame::MyFrame(const wxString &title)
     this->mainNotebook = new ModifiedNotebook(mainPanel, wxID_ANY);
 
     std::shared_ptr<MyTab> firstTab(new MyTab(mainNotebook, "Untitled"));
-    firstTab->addToActiveTabs();
 
     //sizer for notebook
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -155,15 +154,15 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //For checking if the file is already open in one of the tabs
     bool alreadyOpened=0;
     wxString path;
-    for(MyTab& t: MyTab::getActiveTabsVector())
+    for(MyTab* tab: this->mainNotebook->openedTabsVector)
     {
-        if(t.getFilePath().Cmp(openLocation)==0)
+        if(tab->filePath.Cmp(openLocation)==0)
         {
             alreadyOpened=1;
-            path = t.getFilePath().Clone();
+            path = tab->filePath.Clone();
 
             //This will set the matching tab as active. Useful for loading text in the same text box below.
-            t.setAsActive();
+            tab->setAsActive();
             break;
         }
     }
@@ -187,7 +186,6 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     else
     {   
         std::shared_ptr<MyTab> tab(new MyTab(mainNotebook,  _T("Untitled"), openLocation, 1));
-        tab->addToActiveTabs();
     }
 }
 
@@ -215,9 +213,7 @@ void MyFrame::OnNewWindow(wxCommandEvent &event)
 
 void MyFrame::OnNew(wxCommandEvent &event)
 {
-    int newTabNumber = MyTab::getActiveTabsVector().size() + 1;
     MyTab* newTab = new MyTab(this->mainNotebook, _T("Untitled"));
-    newTab->addToActiveTabs();
 }
 
 void MyFrame::OnSaveAs()
@@ -227,7 +223,7 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-    if((MyTab::getCurrentlySelectedTab()->getFilePath()).Cmp(wxString(" "))==0)
+    if((this->mainNotebook->getCurrentlyActiveTab()->filePath).Cmp(_T("-NONE-"))==0)
     {
         if(event.CanVeto()){event.Veto();}
         int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
@@ -257,9 +253,9 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 TextCtrl& MyFrame::getCurrentlyActiveTextBox()
 {
-    if(MyTab::getActiveTabsVector().front().getCurrentlyActiveTextBox()!= nullptr)
+    if(this->mainNotebook->getCurrentlyActiveTab()->textCtrl)
     {
-        return *(MyTab::getActiveTabsVector().front().getCurrentlyActiveTextBox());
+        return *(mainNotebook->getCurrentlyActiveTab()->textCtrl);
     }
     else
     {

@@ -26,7 +26,7 @@ public:
     //Data members
 
     //For keeping track of the savelocation and openlocation
-    wxString filePath=_T("");
+    wxString filePath=_T("-NONE-");
 
     //Keeping track of the notebook which it belongs to
     ModifiedNotebook* parentNotebook;

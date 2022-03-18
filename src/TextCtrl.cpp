@@ -7,7 +7,7 @@
 
 #include "textctrl.hpp"
 
-#include "mytab.hpp"
+#include "mytab2.hpp"
 #include "modifiednotebook.hpp"
 #include "codehighliter.hpp"
 
@@ -162,7 +162,7 @@ void TextCtrl::_SaveFile()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open
      **/
-    if (this->filePath.Cmp(_T("")) == 0)
+    if (this->filePath.Cmp(_T("-NONE-")) == 0)
     {
         this->_SaveFileAs();
         return;
@@ -216,11 +216,11 @@ wxString TextCtrl::updateNameLabel(const wxString &fileLocation)
 
 bool TextCtrl::updateTabFilePaths()
 {
-    for(MyTab& t: MyTab::getActiveTabsVector())
+    for(MyTab* tab: parentNotebook->openedTabsVector)
     {
-        if(t.getCurrentlyActiveTextBox() == this)
+        if(tab->textCtrl == this)
         {
-            t.setFilePath(this->filePath);
+            tab->filePath = this->filePath;
             return 1;
         }
     }
