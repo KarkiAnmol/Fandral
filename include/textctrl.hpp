@@ -1,14 +1,25 @@
 #if defined _TEXT_CTRL_HPP_==0
 #define _TEXT_CTRL_HPP_ 1
 
-#include "app.hpp"
+// For compilers that support precompilation, includes "wx/wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+    #pragma hdrstop
+#endif
+
+// for all others, include the necessary headers (this file is usually all you
+// need because it includes almost all "standard" wxWidgets headers)
+#ifndef WX_PRECOMP
+    #include "wx/wx.h"
+#endif
 
 #include "wx/stc/stc.h"
 #include <wx/aui/auibook.h>
 
-#include "modifiednotebook.hpp"
+class ModifiedNotebook;
+class CodeHighliter;
 
-#include "codehighliter.hpp"
 
 class TextCtrl: public wxStyledTextCtrl{
 public:

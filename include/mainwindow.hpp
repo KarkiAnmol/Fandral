@@ -19,9 +19,9 @@
 
 #include "AppConfig.h"
 
-#include "textctrl.hpp"
-
 #include "modifiednotebook.hpp"
+
+class TextCtrl;
 
 //For position of main window
 #define DISPLAY_DIMENSIONS wxGetDisplaySize()

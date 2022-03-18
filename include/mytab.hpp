@@ -1,11 +1,26 @@
 #if defined _MY_TAB_H_==0  //_TAB_H_
 #define _MY_TAB_H_ 1
 
-#include "mainwindow.hpp"
+// For compilers that support precompilation, includes "wx/wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+    #pragma hdrstop
+#endif
+
+// for all others, include the necessary headers (this file is usually all you
+// need because it includes almost all "standard" wxWidgets headers)
+#ifndef WX_PRECOMP
+    #include "wx/wx.h"
+#endif
+
 #include "memory"
 
 #include <wx/aui/auibook.h>
-#include "modifiednotebook.hpp"
+
+class ModifiedNotebook;
+class TextCtrl;
+
 
 //Class MyTab
 //The tab here is to mimic a particular tab in any app.

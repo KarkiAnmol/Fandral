@@ -1,18 +1,15 @@
-#include "app.hpp"
+
+#ifdef __WXMSW__
+    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 #include "wx/stc/stc.h"
 
 #include "textctrl.hpp"
 
 #include "mytab.hpp"
-
 #include "modifiednotebook.hpp"
-
 #include "codehighliter.hpp"
-
-#ifdef __WXMSW__
-    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
-#endif
 
 TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
     : wxStyledTextCtrl(parentNotebook, wx_ID, wxDefaultPosition, wxDefaultSize,

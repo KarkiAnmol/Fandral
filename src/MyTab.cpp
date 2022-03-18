@@ -1,6 +1,8 @@
-#include "mytab.hpp"
 #include "memory"
+
+#include "mytab.hpp"
 #include "textctrl.hpp"
+#include "modifiednotebook.hpp"
 
 #ifdef __WXMSW__
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
