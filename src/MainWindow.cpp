@@ -31,7 +31,7 @@ MyFrame::MyFrame(const wxString &title)
     //Notebook for managing windows with tabs
     this->mainNotebook = new ModifiedNotebook(mainPanel, wxID_ANY);
 
-    std::shared_ptr<MyTab> firstTab(new MyTab(mainNotebook, "Untitled"));
+    MyTab* firstTab = new MyTab(mainNotebook, "Untitled");
 
     //sizer for notebook
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);

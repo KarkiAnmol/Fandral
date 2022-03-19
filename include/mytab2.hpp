@@ -31,8 +31,8 @@ public:
     TextCtrl *textCtrl;
 
     //File path of the currently open file in textctrl
-    //This is set to be empty at first
-    //Setting it empty makes it easier to check if it has been saved before
+    //This is set to be "-NONE-" at first
+    //Setting it to "-NONE-" makes it easier to check if it has been saved before
     wxString filePath=_T("-NONE-");
 
     //Title or label of the tab (auinotebookpage)

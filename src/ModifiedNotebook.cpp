@@ -51,7 +51,7 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {   
     wxString filePath = this->getCurrentlyActiveTab()->filePath;
-    if((this->getCurrentlyActiveTab()->filePath).Cmp(_T("-NONE-"))==0)
+    if(filePath.Cmp(_T("-NONE-"))==0)
     {
         int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
                  "Confirm",
