@@ -206,7 +206,10 @@ wxString TextCtrl::updateNameLabel(const wxString &fileLocation)
 
     wxString fileNameWithExtension = tempFileLocation.AfterLast(_T('/'));
 
-    this->parentNotebook->SetPageText(this->parentNotebook->GetSelection(), fileNameWithExtension);
+    // Error in changing the name of tab can be here
+    // Due to error in GetPageIndex as the page may not be in notebook
+    // Handle this accordingly
+    this->parentNotebook->SetPageText(parentNotebook->GetPageIndex(this), fileNameWithExtension);
 
     //Updating the highliter after each label update
     this->codehighliter->setLex_Language(this->getAppropriateHighliter(this->filePath));

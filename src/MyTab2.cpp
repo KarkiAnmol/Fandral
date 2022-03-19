@@ -25,6 +25,9 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     
     if(load)
     {
+        // A hack for new opened files not being named when opened initially
+        textCtrl->updateNameLabel(filePath);
+
         textCtrl->LoadFile(filePath);
     }
 
