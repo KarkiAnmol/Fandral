@@ -32,6 +32,9 @@ public:
     //Just be sure to handle separate windows accordingly, if it gives exception
     std::vector<MyTab*> openedTabsVector;
 
+    //Returns the iterator at the posisition matching the given tab pointer in openedTabsVector
+    std::vector<MyTab*>::iterator iteratorAt(MyTab* tab);
+
     ModifiedNotebook();
 
     ModifiedNotebook(wxWindow* parent, wxWindowID id);
