@@ -50,31 +50,46 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {   
-    wxString filePath = this->getCurrentlyActiveTab()->filePath;
-    if(filePath.Cmp(_T("-NONE-"))==0)
+    MyTab* activeTab = this->getCurrentlyActiveTab();
+    if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
-        int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
-                 "Confirm",
-                 wxYES_NO|wxICON_INFORMATION,
-                 this);
+        //Only asks to save if the file isn't empty
+        if(!activeTab->textCtrl->IsEmpty())
+        {
+            int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
+                    "Confirm",
+                    wxYES_NO|wxICON_INFORMATION,
+                    this);
 
-        /*****************************************************
-        ** For some reason the return value of wxMessageBox **
-        ** is 2 for yes, 8 for no and 16 for cancel         **
-        *****************************************************/
+            /*****************************************************
+            ** For some reason the return value of wxMessageBox **
+            ** is 2 for yes, 8 for no and 16 for cancel         **
+            *****************************************************/
 
-       //If user wants to save file without saving then let the event proceed 
-       //else veto it and ask for save location
-        if(confirm == 8 || confirm == 16)   
-        { 
-           event.Veto();
-           this->getCurrentlyActiveTab()->textCtrl->_SaveFileAs();
+            //If user wants to save file without saving then let the event proceed 
+            //else veto it and ask for save location
+            if(confirm == 8)   
+            { 
+                event.Veto();
+                activeTab->textCtrl->_SaveFileAs();
+            }
+            else if(confirm == 16)
+            {
+                // Continue as if close button wasn't pressed if user cancels the dialog
+                event.Veto();
+            }
         }
-
     }
     else
     {
-        this->getCurrentlyActiveTab()->textCtrl->_SaveFile();
+        activeTab->textCtrl->_SaveFile();
+        //Removes the tab from the openedtabs vector after closing it
+        this->openedTabsVector.erase(this->iteratorAt(activeTab));
     }
+}
 
+std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
+{
+    std::vector<MyTab*>::iterator iterator = find(this->openedTabsVector.begin(), this->openedTabsVector.end(), tab);
+    return iterator;
 }
