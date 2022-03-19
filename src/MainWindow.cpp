@@ -167,7 +167,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
         }
     }
 
-    //if the file is already open then asks to ovveride it with old contents
+    //if the file is already open then asks to override it with old contents
     if (alreadyOpened)
     {
         int confirm = wxMessageBox(wxString::Format("The selected file is already open in other tab.\nDo you wish to override it ?"),
@@ -253,10 +253,13 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 event.Veto();
                 return;     //Continue as if close button wasn't pressed
             }
-            else
-            {   // This doesn't do anything. Just setting a place to 
-                // handle this alternatively
-                continue;
+            else if(confirm == 2)
+            {   
+                // Asks the tab to close itself
+                this->mainNotebook->GetPage(t->index)->Close();
+
+                // Erase the tab pointer from openedTabsVector
+                this->mainNotebook->openedTabsVector.erase(this->mainNotebook->iteratorAt(t));
             }
         }
     }

@@ -83,6 +83,10 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
     else
     {
         activeTab->textCtrl->_SaveFile();
+
+        // Ask the tab to close itself;
+        this->GetPage(activeTab->index)->Close();
+
         //Removes the tab from the openedtabs vector after closing it
         this->openedTabsVector.erase(this->iteratorAt(activeTab));
     }
