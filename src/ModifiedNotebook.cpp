@@ -79,6 +79,14 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
                 event.Veto();
             }
         }
+        else
+        {
+            // Ask the tab to close itself;
+            this->GetPage(activeTab->index)->Close();
+
+            //Removes the tab from the openedtabs vector after closing it
+            this->openedTabsVector.erase(this->iteratorAt(activeTab));
+        }
     }
     else
     {

@@ -262,6 +262,20 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 this->mainNotebook->openedTabsVector.erase(this->mainNotebook->iteratorAt(t));
             }
         }
+        else if(t->textCtrl->IsEmpty())
+        {
+            // Asks the tab to close itself
+            this->mainNotebook->GetPage(t->index)->Close();
+
+            // Erase the tab pointer from openedTabsVector
+            this->mainNotebook->openedTabsVector.erase(this->mainNotebook->iteratorAt(t));
+        }
+        else
+        {
+            // Save before closing
+            // This may be handled differently in the future
+            t->textCtrl->_SaveFile();
+        }
     }
 
     //The control will be here only if user decides not save any files
