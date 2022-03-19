@@ -185,7 +185,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
     //else new tab is opened providing the new location as the file path of that tab
     else
     {   
-        std::shared_ptr<MyTab> tab(new MyTab(mainNotebook,  _T("Untitled"), openLocation, 1));
+        MyTab* tab= new MyTab(mainNotebook,  _T("Untitled"), openLocation, 1);
     }
 }
 
@@ -223,32 +223,50 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-    if((this->mainNotebook->getCurrentlyActiveTab()->filePath).Cmp(_T("-NONE-"))==0)
+    for(MyTab* t: this->mainNotebook->openedTabsVector)
     {
-        if(event.CanVeto()){event.Veto();}
-        int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
-                 "Confirm",
-                 wxYES_NO|wxICON_INFORMATION,
-                 this);
+        if((t->filePath.Cmp("-NONE-")==0) && !(t->textCtrl->IsEmpty()))
+        {
+            //Setting the particular tab as active one
+            t->setAsActive();
 
-        /*****************************************************
-        ** For some reason the return value of wxMessageBox **
-        ** is 2 for yes, 8 for no and 16 for cancel         **
-        *****************************************************/
-        if(confirm == wxYES)   
-        { 
-            this->Destroy();
-        }
-        else{
-            this->OnSaveAs();
+            int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
+                    "Confirm",
+                    wxYES_NO|wxICON_INFORMATION,
+                    this);
+
+            /*****************************************************
+            ** For some reason the return value of wxMessageBox **
+            ** is 2 for yes, 8 for no and 16 for cancel         **
+            *****************************************************/
+
+            //If user wants to save file without saving then let the event proceed 
+            //else veto it and ask for save location
+            if(confirm == 8)   
+            { 
+                event.Veto();
+                t->textCtrl->_SaveFile();
+                return;     // Continue as if close button wasn't pressed
+            }
+            else if(confirm == 16)
+            {
+                event.Veto();
+                return;     //Continue as if close button wasn't pressed
+            }
+            else
+            {   // This doesn't do anything. Just setting a place to 
+                // handle this alternatively
+                continue;
+            }
         }
     }
-    else
-    {
-        this->OnSave();
 
-        this->Destroy();
-    }
+    //The control will be here only if user decides not save any files
+    //or all files are saved
+    //or all files which aren't saved are empty
+    //so destroying the frame here will be safe
+    this->Destroy();
+
 }
 
 TextCtrl& MyFrame::getCurrentlyActiveTextBox()
