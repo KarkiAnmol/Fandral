@@ -32,8 +32,16 @@ public:
     //Just be sure to handle separate windows accordingly, if it gives exception
     std::vector<MyTab*> openedTabsVector;
 
-    //Returns the iterator at the posisition matching the given tab pointer in openedTabsVector
+    // Returns the iterator at the posisition matching the given tab pointer in openedTabsVector
+    // If no match is found iterator pointing to the end of vector is returned
+    // which is no a valid element so, handle this accordingly
     std::vector<MyTab*>::iterator iteratorAt(MyTab* tab);
+
+    // Removes the tab pointer if it is found in the openedTabsVector
+    // Returns true(1) if the tab was removed successfully else returns false(0)
+    // This assumes that there is multiple occurance of the tab pointer
+    // but returns true even if only one tab could be removed from the vector
+    bool removeTabFromVector(MyTab* t);
 
     ModifiedNotebook();
 
@@ -49,6 +57,9 @@ public:
 
     //Returns the tab in which currently selected textctrl is contained
     MyTab* getCurrentlyActiveTab();
+
+    // Returns the tab at particular index
+    MyTab* getTabWithIndex(int index);
 
 private:
     // Handles the closign of a particular page (tab in our case)

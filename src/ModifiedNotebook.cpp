@@ -49,8 +49,8 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 }
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
-{   
-    MyTab* activeTab = this->getCurrentlyActiveTab();
+{
+    MyTab* activeTab = this->getTabWithIndex(event.GetSelection());
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
         //Only asks to save if the file isn't empty
@@ -79,24 +79,40 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
                 event.Veto();
             }
         }
-        else
-        {
-            // Ask the tab to close itself;
-            this->GetPage(activeTab->index)->Close();
+        else     // Since the event isn't vetoed, the page will close after we exit from here
+        { 
+            // Closes tab only if the tab was successfully removed from the vector
+            // Not being able to remove may imply that it's isn't a proper tab object
+            if(this->removeTabFromVector(activeTab))
+            {
+                activeTab->textCtrl->_SaveFile();
 
-            //Removes the tab from the openedtabs vector after closing it
-            this->openedTabsVector.erase(this->iteratorAt(activeTab));
+                //Sets immediate tab as the active one if there is any tab left
+                if(!openedTabsVector.empty())
+                {
+                    //Sets selection to next or previous page
+                    // trying to set page one after the closed one
+                    try
+                    {
+                        this->AdvanceSelection();
+                    }
+                    // trying to set page one before the closed one
+                    catch(const std::exception& e)
+                    {
+                        this->AdvanceSelection(false);
+                    }
+                }
+            }
         }
     }
-    else
+    else    // Since the event isn't vetoed, the page will close after we exit from here
     {
-        activeTab->textCtrl->_SaveFile();
-
-        // Ask the tab to close itself;
-        this->GetPage(activeTab->index)->Close();
-
-        //Removes the tab from the openedtabs vector after closing it
-        this->openedTabsVector.erase(this->iteratorAt(activeTab));
+        // Closes tab only if the tab was successfully removed from the vector
+        // Not being able to remove may imply that it's isn't a proper tab object
+        if(this->removeTabFromVector(activeTab))
+        {
+            activeTab->textCtrl->_SaveFile();
+        }
     }
 }
 
@@ -105,3 +121,41 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
     std::vector<MyTab*>::iterator iterator = find(this->openedTabsVector.begin(), this->openedTabsVector.end(), tab);
     return iterator;
 }
+
+ MyTab* ModifiedNotebook::getTabWithIndex(int index)
+ {
+    for(MyTab* t: this->openedTabsVector)
+    {
+        if(t->index==index)
+        {
+            return t;
+        }
+    }
+ }
+
+ bool ModifiedNotebook::removeTabFromVector(MyTab* t)
+ {
+     int returnValue;
+
+    std::vector<MyTab*>::iterator iteratorForRemovingTab = this->iteratorAt(t);
+
+    // For returning true if at least single occurance is found
+    if(iteratorForRemovingTab!=this->openedTabsVector.end())
+    { 
+        returnValue=1;
+    }
+    else 
+    {
+        returnValue=0;
+        return returnValue;
+    }
+
+    // Doing this recursively as there might be many occurance of the given data
+    while(iteratorForRemovingTab!=this->openedTabsVector.end())
+    {
+        this->openedTabsVector.erase(iteratorForRemovingTab);
+        std::vector<MyTab*>::iterator iteratorForRemovingTab = this->iteratorAt(t);
+    }
+    return returnValue;
+
+ }

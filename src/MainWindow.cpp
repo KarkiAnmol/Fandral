@@ -223,6 +223,14 @@ void MyFrame::OnSaveAs()
 
 void MyFrame::OnClose(wxCloseEvent &event)
 {
+    if(event.CanVeto())
+    {
+        // vetoing the event as we don't want it to create exceptions after we're done 
+        // with this method.
+        // If the window can be closed the Destroy() method should be called.
+        event.Veto();
+    }
+
     for(MyTab* t: this->mainNotebook->openedTabsVector)
     {
         if((t->filePath.Cmp("-NONE-")==0) && !(t->textCtrl->IsEmpty()))
@@ -240,41 +248,47 @@ void MyFrame::OnClose(wxCloseEvent &event)
             ** is 2 for yes, 8 for no and 16 for cancel         **
             *****************************************************/
 
-            //If user wants to save file without saving then let the event proceed 
-            //else veto it and ask for save location
+            //If user wants to close file without saving it then close the tab else
+            //ask for save location
             if(confirm == 8)   
             { 
-                event.Veto();
                 t->textCtrl->_SaveFile();
                 return;     // Continue as if close button wasn't pressed
             }
             else if(confirm == 16)
             {
-                event.Veto();
                 return;     //Continue as if close button wasn't pressed
             }
             else if(confirm == 2)
             {   
-                // Asks the tab to close itself
-                this->mainNotebook->GetPage(t->index)->Close();
-
-                // Erase the tab pointer from openedTabsVector
-                this->mainNotebook->openedTabsVector.erase(this->mainNotebook->iteratorAt(t));
+                // Closes tab only if the tab was successfully removed from the vector
+                // Not being able to remove may imply that it's isn't a proper tab object
+                if(this->mainNotebook->removeTabFromVector(t))
+                {
+                    // Here true is passed to force it to close
+                    // if nothing is passed or false is passed the window may not close
+                    this->mainNotebook->GetPage(t->index)->Close(true);
+                }
             }
         }
         else if(t->textCtrl->IsEmpty())
         {
-            // Asks the tab to close itself
-            this->mainNotebook->GetPage(t->index)->Close();
-
-            // Erase the tab pointer from openedTabsVector
-            this->mainNotebook->openedTabsVector.erase(this->mainNotebook->iteratorAt(t));
+            // Closes tab only if the tab was successfully removed from the vector
+            // Not being able to remove may imply that it isn't a proper tab object
+            if(this->mainNotebook->removeTabFromVector(t))
+            {
+                // Here true is passed to force it to close
+                // if nothing is passed or false is passed the window may not close
+                this->mainNotebook->GetPage(t->index)->Close(true);
+            }
         }
         else
         {
             // Save before closing
-            // This may be handled differently in the future
+            // Assumes that valid save location is set
+            // This may be handled differently depending upon the requirements
             t->textCtrl->_SaveFile();
+            this->mainNotebook->GetPage(t->index)->Close(true);
         }
     }
 
