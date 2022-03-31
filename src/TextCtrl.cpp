@@ -64,7 +64,11 @@ TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxS
 {
     this->filePath = filePath;
 
-    this->updateNameLabel(filePath);
+    //only update the name of the tab if filepath isn't empty
+    if(!filePath.compare("-NONE-")==0)
+    {
+        this->updateNameLabel(filePath);
+    }
 }
 
 void TextCtrl::KeyEvent(wxKeyEvent &event)
