@@ -25,8 +25,8 @@ bool App::OnInit()
 
     wxString title;
     title = wxString::Format("Fandral Editor  V %d.%d    ",
-        (int)Editor_VERSION_MAJOR,
-        (int)Editor_VERSION_MINOR);
+        (int)Fandral_Editor_VERSION_MAJOR,
+        (int)Fandral_Editor_VERSION_MINOR);
 
     // create the main application window
     MyFrame *frame = new MyFrame(title);

@@ -14,6 +14,6 @@ cd build
 cmake ../
 
 ::making the executables
-cmake --build . && Editor
+cmake --build . && FandralEditor
 
 cd ..

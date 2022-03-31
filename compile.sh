@@ -11,7 +11,7 @@ cd build
 cmake ../
 
 #building the app and launching the app if the builing succeeds
-cmake --build . && ./Editor
+cmake --build . && ./FandralEditor
 
 #Returning to project main directory
 cd ..

@@ -13,7 +13,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(wxWidgets_CONFIGURATION mswud)
 
 # set the project name
-project(Editor VERSION 0.2 LANGUAGES CXX C)
+project("FandralEditor" VERSION 0.3 LANGUAGES CXX C)
 
 # hack for buggy CMake's FindwxWidgets script
 if (DEFINED ENV_WX_CONFIG)
@@ -46,8 +46,10 @@ configure_file(include/AppConfig.h.in AppConfig.h)
 
 target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}" PUBLIC include)
 
-find_package(wxWidgets REQUIRED gl core base stc aui OPTIONAL_COMPONENTS net)
+find_package(wxWidgets REQUIRED gl aui core base stc OPTIONAL_COMPONENTS net)
 
-include(${wxWidgets_USE_FILE})
-
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+if(wxWidgets_FOUND)
+    include(${wxWidgets_USE_FILE})
+    #For building statically: target_link_libraries(${PROJECT_NAME}  "-static" ${wxWidgets_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+endif()

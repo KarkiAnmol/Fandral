@@ -9,8 +9,8 @@
 #if defined _APP_CONFIG_H_==0 // _APP_CONFIG_H_
 #define _APP_CONFIG_H_ 1
 
-#define Editor_VERSION_MAJOR @Editor_VERSION_MAJOR@
-#define Editor_VERSION_MINOR @Editor_VERSION_MINOR@
-#define PROJECT_ABSOLUTE_PATH "@PROJECT_ABSOLUTE_PATH@"
+#define Fandral_Editor_VERSION_MAJOR @FandralEditor_VERSION_MAJOR@
+#define Fandral_Editor_VERSION_MINOR @FandralEditor_VERSION_MINOR@
+#define Fandral_PROJECT_ABSOLUTE_PATH "@PROJECT_ABSOLUTE_PATH@"
 
 #endif // _APP_CONFIG_H_
