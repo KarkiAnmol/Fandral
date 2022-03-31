@@ -4,7 +4,7 @@
 #include "textctrl.hpp"
 
 MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle)
-: wxAuiNotebookPage(), parentNotebook(parentNotebook), tabTitle(tabTitle)
+: wxAuiNotebookPage(), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(_T("-NONE-"))
 {
     this->textCtrl = new TextCtrl(parentNotebook, wxID_ANY, tabTitle);
 
@@ -14,7 +14,7 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle)
 
 }
 
-MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath, bool load)
+MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath = _T("-NONE-"), bool load=false)
 :wxAuiNotebookPage(), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(filePath)
 {
     this->textCtrl = new TextCtrl(parentNotebook, wxID_ANY, filePath, tabTitle);
