@@ -29,6 +29,7 @@ list(APPEND SRCS "src/MyTab2.cpp")
 list(APPEND SRCS "src/TextCtrl.cpp")
 list(APPEND SRCS "src/ModifiedNotebook.cpp")
 list(APPEND SRCS "src/CodeHighliter.cpp")
+list(APPEND SRCS "src/CommandArea.cpp")
 
 if (APPLE)
     # create bundle on apple compiles

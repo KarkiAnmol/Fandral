@@ -15,33 +15,29 @@
 #endif
 
 #include "wx/stc/stc.h"
-#include <wx/aui/auibook.h>
 
 class ModifiedNotebook;
 class CodeHighliter;
-
+class MyTab;
 
 class TextCtrl: public wxStyledTextCtrl{
 public:
-    //Data members
 
-    //For keeping track of the savelocation and openlocation
-    wxString filePath=_T("-NONE-");
-
-    //Keeping track of the notebook which it belongs to
-    ModifiedNotebook* parentNotebook;
+    // The tab which it belongs to
+    MyTab* parentTab;
 
     //constructors
     TextCtrl();
 
-    TextCtrl(ModifiedNotebook* notebook, wxWindowID wx_ID, const wxString name);
-
-    TextCtrl(ModifiedNotebook* notebook, wxWindowID wx_ID, const wxString filePath, const wxString name);
+    TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name, const wxString filePath=_T("-NONE-"));
 
     //methods
 
-    //For updating the label of the tab
-    wxString updateNameLabel(const wxString& fileLocation);
+
+    MyTab* getParent()
+    {
+        return parentTab;
+    }
 
     //Saves the current file
     void _SaveFile();
@@ -49,16 +45,8 @@ public:
     //Performs save as operation
     void _SaveFileAs();
 
-    //updates the tab file paths to the correct one
-    //Taking the correct one from textctrl
-    //this is done after each save and saveas operation
-    bool updateTabFilePaths();
-
     //for syntax highliting with one highliter object in each textctrl
     CodeHighliter* codehighliter;
-
-    //Returns the extension of currently open file (if path is set)
-    wxString getFileExtension();
 
     //This will return the appropriate syntax highliter if available
     //The highliting is done according to fileExtension

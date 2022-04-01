@@ -10,11 +10,15 @@
 #include "mytab2.hpp"
 #include "modifiednotebook.hpp"
 #include "codehighliter.hpp"
+#include "wx/splitter.h"
+#include "commandarea.hpp"
 
-TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString name)
-    : wxStyledTextCtrl(parentNotebook, wx_ID, wxDefaultPosition, wxDefaultSize,
-                       wxTE_MULTILINE | wxTE_RICH, name), parentNotebook(parentNotebook)
+TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name, const wxString filePath)
+    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(800, 550), wxRESIZE_BORDER)
+    , parentTab(parentTab)
 {
+    // Setting the initial size and minimum size
+    this->SetInitialSize(wxSize(400, 350));
 
     // dynamically binding event handlers
     Bind(wxEVT_KEY_DOWN, &TextCtrl::KeyEvent, this);
@@ -59,21 +63,9 @@ TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxS
 
 }
 
-TextCtrl::TextCtrl(ModifiedNotebook* parentNotebook, wxWindowID wx_ID, const wxString filePath, const wxString name)
-    : TextCtrl(parentNotebook, wx_ID, name)
-{
-    this->filePath = filePath;
-
-    //only update the name of the tab if filepath isn't empty
-    if(!filePath.compare("-NONE-")==0)
-    {
-        this->updateNameLabel(filePath);
-    }
-}
-
 void TextCtrl::KeyEvent(wxKeyEvent &event)
 {
-
+    CommandArea* associatedCommandArea = this->getParent()->commandArea;
     wxChar uc = event.GetUnicodeKey();
     if (uc != WXK_NONE)
     {
@@ -90,6 +82,7 @@ void TextCtrl::KeyEvent(wxKeyEvent &event)
                 // this is only for now, the implementation might be different in future
                 case 73: // B --> 73
                     this->SetEditable(true);
+                    associatedCommandArea->AppendText("Entered into insertion mode.");
                     break;
 
                 // move cursor left
@@ -126,6 +119,7 @@ void TextCtrl::KeyEvent(wxKeyEvent &event)
             {
             // If escape key is pressed, enter into command mode
             case WXK_ESCAPE:
+                associatedCommandArea->AppendText("Entered into command mode.\n 'Press I to enter to insertion mode'");
                 this->SetEditable(false);
                 break;
             case WXK_CONTROL_S:
@@ -166,7 +160,7 @@ void TextCtrl::_SaveFile()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open
      **/
-    if (this->filePath.Cmp(_T("-NONE-")) == 0)
+    if (this->getParent()->filePath.Cmp(_T("-NONE-")) == 0)
     {
         this->_SaveFileAs();
         return;
@@ -174,11 +168,10 @@ void TextCtrl::_SaveFile()
     else
     {
         // sets saveLocation to currently open file save location if it's known.
-        saveLocation = this->filePath;
+        saveLocation = this->getParent()->filePath;
     }
     
     this->SaveFile(saveLocation);
-    this->updateNameLabel(saveLocation);
 }
 
 void TextCtrl::_SaveFileAs()
@@ -191,54 +184,9 @@ void TextCtrl::_SaveFileAs()
         this);
 
     // Modifying the filepath of the tab object
-    this->filePath = saveLocation;
+    this->getParent()->filePath = saveLocation;
 
     this->SaveFile(saveLocation);
-    this->updateNameLabel(saveLocation);
-}
-
-wxString TextCtrl::updateNameLabel(const wxString &fileLocation)
-{
-    this->updateTabFilePaths();
-    wxString tempFileLocation = fileLocation.Clone();
-
-// The file separator in windows will be '\\' so it is replaced with '\'
-#if defined __WXMSW__
-    // this will be file name only
-    tempFileLocation.Replace("\\", "/", true);
-#endif
-
-    wxString fileNameWithExtension = tempFileLocation.AfterLast(_T('/'));
-
-    // Error in changing the name of tab can be here
-    // Due to error in GetPageIndex as the page may not be in notebook
-    // Handle this accordingly
-    this->parentNotebook->SetPageText(parentNotebook->GetPageIndex(this), fileNameWithExtension);
-
-    //Updating the highliter after each label update
-    this->codehighliter->setLex_Language(this->getAppropriateHighliter(this->filePath));
-
-    return fileNameWithExtension;
-}
-
-bool TextCtrl::updateTabFilePaths()
-{
-    for(MyTab* tab: parentNotebook->openedTabsVector)
-    {
-        if(tab->textCtrl == this)
-        {
-            tab->filePath = this->filePath;
-            return 1;
-        }
-    }
-    return 0;
-}
-
-wxString TextCtrl::getFileExtension()
-{
-    wxString fileExtension = this->filePath.AfterLast(_T('.'));
-
-    return fileExtension;
 }
 
 int TextCtrl::getAppropriateHighliter(const wxString& fileExtension)

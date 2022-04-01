@@ -18,12 +18,12 @@
 
 // frame constructor
 MyFrame::MyFrame(const wxString &title)
-    : wxFrame(NULL, wxID_ANY, title, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT /*Making it square for now*/, MAIN_WINDOW_HEIGHT))
+    : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxDefaultSize)
 {
     this->Center(wxBOTH);
 
     //The main panel on top of the main window
-    wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxPoint(MAIN_WINDOW_POS_X, MAIN_WINDOW_POS_Y), wxSize(MAIN_WINDOW_HEIGHT, MAIN_WINDOW_HEIGHT), 0l,  "Main Panel");
+    wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0l,  "Main Panel");
     
     //This is make it possible to change colors of child widgets properly in all platforms
     mainPanel->SetBackgroundColour(wxColor(100, 100, 100));
@@ -42,6 +42,7 @@ MyFrame::MyFrame(const wxString &title)
     // according to its contents
     wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
     topSizer->Add(mainPanel, 1, wxEXPAND);
+    this->Fit();
     SetSizerAndFit(topSizer);
 
 #if wxUSE_MENUS
@@ -313,7 +314,7 @@ TextCtrl& MyFrame::getCurrentlyActiveTextBox()
                  wxOK|wxICON_INFORMATION,
                  this);
 
-        std::shared_ptr<TextCtrl> dummyOne(new TextCtrl(NULL, wxID_ANY, "Dummy one"));
+        std::shared_ptr<TextCtrl> dummyOne(new TextCtrl(NULL, NULL, wxID_ANY, "Dummy one"));
         return *dummyOne;
     }
 }

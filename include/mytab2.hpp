@@ -14,21 +14,25 @@
     #include "wx/wx.h"
 #endif
 
-#include "wx/aui/auibook.h"
-
 class ModifiedNotebook;
 class TextCtrl;
+class CommandArea;
+class wxAuiManager;
+class wxSplitterWindow;
 
 
-class MyTab: public wxAuiNotebookPage
+class MyTab: public wxWindow
 {
 public:
 
-    //The parent wxauinotebook which the page is contained in.
+    //The parent wxauinotebook which the tab is contained in.
     ModifiedNotebook *parentNotebook;
 
-    //The textctrl (inherited from wxstyledtextctrl) contained by the page
+    //The textctrl (inherited from wxstyledtextctrl) contained by the tab
     TextCtrl *textCtrl;
+
+    // The command area contained by the tab
+    CommandArea *commandArea;
 
     //File path of the currently open file in textctrl
     //This is set to be "-NONE-" at first
@@ -41,16 +45,21 @@ public:
     //index of the page (tab in this case) starting from zero.
     int index;
 
-    //Creates a tab contained in parentNotebook with name and without any file path.
-    MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle);
-
-    //For creating a tab contained in parentNotebook with file path and
-    //also provides option to load the file present in the filepath into tab
-    MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle, wxString filePath, bool load);
+    // For creating a tab contained in parentNotebook with file path and
+    // also provides option to load the file present in the filepath into tab
+    //
+    // The tab is automatically added to parentNotebook as page.
+    MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle, wxString filePath=_T("-NONE_"), bool load=false);
 
     //Sets the particular tab as active one
     //Specifically setting the textctrl contained inside the tab as active one
     void setAsActive();
+
+    //Closes the tab
+    bool close();
+
+    // Userful for showing/ hiding the command area 
+    wxSplitterWindow* tabSplitter;
 
 };
 

@@ -32,7 +32,7 @@ public:
     //Just be sure to handle separate windows accordingly, if it gives exception
     std::vector<MyTab*> openedTabsVector;
 
-    // Returns the iterator at the posisition matching the given tab pointer in openedTabsVector
+    // Returns the iterator at the position matching the given tab pointer in openedTabsVector
     // If no match is found iterator pointing to the end of vector is returned
     // which is no a valid element so, handle this accordingly
     std::vector<MyTab*>::iterator iteratorAt(MyTab* tab);
@@ -53,7 +53,7 @@ public:
     //This will get textctrl contained inside tab and it's title
     //So, be sure to update those before adding.
     //Set select to false only if you want to add tab in background or not set the textctrl as the active one
-    bool AddPage(MyTab* tab, bool select);
+    bool AddPage(MyTab* tab, bool select=true);
 
     //Returns the tab in which currently selected textctrl is contained
     MyTab* getCurrentlyActiveTab();

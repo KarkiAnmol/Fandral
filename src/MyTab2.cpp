@@ -3,34 +3,37 @@
 #include "modifiednotebook.hpp"
 #include "textctrl.hpp"
 
-MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle)
-: wxAuiNotebookPage(), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(_T("-NONE-"))
+#include "wx/splitter.h"
+#include "wx/sizer.h"
+#include "commandarea.hpp"
+
+MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath, bool load)
+:wxWindow(parentNotebook, wxID_ANY), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(filePath)
 {
-    this->textCtrl = new TextCtrl(parentNotebook, wxID_ANY, tabTitle);
+    // For splitting the textctrl and commandarea
+    tabSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_BORDER|wxSP_LIVE_UPDATE);
 
-    parentNotebook->AddPage(this, true);
+    this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle, filePath);
+    this->commandArea = new CommandArea(tabSplitter, this);
 
-    this->index = parentNotebook->GetPageIndex(textCtrl);
+    tabSplitter->SplitHorizontally(textCtrl, commandArea);
 
-}
+    tabSplitter->SetMinimumPaneSize(30);
+    tabSplitter->SetSashGravity(1);
 
-MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath = _T("-NONE-"), bool load=false)
-:wxAuiNotebookPage(), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(filePath)
-{
-    this->textCtrl = new TextCtrl(parentNotebook, wxID_ANY, filePath, tabTitle);
+    tabSplitter->SetInitialSize(tabSplitter->GetBestSize());
 
-    parentNotebook->AddPage(this, true);
-    
-    this->index = parentNotebook->GetPageIndex(textCtrl);
-    
     if(load)
     {
-        // A hack for new opened files not being named when opened initially
-        textCtrl->updateNameLabel(filePath);
-
         textCtrl->LoadFile(filePath);
     }
 
+    // Expanding the tabsplitter window when the frame expands
+    wxBoxSizer* tabSizer = new wxBoxSizer(wxVERTICAL);
+    tabSizer->Add(tabSplitter, wxSizerFlags(1).Expand());
+    this->SetSizerAndFit(tabSizer);
+
+    parentNotebook->AddPage(this);
 }
 
 void MyTab::setAsActive()

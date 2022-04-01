@@ -10,6 +10,8 @@
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
+#include <memory>
+
 ModifiedNotebook::ModifiedNotebook() : wxAuiNotebook() {}
 
 ModifiedNotebook::ModifiedNotebook(wxWindow *parent, wxWindowID id) 
@@ -22,8 +24,8 @@ ModifiedNotebook::ModifiedNotebook(wxWindow *parent, wxWindowID id)
 
 bool ModifiedNotebook::AddPage(MyTab* tab, bool select)
 {
-     //adding page to wxauinotebook
-    if(wxAuiNotebook::AddPage(tab->textCtrl, tab->tabTitle, select))
+    //adding page to wxauinotebook
+    if(wxAuiNotebook::AddPage(tab, tab->tabTitle, select))
     {
         this->openedTabsVector.push_back(tab);
 
