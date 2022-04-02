@@ -13,7 +13,7 @@
 #include "wx/splitter.h"
 #include "commandarea.hpp"
 
-TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name, const wxString filePath)
+TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name)
     : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(800, 550), wxRESIZE_BORDER)
     , parentTab(parentTab)
 {
@@ -160,7 +160,7 @@ void TextCtrl::_SaveFile()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open
      **/
-    if (this->getParent()->filePath.Cmp(_T("-NONE-")) == 0)
+    if (this->getParent()->filePath.Cmp(_T("-NONE-"))==0)
     {
         this->_SaveFileAs();
         return;

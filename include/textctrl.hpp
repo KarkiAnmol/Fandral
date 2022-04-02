@@ -29,7 +29,7 @@ public:
     //constructors
     TextCtrl();
 
-    TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name, const wxString filePath=_T("-NONE-"));
+    TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name);
 
     //methods
 
