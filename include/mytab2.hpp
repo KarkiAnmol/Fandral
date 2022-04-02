@@ -50,7 +50,7 @@ public:
     // also provides option to load the file present in the filepath into tab
     //
     // The tab is automatically added to parentNotebook as page.
-    MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle, wxString filePath=_T("-NONE_"), bool load=false);
+    MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle, wxString filePath=_T("-NONE-"), bool load=false);
 
     // Sets the particular tab as active one
     // Specifically setting the textctrl contained inside the tab as active one

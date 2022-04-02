@@ -14,7 +14,7 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     tabSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_BORDER|wxSP_LIVE_UPDATE);
 
     // Adding these controls as children of the splitter as to spit it later on
-    this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle, filePath);
+    this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle);
     this->commandArea = new CommandArea(tabSplitter, this);
 
     // Splitting the window horizontally into textctrl and commandarea
@@ -59,8 +59,7 @@ bool MyTab::Close()
     // Initially removing the tab from the parentnotebook
    if(parentNotebook->RemovePage(parentNotebook->GetPageIndex(this)))
    {
-        // Calling the Close function of wxWidow and closing the tab 
-        if(this->wxWindow::Close(true)) return 1;
+        this->wxWindow::Close(true);
    }
    return 0;
 
