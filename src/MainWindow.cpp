@@ -292,6 +292,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
     //or all files are saved
     //or all files which aren't saved are empty
     //so destroying the frame here will be safe
+    this->mainNotebook->openedTabsVector.clear();
     this->Destroy();
 
 }

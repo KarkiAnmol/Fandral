@@ -11,12 +11,16 @@
 #endif
 
 #include <memory>
+#include <vector>
 
 ModifiedNotebook::ModifiedNotebook() : wxAuiNotebook() {}
 
 ModifiedNotebook::ModifiedNotebook(wxWindow *parent, wxWindowID id) 
 : wxAuiNotebook(parent, id, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE| wxAUI_NB_BOTTOM | wxAUI_NB_CLOSE_ON_ALL_TABS)
 {
+    // Initially clearing the tabs stored in openedTabsVector
+    this->openedTabsVector.clear();
+
     this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &ModifiedNotebook::OnClose, this);
     this->SetMeasuringFont(wxFont(16, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     this->SetAutoLayout(true);
@@ -52,6 +56,7 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {
     MyTab* activeTab = this->getTab(event.GetSelection());
+
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
         //Only asks to save if the file isn't empty
@@ -114,29 +119,15 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
     }
  }
 
- bool ModifiedNotebook::removeTabFromVector(MyTab* t)
+ bool ModifiedNotebook::removeTabFromVector(MyTab* tabToBeRemoved)
  {
-     int returnValue;
+    auto iteratorAtTabToBeRemoved = this->iteratorAt(tabToBeRemoved);
 
-    std::vector<MyTab*>::iterator iteratorForRemovingTab = this->iteratorAt(t);
-
-    // For returning true if at least single occurance is found
-    if(iteratorForRemovingTab!=this->openedTabsVector.end())
-    { 
-        returnValue=1;
-    }
-    else 
+    if(iteratorAtTabToBeRemoved!=this->openedTabsVector.end())
     {
-        returnValue=0;
-        return returnValue;
+        this->openedTabsVector.erase(iteratorAtTabToBeRemoved);
+        return 1;
     }
 
-    // Doing this recursively as there might be many occurance of the given data
-    while(iteratorForRemovingTab!=this->openedTabsVector.end())
-    {
-        this->openedTabsVector.erase(iteratorForRemovingTab);
-        std::vector<MyTab*>::iterator iteratorForRemovingTab = this->iteratorAt(t);
-    }
-    return returnValue;
-
+    return 0;
  }
