@@ -13,17 +13,24 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     // For splitting the textctrl and commandarea
     tabSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_BORDER|wxSP_LIVE_UPDATE);
 
+    // Adding these controls as children of the splitter as to spit it later on
     this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle, filePath);
     this->commandArea = new CommandArea(tabSplitter, this);
 
+    // Splitting the window horizontally into textctrl and commandarea
     tabSplitter->SplitHorizontally(textCtrl, commandArea);
 
+    // Minimum height of each of the controls
     tabSplitter->SetMinimumPaneSize(30);
+
+    // Setting only the textctrl to expand when outer windows/ frames / panels are expanded
     tabSplitter->SetSashGravity(1);
 
+    // Setting the initial size of the splitter window to be the sum of sizes of it's children
     tabSplitter->SetInitialSize(tabSplitter->GetBestSize());
 
-    if(load)
+    // If properfilepath is given and load is true load the file into the textctrl
+    if(load && !filePath.Cmp("-NONE-")==0)
     {
         textCtrl->LoadFile(filePath);
     }
@@ -33,12 +40,39 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     tabSizer->Add(tabSplitter, wxSizerFlags(1).Expand());
     this->SetSizerAndFit(tabSizer);
 
+    // Finally adding the tab to the notebook 
+    // This is to automate the tab creation process 
+    // i.e. whenever new tab is created it is added to the ModifiedNotebook
     parentNotebook->AddPage(this);
+
+    // Also updating the index of the tab to be same as the index in parentNotebook
+    this->index = parentNotebook->GetPageIndex(this);
 }
 
 void MyTab::setAsActive()
 {
-    //This will work as long as parentnotebook is updated
-    //and index is same as the index inside the parent notebook
-    this->parentNotebook->SetSelection(this->index);
+    parentNotebook->SetSelection(parentNotebook->GetPageIndex(this));   
+}
+
+bool MyTab::Close()
+{
+    // Initially removing the tab from the parentnotebook
+   if(parentNotebook->RemovePage(parentNotebook->GetPageIndex(this)))
+   {
+        // Calling the Close function of wxWidow and closing the tab 
+        if(this->wxWindow::Close(true)) return 1;
+   }
+   return 0;
+
+}
+
+bool MyTab::isActive()
+{
+    if(parentNotebook->GetSelection()==parentNotebook->GetPageIndex(this)) return 1;
+    return 0;
+}
+
+bool MyTab::saveFile()
+{
+    this->textCtrl->_SaveFile();
 }

@@ -138,7 +138,6 @@ void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
-
     wxString openLocation = wxLoadFileSelector(
 
         "a text",
@@ -148,7 +147,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
           *correct:   PNG files (*.png)|*.png
           *incorrect: PNG files (*.png)| *.png
          **/
-        "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md| CPP files (*.cpp)|*.cpp",
+        "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md| CPP files (*.cpp)|*.cpp| Any Files (*.*)|*.*",
         "Fandral",
         this);
 
@@ -180,7 +179,7 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
         {
             //The condition to check if the file is already open would already have set the matching textctrl as the active one.
             //So, this will override that tab(text area) not the other ones.
-            this->getCurrentlyActiveTextBox().LoadFile(path);
+            this->getCurrentlyActiveTab()->textCtrl->LoadFile(path);
         }
     }
     //else new tab is opened providing the new location as the file path of that tab
@@ -197,7 +196,7 @@ void MyFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnSave()
 {
-    this->getCurrentlyActiveTextBox()._SaveFile();
+    this->getCurrentlyActiveTab()->saveFile();
 }
 
 void MyFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
@@ -219,7 +218,7 @@ void MyFrame::OnNew(wxCommandEvent &event)
 
 void MyFrame::OnSaveAs()
 {
-    this->getCurrentlyActiveTextBox()._SaveFileAs();
+    this->getCurrentlyActiveTab()->textCtrl->_SaveFileAs();
 }
 
 void MyFrame::OnClose(wxCloseEvent &event)
@@ -253,7 +252,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
             //ask for save location
             if(confirm == 8)   
             { 
-                t->textCtrl->_SaveFile();
+                t->saveFile();
                 return;     // Continue as if close button wasn't pressed
             }
             else if(confirm == 16)
@@ -266,9 +265,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 // Not being able to remove may imply that it's isn't a proper tab object
                 if(this->mainNotebook->removeTabFromVector(t))
                 {
-                    // Here true is passed to force it to close
-                    // if nothing is passed or false is passed the window may not close
-                    this->mainNotebook->GetPage(t->index)->Close(true);
+                    t->Close();
                 }
             }
         }
@@ -278,9 +275,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
             // Not being able to remove may imply that it isn't a proper tab object
             if(this->mainNotebook->removeTabFromVector(t))
             {
-                // Here true is passed to force it to close
-                // if nothing is passed or false is passed the window may not close
-                this->mainNotebook->GetPage(t->index)->Close(true);
+                t->Close();
             }
         }
         else
@@ -288,8 +283,8 @@ void MyFrame::OnClose(wxCloseEvent &event)
             // Save before closing
             // Assumes that valid save location is set
             // This may be handled differently depending upon the requirements
-            t->textCtrl->_SaveFile();
-            this->mainNotebook->GetPage(t->index)->Close(true);
+            t->saveFile();
+            t->Close();
         }
     }
 
@@ -301,20 +296,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 }
 
-TextCtrl& MyFrame::getCurrentlyActiveTextBox()
-{
-    if(this->mainNotebook->getCurrentlyActiveTab()->textCtrl)
-    {
-        return *(mainNotebook->getCurrentlyActiveTab()->textCtrl);
-    }
-    else
-    {
-         wxMessageBox(wxString::Format("Couldn't complete the desired operation."),
-                 "Confirm",
-                 wxOK|wxICON_INFORMATION,
-                 this);
-
-        std::shared_ptr<TextCtrl> dummyOne(new TextCtrl(NULL, NULL, wxID_ANY, "Dummy one"));
-        return *dummyOne;
-    }
-}
+ MyTab* MyFrame::getCurrentlyActiveTab()
+ {
+    return this->mainNotebook->getCurrentlyActiveTab();
+ }

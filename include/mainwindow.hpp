@@ -100,9 +100,8 @@ public:
     //For setting the font style and size for text inside text control
     //wxFont myFont = wxFont(MAIN_WINDOW_FONT_SIZE, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-    //To handel nullptr properly and get a valid text box.
-    //Returns reference to currently active text box or a dummy one.
-    TextCtrl& getCurrentlyActiveTextBox();
+    // To serve as interface between different classes
+    MyTab* getCurrentlyActiveTab();
 
 private:
     // any class wishing to process wxWidgets events must use this macro

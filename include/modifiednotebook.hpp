@@ -59,7 +59,7 @@ public:
     MyTab* getCurrentlyActiveTab();
 
     // Returns the tab at particular index
-    MyTab* getTabWithIndex(int index);
+    MyTab* getTab(int index);
 
 private:
     // Handles the closign of a particular page (tab in our case)

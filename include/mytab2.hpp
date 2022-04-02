@@ -43,6 +43,7 @@ public:
     wxString tabTitle;
 
     //index of the page (tab in this case) starting from zero.
+    //always set the index of tab to be equal to it's index in parentnotebook
     int index;
 
     // For creating a tab contained in parentNotebook with file path and
@@ -51,12 +52,19 @@ public:
     // The tab is automatically added to parentNotebook as page.
     MyTab(ModifiedNotebook* parentNotebook, const wxString& tabTitle, wxString filePath=_T("-NONE_"), bool load=false);
 
-    //Sets the particular tab as active one
-    //Specifically setting the textctrl contained inside the tab as active one
+    // Sets the particular tab as active one
+    // Specifically setting the textctrl contained inside the tab as active one
     void setAsActive();
 
-    //Closes the tab
-    bool close();
+    // Closes the tab
+    // Returns true if the tab could be closed successfully
+    bool Close();
+
+    // Returns true if the tab is active else return false
+    bool isActive();
+
+    // Performs save operation on the respective textctrl
+    bool saveFile();
 
     // Userful for showing/ hiding the command area 
     wxSplitterWindow* tabSplitter;

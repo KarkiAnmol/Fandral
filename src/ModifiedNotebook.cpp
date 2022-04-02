@@ -40,10 +40,9 @@ bool ModifiedNotebook::AddPage(MyTab* tab, bool select)
 
 MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 {
-    int selection = this->GetSelection();
     for(MyTab* tab: this->openedTabsVector)
     {
-        if((selection!=wxNOT_FOUND) && (selection==tab->index))
+        if(tab->isActive())
         {
             return tab;
         }
@@ -52,7 +51,7 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {
-    MyTab* activeTab = this->getTabWithIndex(event.GetSelection());
+    MyTab* activeTab = this->getTab(event.GetSelection());
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
         //Only asks to save if the file isn't empty
@@ -83,28 +82,8 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
         }
         else     // Since the event isn't vetoed, the page will close after we exit from here
         { 
-            // Closes tab only if the tab was successfully removed from the vector
-            // Not being able to remove may imply that it's isn't a proper tab object
-            if(this->removeTabFromVector(activeTab))
-            {
-                activeTab->textCtrl->_SaveFile();
-
-                //Sets immediate tab as the active one if there is any tab left
-                if(!openedTabsVector.empty())
-                {
-                    //Sets selection to next or previous page
-                    // trying to set page one after the closed one
-                    try
-                    {
-                        this->AdvanceSelection();
-                    }
-                    // trying to set page one before the closed one
-                    catch(const std::exception& e)
-                    {
-                        this->AdvanceSelection(false);
-                    }
-                }
-            }
+            // Remove the tab and proceeds to close it.
+            this->removeTabFromVector(activeTab);
         }
     }
     else    // Since the event isn't vetoed, the page will close after we exit from here
@@ -124,7 +103,7 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
     return iterator;
 }
 
- MyTab* ModifiedNotebook::getTabWithIndex(int index)
+ MyTab* ModifiedNotebook::getTab(int index)
  {
     for(MyTab* t: this->openedTabsVector)
     {
