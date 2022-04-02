@@ -13,10 +13,12 @@
 #include <memory>
 #include <vector>
 
+#include <iostream>
+
 ModifiedNotebook::ModifiedNotebook() : wxAuiNotebook() {}
 
 ModifiedNotebook::ModifiedNotebook(wxWindow *parent, wxWindowID id) 
-: wxAuiNotebook(parent, id, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE| wxAUI_NB_BOTTOM | wxAUI_NB_CLOSE_ON_ALL_TABS)
+: wxAuiNotebook(parent, id, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE| wxAUI_NB_BOTTOM | wxAUI_NB_CLOSE_ON_ACTIVE_TAB)
 {
     // Initially clearing the tabs stored in openedTabsVector
     this->openedTabsVector.clear();
@@ -55,7 +57,7 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {
-    MyTab* activeTab = this->getTab(event.GetSelection());
+    MyTab* activeTab = this->getCurrentlyActiveTab();
 
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
@@ -110,11 +112,11 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
 
  MyTab* ModifiedNotebook::getTab(int index)
  {
-    for(MyTab* t: this->openedTabsVector)
+    for(int i=0; i<this->openedTabsVector.size(); i++)
     {
-        if(t->index==index)
+        if(openedTabsVector[i]->index==index)
         {
-            return t;
+            return openedTabsVector[i];
         }
     }
  }
@@ -123,9 +125,14 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
  {
     auto iteratorAtTabToBeRemoved = this->iteratorAt(tabToBeRemoved);
 
+    auto vectorTab = this->openedTabsVector;
+
     if(iteratorAtTabToBeRemoved!=this->openedTabsVector.end())
     {
         this->openedTabsVector.erase(iteratorAtTabToBeRemoved);
+
+        auto vectorTabAfterRemovingVector = this->openedTabsVector;
+
         return 1;
     }
 
