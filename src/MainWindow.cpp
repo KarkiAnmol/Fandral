@@ -231,13 +231,12 @@ void MyFrame::OnClose(wxCloseEvent &event)
         event.Veto();
     }
 
-    for(MyTab* t: this->mainNotebook->openedTabsVector)
+    for (int i = 0; i < this->mainNotebook->openedTabsVector.size() ; i++)
     {
+        MyTab* t = this->mainNotebook->openedTabsVector[i];
         if((t->filePath.Cmp("-NONE-")==0) && !(t->textCtrl->IsEmpty()))
         {
-            //Setting the particular tab as active one
-            t->setAsActive();
-
+            
             int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
                     "Confirm",
                     wxYES_NO|wxICON_INFORMATION,
@@ -251,12 +250,14 @@ void MyFrame::OnClose(wxCloseEvent &event)
             //If user wants to close file without saving it then close the tab else
             //ask for save location
             if(confirm == 8)   
-            { 
+            {
+                t->setAsActive(); 
                 t->saveFile();
                 return;     // Continue as if close button wasn't pressed
             }
             else if(confirm == 16)
             {
+                t->setAsActive();
                 return;     //Continue as if close button wasn't pressed
             }
             else if(confirm == 2)
@@ -268,6 +269,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
                     t->Close();
                 }
             }
+
         }
         else if(t->textCtrl->IsEmpty())
         {

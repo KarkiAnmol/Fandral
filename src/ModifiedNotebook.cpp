@@ -57,6 +57,8 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
 {
+    // This will work only if close button is enabled on active tabs
+    // If it is enabled on all tabs, it will create problems.
     MyTab* activeTab = this->getCurrentlyActiveTab();
 
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
@@ -125,13 +127,9 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
  {
     auto iteratorAtTabToBeRemoved = this->iteratorAt(tabToBeRemoved);
 
-    auto vectorTab = this->openedTabsVector;
-
     if(iteratorAtTabToBeRemoved!=this->openedTabsVector.end())
     {
         this->openedTabsVector.erase(iteratorAtTabToBeRemoved);
-
-        auto vectorTabAfterRemovingVector = this->openedTabsVector;
 
         return 1;
     }

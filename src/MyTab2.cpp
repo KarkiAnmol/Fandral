@@ -10,6 +10,7 @@
 MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath, bool load)
 :wxWindow(parentNotebook, wxID_ANY), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(filePath)
 {
+
     // For splitting the textctrl and commandarea
     tabSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_BORDER|wxSP_LIVE_UPDATE);
 
@@ -43,7 +44,7 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     // Finally adding the tab to the notebook 
     // This is to automate the tab creation process 
     // i.e. whenever new tab is created it is added to the ModifiedNotebook
-    parentNotebook->AddPage(this);
+    parentNotebook->AddPage(this, true);
 
     // Also updating the index of the tab to be same as the index in parentNotebook
     this->index = parentNotebook->GetPageIndex(this);
