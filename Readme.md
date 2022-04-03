@@ -4,13 +4,20 @@
 - Cmake
 - Make or equivalent build tool
 - g++
-- Proper setup of wxWidgets library[Getting Started](https://wiki.wxwidgets.org/Getting_Started_with_wxWidgets)
+- Proper setup of wxWidgets library [Getting Started](https://wiki.wxwidgets.org/Getting_Started_with_wxWidgets)
 
 Be sure to set the required make type by using -G flag in the cmake scripts.
 eg: If i want unix makefiles: `cmake -G "Unix Makefiles"`
 
 ## For windows
 - Check if WXWIN environment variable is properly set up: `%WXWIN%` should point to the wxWidget directory. If not then you can add a new environment variable named WXWIN and point towards wxWidgets directory.
+- Additionally you can set WXCFG path to point towards lib/{FolderContainingTheRequiredLibrary}/{msu/msud}/build.cfg.
+
+(The values inside {} braces are the values for you to set, not somekind of variable available to windows or path)
+
+For example: I have setup mingw64 v8.1.0 to build wxWidget app dynamically then the WXCFG path should point as
+
+`C:\wxWidgets-3.1.5\lib\gcc810_x64_dll\mswud\build.cfg`
 - Uncomment the required lines in compile.bat script then `./compile.bat`
 
 ## For Unix systems
