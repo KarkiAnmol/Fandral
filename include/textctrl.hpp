@@ -40,17 +40,22 @@ public:
     }
 
     //Saves the current file
+    // Performs save as operation if the file wasn't saved before
     void _SaveFile();
 
     //Performs save as operation
+    // Also modifies the file path of the parent tab
     void _SaveFileAs();
 
     //for syntax highliting with one highliter object in each textctrl
     CodeHighliter* codehighliter;
 
+    // Updates the highliter according to the file extension
+    bool updateHighlighter();
+
     //This will return the appropriate syntax highliter if available
     //The highliting is done according to fileExtension
-    int getAppropriateHighliter(const wxString& fileExtension);
+    int getAppropriateHighliter();
 
 private:
     //Event handlers

@@ -172,6 +172,7 @@ void TextCtrl::_SaveFile()
     }
     
     this->SaveFile(saveLocation);
+    this->getParent()->updateNameLabel(saveLocation);   // updating the label of the parent tab
 }
 
 void TextCtrl::_SaveFileAs()
@@ -186,12 +187,14 @@ void TextCtrl::_SaveFileAs()
     // Modifying the filepath of the tab object
     this->getParent()->filePath = saveLocation;
 
-    this->SaveFile(saveLocation);
+    // Also updating the label of the parent tab
+    this->getParent()->updateNameLabel(saveLocation);
 }
 
-int TextCtrl::getAppropriateHighliter(const wxString& fileExtension)
+
+int TextCtrl::getAppropriateHighliter()
 {
-    wxString lowercaseFileExtension = fileExtension.AfterLast(_T('.'));
+    wxString lowercaseFileExtension = this->getParent()->getFileExtension();
     lowercaseFileExtension.LowerCase();
 
     if(lowercaseFileExtension.compare(_T("cpp"))==0)
@@ -210,4 +213,10 @@ int TextCtrl::getAppropriateHighliter(const wxString& fileExtension)
     {
         return -5;
     }
+}
+
+bool TextCtrl::updateHighlighter()
+{
+    //Updating the highliter after each label update
+    this->codehighliter->setLex_Language(this->getAppropriateHighliter());
 }

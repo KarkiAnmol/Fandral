@@ -218,6 +218,7 @@ void MyFrame::OnNew(wxCommandEvent &event)
 
 void MyFrame::OnSaveAs()
 {
+    // Calling savefileas specifially as user may want to change name or location or both of the current file
     this->getCurrentlyActiveTab()->textCtrl->_SaveFileAs();
 }
 

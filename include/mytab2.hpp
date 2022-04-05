@@ -66,6 +66,15 @@ public:
     // Performs save operation on the respective textctrl
     bool saveFile();
 
+    // Returns the extension of the tab
+    wxString getFileExtension();
+
+
+    // Updates the tab label and returns the file name with extension
+    wxString updateNameLabel(const wxString &fileLocation);
+
+
+
     // Userful for showing/ hiding the command area 
     wxSplitterWindow* tabSplitter;
 

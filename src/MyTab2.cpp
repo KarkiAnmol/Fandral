@@ -30,12 +30,6 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     // Setting the initial size of the splitter window to be the sum of sizes of it's children
     tabSplitter->SetInitialSize(tabSplitter->GetBestSize());
 
-    // If properfilepath is given and load is true load the file into the textctrl
-    if(load && !filePath.Cmp("-NONE-")==0)
-    {
-        textCtrl->LoadFile(filePath);
-    }
-
     // Expanding the tabsplitter window when the frame expands
     wxBoxSizer* tabSizer = new wxBoxSizer(wxVERTICAL);
     tabSizer->Add(tabSplitter, wxSizerFlags(1).Expand());
@@ -48,6 +42,14 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
 
     // Also updating the index of the tab to be same as the index in parentNotebook
     this->index = parentNotebook->GetPageIndex(this);
+
+     // If properfilepath is given and load is true load the file into the textctrl
+     // also update the label of the tab
+    if(load && !filePath.Cmp("-NONE-")==0)
+    {
+        textCtrl->LoadFile(filePath);
+        this->updateNameLabel(filePath);
+    }
 }
 
 void MyTab::setAsActive()
@@ -75,4 +77,31 @@ bool MyTab::isActive()
 bool MyTab::saveFile()
 {
     this->textCtrl->_SaveFile();
+}
+
+wxString MyTab::updateNameLabel(const wxString &fileLocation)
+{
+    wxString tempFileLocation = fileLocation.Clone();
+
+// The file separator in windows will be '\\' so it is replaced with '\'
+#if defined __WXMSW__
+    // this will be file name only
+    tempFileLocation.Replace("\\", "/", true);
+#endif
+
+    wxString fileNameWithExtension = tempFileLocation.AfterLast(_T('/'));
+
+    this->parentNotebook->SetPageText(this->index, fileNameWithExtension);
+
+    // Updating codehighliting each time the name of the tab is changed.
+    this->textCtrl->updateHighlighter();
+    
+    return fileNameWithExtension;
+}
+
+wxString MyTab::getFileExtension()
+{
+    wxString fileExtension = this->filePath.AfterLast(_T('.'));
+
+    return fileExtension;
 }
