@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <iostream>
+#include <stdexcept>
 
 ModifiedNotebook::ModifiedNotebook() : wxAuiNotebook() {}
 
@@ -88,21 +89,62 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
                 // Continue as if close button wasn't pressed if user cancels the dialog
                 event.Veto();
             }
+            else if(confirm==2)
+            {
+                try
+                {
+                    this->removeTabFromVector(activeTab);
+                }
+                catch(std::logic_error &error)
+                {
+                    wxMessageBox(wxString::Format("Couldn't complete the close operation."),
+                            "Error",
+                            wxOK|wxICON_INFORMATION,
+                            this);
+
+                    // discarding the close operation as there was an error
+                    event.Veto();
+                }
+            }
         }
         else     // Since the event isn't vetoed, the page will close after we exit from here
         { 
             // Remove the tab and proceeds to close it.
-            this->removeTabFromVector(activeTab);
+            try
+            {
+                this->removeTabFromVector(activeTab);
+            }
+            catch(std::logic_error &error)
+            {
+                wxMessageBox(wxString::Format("Couldn't complete the close operation."),
+                        "Error",
+                        wxOK|wxICON_INFORMATION,
+                        this);
+
+                // discarding the close operation as there was an error
+                event.Veto();
+            }
         }
     }
     else    // Since the event isn't vetoed, the page will close after we exit from here
     {
         // Closes tab only if the tab was successfully removed from the vector
         // Not being able to remove may imply that it's isn't a proper tab object
-        if(this->removeTabFromVector(activeTab))
+        try
         {
-            activeTab->textCtrl->_SaveFile();
+            this->removeTabFromVector(activeTab);
         }
+        catch(std::logic_error &error)
+        {
+             wxMessageBox(wxString::Format("Couldn't complete the close operation."),
+                    "Error",
+                    wxOK|wxICON_INFORMATION,
+                    this);
+            return;
+        }
+        
+        // This will only execute if there wasn't error in the above try / catch block
+        activeTab->textCtrl->_SaveFile();
     }
 }
 
@@ -123,16 +165,18 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
     }
  }
 
- bool ModifiedNotebook::removeTabFromVector(MyTab* tabToBeRemoved)
+ std::vector<MyTab *>::iterator ModifiedNotebook::removeTabFromVector(MyTab* tabToBeRemoved)
  {
-    auto iteratorAtTabToBeRemoved = this->iteratorAt(tabToBeRemoved);
+    std::vector<MyTab*>::iterator iteratorAtTabToBeRemoved = this->iteratorAt(tabToBeRemoved);
 
     if(iteratorAtTabToBeRemoved!=this->openedTabsVector.end())
     {
-        this->openedTabsVector.erase(iteratorAtTabToBeRemoved);
-
-        return 1;
+        // The erase vector returns an iterator pointing to next element or the end of the vector
+        return this->openedTabsVector.erase(iteratorAtTabToBeRemoved);
+    }
+    else
+    {
+        throw std::logic_error("Couldn't find the specified tab");
     }
 
-    return 0;
  }

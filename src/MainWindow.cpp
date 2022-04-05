@@ -231,12 +231,22 @@ void MyFrame::OnClose(wxCloseEvent &event)
         event.Veto();
     }
 
-    for (int i = 0; i < this->mainNotebook->openedTabsVector.size() ; i++)
+    // Iterating over vector while remvoing elements from it can cause problems
+    // So using iterator of that vector.
+    // erase() function returns the iterator pointing to the next element
+    // so we can use that for iterating over the vector even it is modified in middle
+    std::vector<MyTab*>::iterator vectorIterator = this->mainNotebook->openedTabsVector.begin();
+    std::vector<MyTab*>::iterator vectorIteratorEnd = this->mainNotebook->openedTabsVector.end();
+
+    for (vectorIterator; vectorIterator!=vectorIteratorEnd; vectorIterator++)
     {
-        MyTab* t = this->mainNotebook->openedTabsVector[i];
-        if((t->filePath.Cmp("-NONE-")==0) && !(t->textCtrl->IsEmpty()))
+        MyTab* t = *vectorIterator;
+        wxString tabFilepath = t->filePath;
+        bool empty = t->textCtrl->IsEmpty();
+        
+        if((tabFilepath.Cmp("-NONE-")==0) && !empty)
         {
-            
+             
             int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
                     "Confirm",
                     wxYES_NO|wxICON_INFORMATION,
@@ -249,35 +259,48 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
             //If user wants to close file without saving it then close the tab else
             //ask for save location
-            if(confirm == 8)   
+            if(confirm == 8)   // User clicks no
             {
                 t->setAsActive(); 
                 t->saveFile();
                 return;     // Continue as if close button wasn't pressed
             }
-            else if(confirm == 16)
+            else if(confirm == 16) // User cancels the dialog
             {
                 t->setAsActive();
                 return;     //Continue as if close button wasn't pressed
             }
-            else if(confirm == 2)
+            else if(confirm == 2)   // User clicks yes
             {   
                 // Closes tab only if the tab was successfully removed from the vector
-                // Not being able to remove may imply that it's isn't a proper tab object
-                if(this->mainNotebook->removeTabFromVector(t))
+                // Not being able to remove may imply that the tab isn't in the vector
+            
+                vectorIterator = this->mainNotebook->openedTabsVector.erase(vectorIterator);
+                vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
+                if(vectorIterator!=vectorIteratorEnd)
                 {
                     t->Close();
                 }
+                else 
+                {
+                    break;  // the iterator will point to the end of vector which isn't a valid tab
+                }
+  
             }
-
         }
-        else if(t->textCtrl->IsEmpty())
+        else if(empty)
         {
             // Closes tab only if the tab was successfully removed from the vector
-            // Not being able to remove may imply that it isn't a proper tab object
-            if(this->mainNotebook->removeTabFromVector(t))
+            // Not being able to remove may imply that the tab isn't in the vector
+            vectorIterator = this->mainNotebook->openedTabsVector.erase(vectorIterator);
+            vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
+            if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close();
+                t->Close(); 
+            }
+            else 
+            {
+                break;  // the iterator will point to the end of vector which isn't a valid tab
             }
         }
         else
@@ -286,7 +309,20 @@ void MyFrame::OnClose(wxCloseEvent &event)
             // Assumes that valid save location is set
             // This may be handled differently depending upon the requirements
             t->saveFile();
-            t->Close();
+
+            // Closes tab only if the tab was successfully removed from the vector
+            // Not being able to remove may imply that the tab isn't in the vector
+           
+            vectorIterator = this->mainNotebook->openedTabsVector.erase(vectorIterator);
+            vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
+            if(vectorIterator!=vectorIteratorEnd)
+            {
+                t->Close(); 
+            }
+            else 
+            {
+                break;  // the iterator will point to the end of vector which isn't a valid tab
+            }
         }
     }
 

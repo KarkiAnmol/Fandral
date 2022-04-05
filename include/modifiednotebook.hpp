@@ -38,10 +38,9 @@ public:
     std::vector<MyTab*>::iterator iteratorAt(MyTab* tab);
 
     // Removes the tab pointer if it is found in the openedTabsVector
-    // Returns true(1) if the tab was removed successfully else returns false(0)
-    // This assumes that there is multiple occurance of the tab pointer
-    // but returns true even if only one tab could be removed from the vector
-    bool removeTabFromVector(MyTab* t);
+    // Returns the iterator pointing to next element in the vector
+    // throws std::logic_error if the tab isn't found
+    std::vector<MyTab*>::iterator removeTabFromVector(MyTab* t);
 
     ModifiedNotebook();
 
