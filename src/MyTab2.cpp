@@ -27,6 +27,8 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     // Setting only the textctrl to expand when outer windows/ frames / panels are expanded
     tabSplitter->SetSashGravity(1);
 
+    tabSplitter->SetBorderSize(2);
+
     // Setting the initial size of the splitter window to be the sum of sizes of it's children
     tabSplitter->SetInitialSize(tabSplitter->GetBestSize());
 
