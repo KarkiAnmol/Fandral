@@ -110,6 +110,14 @@ private:
 
 enum
 {
+    // status bar
+        Status_Bar_First_Part = 1,
+        Status_Bar_Second_Part = 2,
+        Status_Bar_Third_Part = 3,
+        Status_Bar_Fourth_Part = 4,
+        Status_Bar_Fifth_Part = 5,
+        Status_Bar_Sixth_Part = 6,
+        
     //Windows
         Main_Window = wxID_HIGHEST + 1,
 

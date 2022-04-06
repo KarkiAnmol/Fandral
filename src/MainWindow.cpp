@@ -20,7 +20,6 @@
 MyFrame::MyFrame(const wxString &title)
     : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxDefaultSize)
 {
-    this->Center(wxBOTH);
 
     //The main panel on top of the main window
     wxPanel *mainPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0l,  "Main Panel");
@@ -42,7 +41,6 @@ MyFrame::MyFrame(const wxString &title)
     // according to its contents
     wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
     topSizer->Add(mainPanel, 1, wxEXPAND);
-    this->Fit();
     SetSizerAndFit(topSizer);
 
 #if wxUSE_MENUS
@@ -57,21 +55,21 @@ MyFrame::MyFrame(const wxString &title)
 
     //create file menu
     wxMenu *fileMenu = new wxMenu;
-    fileMenu->Append(New_Window, "New Window", "Open New Window");
-    fileMenu->Append(New_File, "&New\tCtrl-N", "Open new text file");
-    fileMenu->Append(Open_File, "&Open", "Open saved text files");
-    fileMenu->Append(Save_File, "Save\tCtrl-S", "Save the current file");
-    fileMenu->Append(Save_File_As, "Save As", "Save the file as");
-    fileMenu->Append(Editor_Quit, "E&xit\tAlt-X", "Quit this program");
+    fileMenu->Append(New_Window, "New Window");
+    fileMenu->Append(New_File, "&New\tCtrl-N");
+    fileMenu->Append(Open_File, "&Open");
+    fileMenu->Append(Save_File, "Save\tCtrl-S");
+    fileMenu->Append(Save_File_As, "Save As");
+    fileMenu->Append(Editor_Quit, "E&xit\tAlt-X");
 
     // create edit menu
     wxMenu *editMenu = new wxMenu;
-    editMenu->Append(Find_Item, "&Find\tCtrl-F", "Find Items");
-    editMenu->Append(Find_And_Replace_Item, "Find And &Replace \tCtrl-R", "Find Items and Replace");
+    editMenu->Append(Find_Item, "&Find\tCtrl-F");
+    editMenu->Append(Find_And_Replace_Item, "Find And &Replace \tCtrl-R");
 
     // create help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(Editor_About, "&About\tF1", "Show about dialog");
+    helpMenu->Append(Editor_About, "&About\tF1");
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -83,15 +81,17 @@ MyFrame::MyFrame(const wxString &title)
     SetMenuBar(menuBar);
 #endif // wxUSE_MENUS
 
-#if wxUSE_STATUSBAR
-    // create a status bar just for fun (by default with 1 pane only)
-    CreateStatusBar(1);
-    //SetStatusText (const wxString &text, int i=0)
-    int statusBarFistPart = 0; // statusBarSecondPart = 1, statusBarThirdPart = 2;
-    SetStatusText("Welcome! to Fandral Text Editor", statusBarFistPart);
-    //SetStatusText("Don't compare with VScode", statusBarThirdPart);
+/*#if wxUSE_TOOLBAR
+    wxToolBar *toolbar = new wxToolBar;
 
-#endif // wxUSE_STATUSBAR
+    toolbar->AddTool(Save_File, "Save", wxNullBitmap, "Save File");
+
+    this->SetToolBar(toolbar);
+
+#endif // wxUSE_TOOLBAR */
+
+    this->Center(wxBOTH);
+    
 }
 
 // ----------------------------------------------------------------------------
