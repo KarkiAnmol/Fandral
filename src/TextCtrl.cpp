@@ -14,14 +14,14 @@
 #include "commandarea.hpp"
 
 TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name)
-    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(800, 550), wxRESIZE_BORDER)
+    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(200, 100), wxRESIZE_BORDER | wxNO_BORDER)
     , parentTab(parentTab)
 {
-    // Setting the initial size and minimum size
-    this->SetInitialSize(wxSize(400, 350));
+    this->SetInitialSize(wxSize(400, 200));
 
     // dynamically binding event handlers
-    Bind(wxEVT_KEY_DOWN, &TextCtrl::KeyEvent, this);
+    Bind(wxEVT_CHAR, &TextCtrl::charEventHandler, this);
+    Bind(wxEVT_KEY_DOWN, &TextCtrl::keyDownEventHandler, this);
 
     // Initially setting it to be editable
     this->SetEditable(true);
@@ -47,6 +47,15 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
     //clearing previous styles and setting to default ones
     this->StyleClearAll();
 
+
+    // setting the selection color
+    this->SetSelBackground(true, wxColour(200,200,200) );
+    this->SetSelForeground(true, wxColour(0,0,0) );
+
+    this->SetAdditionalSelBackground( wxColor(200,200,200) );
+    this->SetAdditionalSelForeground( wxColour(0,0,0) );
+    this->SetAdditionalCaretsVisible(false);
+
     // creating line numbers margin to the left
     // and setting up it's styles
 
@@ -63,10 +72,11 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
 
 }
 
-void TextCtrl::KeyEvent(wxKeyEvent &event)
+void TextCtrl::charEventHandler(wxKeyEvent &event)
 {
     CommandArea* associatedCommandArea = this->getParent()->commandArea;
     wxChar uc = event.GetUnicodeKey();
+    int keycode = event.GetKeyCode();
     if (uc != WXK_NONE)
     {
         // It's a "normal" character. Notice that this includes
@@ -76,82 +86,195 @@ void TextCtrl::KeyEvent(wxKeyEvent &event)
         {
             if (!this->IsEditable()) // only do this if the editor is in command mode
             {
+                int pos = this->GetCurrentPos();
                 switch (uc)
                 {
-                // If i is pressed when the text ctrl is not editable, set it back to be editable
-                // this is only for now, the implementation might be different in future
-                case 73: // B --> 73
+                // enter into insertion mode at the starting of the line
+                case 73: // I --> 73
+                    this->GotoLine(this->GetCurrentLine());
                     this->SetEditable(true);
-                    associatedCommandArea->AppendText("Entered into insertion mode.");
+                    break;
+                
+                // enter into insertion mode at the current position
+                case 105: // i --> 105
+                    this->SetEditable(true);
+                    break;
+
+                // move cursor one character to right and set editable
+                case 97: // a --> 97
+                    this->CharRight();
+                    this->SetEditable(true);
+                    break;
+
+                // move cursor to the end of line and set editable
+                case 65: // A --> 65
+                    this->LineEnd();
+                    this->SetEditable(true);
                     break;
 
                 // move cursor left
-                case 72: // H--> 72
+                case 104: // h --> 104
                     this->CharLeft();
                     break;
 
                 // move cursor down
-                case 74: // J--> 74
+                case 106: // j --> 106
                     this->LineDown();
                     break;
 
                 // move cursor up
-                case 75: // K--> 75
+                case 107: // k --> 107
                     this->LineUp();
                     break;
 
                 // move cursor right
-                case 76: // L--> 76
+                case 108: // l--> 108
                     this->CharRight();
+                    break;
+                
+                // open a new line below the current line
+                case 111: // o --> 111
+                    this->SetEditable(true);
+                    this->NewLine();
+                    this->SetEditable(false);
+                    break;
+
+                // open a new line above the current line 
+                case 79: // O --> 79
+                    this->LineUp();
+                    this->SetEditable(true);
+                    this->NewLine();
+                    this->SetEditable(false);
+                    break;
+                
+                // cut a character right to the cursor
+                case 120: // x --> 120
+                    this->SetSelection(this->GetCurrentPos(), this->GetCurrentPos() + 1);
+                    this->SetEditable(true);
+                    this->Cut();
+                    this->SetEditable(false);
+
+                    // moves the caret one position to left if it is the end of the line
+                    if(this->GetCurrentPos() == this->GetLineEndPosition(this->GetCurrentLine()))  this->CharLeft();
+                    break;
+
+                // paste after the cursor
+                case 112: // p --> 112
+                    this->SetEditable(true);
+                    this->Paste();
+                    this->SetEditable(false);
+                    break;
+
+                // paste before the cursor
+                case 80: // P --> 80
+                    this->SetEditable(true);  // Implementation is incomplete, performs same operation as the above case (112)
+                    this->Paste();            // Setting changing position is selecting the pasted text
+                    this->SetEditable(false); // and clearing the selection is brining the caret to the first place 
+                    break;
+                
+                // undo
+                case 117: // u --> 117
+                    this->SetEditable(true);
+                    this->Undo();
+                    this->SetEditable(false);
                     break;
 
                 default:
                     event.Skip();
                 }
             }
-            else
-                event.Skip();
-        }
-        else
-        {
-            // It's a control character
-            switch (uc)
+            else // When the textctrl is editable
             {
-            // If escape key is pressed, enter into command mode
-            case WXK_ESCAPE:
-                associatedCommandArea->AppendText("Entered into command mode.\n 'Press I to enter to insertion mode'");
-                this->SetEditable(false);
-                break;
-            case WXK_CONTROL_S:
-                this->_SaveFile();
-            default:
+                
                 event.Skip();
+   
+            }  
+        }
+        else  // Since the the app will ignore modifiers so, this is not the correct place
+              // to check for ctrl + alphabet, escape character and so on  (unicode from 1 to 31)
+              // This will be checked by keyDownEventHandler 
+        {
+            if(this->IsEditable())
+            {
+                switch(uc)
+                {
+                    // Perform save opearation on ctrl + s
+                    case WXK_CONTROL_S:
+                        this->_SaveFile();
+                        break;
+
+                    // If escape key is pressed, enter into command mode
+                    case WXK_ESCAPE:
+                        this->SetEditable(false);
+                        break;
+                
+                    default:
+                        event.Skip();
+                }
             }
         }
     }
     else // No Unicode equivalent.
+         // Might be handled by keyDownEventHandler
     {
-        // It's a special key, deal with all the known ones:
-
-        int keyCode = event.GetKeyCode();
-        switch(keyCode)
-        {
-            case WXK_LEFT: // Left arrow key
-                this->CharLeft();
-                break;
-            case WXK_RIGHT: // Right arrow key
-                this->CharRight();
-                break;
-            case WXK_UP:    // Up arrow key
-                this->LineUp();
-                break;
-            case WXK_DOWN:  // Down arrow key
-                this->LineDown();
-                break;
-        }
+       event.Skip();
     }
     return;
 };
+
+
+void TextCtrl::keyDownEventHandler(wxKeyEvent &event)
+{
+    int keyCode = event.GetKeyCode();
+
+    if(this->IsEditable()) // when editable
+    {
+        switch (keyCode)
+        {
+            case WXK_ESCAPE:
+                this->SetEditable(false);
+                break;
+            case 83: // S --> 83
+                if(event.ControlDown()) 
+                {                       // Performs save file operation only if 
+                    this->_SaveFile();  // ctrl was hold down when s was pressed  
+                }
+                else event.Skip();                                    
+                break;
+            default:
+                event.Skip();
+        }
+    }
+    else // when not editable
+    {
+        // Handeling the keys and other when in command mode.
+        switch(keyCode)
+        {
+        case 82: // R --> 82
+            if(event.ControlDown())
+            { 
+                this->Redo(); // Do redo only if shift was held down when r was pressed
+            }
+            else event.Skip();
+            break;
+        case WXK_LEFT: // Left arrow key
+            this->CharLeft();
+            break;
+        case WXK_RIGHT: // Right arrow key
+            this->CharRight();
+            break;
+        case WXK_UP:    // Up arrow key
+            this->LineUp();
+            break;
+        case WXK_DOWN:  // Down arrow key
+            this->LineDown();
+            break;
+
+        default: 
+            event.Skip();
+        }
+    }
+}
 
 void TextCtrl::_SaveFile()
 {
@@ -197,7 +320,9 @@ int TextCtrl::getAppropriateHighliter()
     wxString lowercaseFileExtension = this->getParent()->getFileExtension();
     lowercaseFileExtension.LowerCase();
 
-    if(lowercaseFileExtension.compare(_T("cpp"))==0)
+    if(lowercaseFileExtension.compare(_T("cpp"))==0 || lowercaseFileExtension.compare(_T("cxx"))==0 ||
+    lowercaseFileExtension.compare(_T("hpp"))==0 || lowercaseFileExtension.compare(_T("c++"))==0 || lowercaseFileExtension.compare(_T("cc"))==0 || 
+    lowercaseFileExtension.compare(_T("c++"))==0 || lowercaseFileExtension.compare(_T("h++"))==0 )
     {
         return wxSTC_LEX_CPP;
     }
@@ -207,7 +332,7 @@ int TextCtrl::getAppropriateHighliter()
     }
     else if((lowercaseFileExtension.compare(_T("c"))==0))
     {
-        return wxSTC_LEX_CPP;
+        return wxSTC_LEX_CPP; // since syntax for c and cpp are same for most of the cases
     }
     else
     {
@@ -215,7 +340,7 @@ int TextCtrl::getAppropriateHighliter()
     }
 }
 
-bool TextCtrl::updateHighlighter()
+void TextCtrl::updateHighlighter()
 {
     //Updating the highliter after each label update
     this->codehighliter->setLex_Language(this->getAppropriateHighliter());

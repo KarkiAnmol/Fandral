@@ -51,7 +51,7 @@ public:
     CodeHighliter* codehighliter;
 
     // Updates the highliter according to the file extension
-    bool updateHighlighter();
+    void updateHighlighter();
 
     //This will return the appropriate syntax highliter if available
     //The highliting is done according to fileExtension
@@ -60,14 +60,16 @@ public:
 private:
     //Event handlers
 
-    //Handles key event when the wxstyledtextctrl is active
-    //This should handle every key event.
-    //When the textctrl isn't in command mode, the keyevents are skipped and passed to default handlers
-    //when esc key is pressed, the textctrl enters command mode.
-    //when it is in command mode, pressing i key will exit from command mode (for now).
-    //few keys performs command simiar to vim
-    //such as h,j,k,l will move cursor right, down, up and left respectively so does the arrow keys
-    void KeyEvent(wxKeyEvent& event);
+    // this is to get the specific key pressed 
+    // both capital and small letters 
+    // but this doesn't work for modifiers like escape key, shift key and so on
+    void charEventHandler(wxKeyEvent& event);
+
+
+    // this is for special key like escape key, shift key and so on
+    // can also be used to get the key pressed regardless of keyborad state
+    // (doesn't matter if shift is capslock is on, event.GetKeyCode() will give the same value)
+    void keyDownEventHandler(wxKeyEvent& event);
 
 };
 
