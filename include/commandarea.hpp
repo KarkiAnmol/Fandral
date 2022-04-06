@@ -48,5 +48,9 @@ private:
 
 };
 
+enum{
+    Left_Margin,
+};
+
 
 #endif
