@@ -47,17 +47,17 @@ public:
 
     void setLex_Language(int lex_language);
 
-    bool highlightCPP();
+    void highlightCPP();
 
-    bool highlightPython();
+    void highlightPython();
 
-    bool highlightJava();
+    void highlightJava();
 
-    bool highlightC();
+    void highlightC();
 
-    bool highlightJavaScript();
+    void highlightJavaScript();
 
-    bool highlightCSharp();
+    void highlightCSharp();
 
 };
 
