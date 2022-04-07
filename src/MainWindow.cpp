@@ -69,7 +69,8 @@ MyFrame::MyFrame(const wxString &title)
 
     // create help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(Editor_About, "&About\tF1");
+    helpMenu->Append(Editor_About, "&About\t");
+    helpMenu->Append(Editor_Help, "&Help\tF1");
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -109,6 +110,7 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Save_File, MyFrame::OnSave)
     EVT_MENU(Open_File, MyFrame::OnOpen)
     EVT_MENU(Save_File_As, MyFrame::OnSaveAs)
+    EVT_MENU(Editor_Help, MyFrame::OnHelp)
     EVT_CLOSE(MyFrame::OnClose)
 wxEND_EVENT_TABLE()
 
@@ -336,7 +338,13 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 }
 
- MyTab* MyFrame::getCurrentlyActiveTab()
- {
-    return this->mainNotebook->getCurrentlyActiveTab();
- }
+void MyFrame::OnHelp(wxCommandEvent& event)
+{
+    wxDialog* dialog = new wxDialog(this, wxID_ANY, "Help", wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX| wxCAPTION | wxCLOSE_BOX| wxMAXIMIZE_BOX, "Help Dialog");
+    dialog->Show(true);
+}
+
+MyTab* MyFrame::getCurrentlyActiveTab()
+{
+   return this->mainNotebook->getCurrentlyActiveTab();
+}

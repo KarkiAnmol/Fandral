@@ -87,6 +87,9 @@ public:
     //For capturing close event and performing some pre-close actions
     void OnClose(wxCloseEvent& event);
 
+    // Display new window with help items
+    void OnHelp(wxCommandEvent& event);
+
     //Setting one frame (app window) to use only one notebook
     //For now one frame will have only one notebook
     ModifiedNotebook* mainNotebook;
@@ -138,6 +141,7 @@ enum
 
         //Help Menu
             Editor_About = wxID_ABOUT,
+            Editor_Help = wxID_HELP,
 
 };
 
