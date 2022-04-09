@@ -14,6 +14,8 @@
 
 #include "wx/wxhtml.h"
 
+#include <wx/html/helpctrl.h>
+
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
@@ -127,11 +129,12 @@ void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-    wxDialog *aboutDialog = new wxDialog(this, wxID_ANY, "About Us");
+    wxDialog *aboutDialog = new wxDialog(this, wxID_ANY, "About Fandral Editor");
 
     wxHtmlWindow *aboutWindow = new wxHtmlWindow(aboutDialog, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
-    // This should be set on compile time
+    // This is set on runtime for now
+    // Either a webpage should be setup or the installation path must be fixed for it to function properly
     aboutWindow->LoadPage(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/AboutUs.html"));
 
     aboutDialog->Show(true);
@@ -340,8 +343,11 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 void MyFrame::OnHelp(wxCommandEvent& event)
 {
-    wxDialog* dialog = new wxDialog(this, wxID_ANY, "Help", wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX| wxCAPTION | wxCLOSE_BOX| wxMAXIMIZE_BOX, "Help Dialog");
-    dialog->Show(true);
+
+    wxHtmlHelpController *helpController = new wxHtmlHelpController(this);
+    helpController->AddBook(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/help.hhp"));
+    helpController->Display(1);
+
 }
 
 MyTab* MyFrame::getCurrentlyActiveTab()
