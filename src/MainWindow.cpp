@@ -12,6 +12,8 @@
 #include "textctrl.hpp"
 #include "mytab2.hpp"
 
+#include "wx/wxhtml.h"
+
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
@@ -125,17 +127,15 @@ void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-    wxMessageBox(wxString::Format(
-                     "Welcome to Fandral Editor made with %s!\n"
-                     "\n"
-                     "This is the initial build of Fandral Editor\n"
-                     "We will be adding other features soon."
-                     "\nYour os Description is %s.",
-                     wxVERSION_STRING,
-                     wxGetOsDescription()),
-                 "About Fandral Editor",
-                 wxOK | wxICON_INFORMATION,
-                 this);
+    wxDialog *aboutDialog = new wxDialog(this, wxID_ANY, "About Us");
+
+    wxHtmlWindow *aboutWindow = new wxHtmlWindow(aboutDialog, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+
+    // This should be set on compile time
+    aboutWindow->LoadPage(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/AboutUs.html"));
+
+    aboutDialog->Show(true);
+
 }
 
 void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
