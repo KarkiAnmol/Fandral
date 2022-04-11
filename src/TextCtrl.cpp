@@ -179,6 +179,15 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     this->SetEditable(false);
                     break;
 
+                // :           for entering into multicharcommand mode
+                case 58: // : --> 58
+                    this->getParent()->commandArea->enterMultiCharCommandMode();
+                    this->getParent()->commandArea->SetFocus();
+                    
+                    // Going to last position as the colon will be on the last position
+                    this->getParent()->commandArea->GotoPos(this->getParent()->commandArea->GetLastPosition());
+                    break;
+
                 default:
                     event.Skip();
                 }
