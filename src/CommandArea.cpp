@@ -35,6 +35,10 @@ CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID)
     // Setting margin as a line number margin
     this->SetMarginType(Left_Margin, wxSTC_MARGIN_NUMBER);
 
+    // Custom styled
+    this->StyleSetForeground(Style_Invalid_Command, *wxWHITE);
+    this->StyleSetBackground(Style_Invalid_Command, *wxRED);
+
 }
 
 void CommandArea::AppendText(const wxString& text)
@@ -169,7 +173,8 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
             
                 break;
             case WXK_RETURN:    // for enter key press
-
+                this->executeMultiCharCommand(this->getMultiCharCommand());
+                break;
             
             default:
                 event.Skip();
@@ -187,20 +192,67 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
     if(command.Cmp("wq")==0 || command.Cmp("x")==0 || command.Cmp("ZZ")==0) // save and exit
     {
         this->getParent()->textCtrl->_SaveFile();
+        this->getParent()->Close();
         
-
     }
     else if(command.Cmp("q")==0) // quit, asks to save if there are unsaved changes
+                                 // The behaviour should be changes if desired
     {
+        int confirm = wxMessageBox(wxString::Format("Do you wish to close this file without saving ?"),
+                    "Confirm",
+                    wxYES_NO|wxICON_INFORMATION,
+                    this);
 
+        //If user wants to close file without saving it then close the tab else
+        //ask for save location
+        if(confirm == 8)   // User clicks no
+        {
+            this->getParent()->saveFile();
+        }
+        else if(confirm == 2)   // User clicks yes
+        {   
+            this->getParent()->Close();   
+        }
     }
-    else if(command.Cmp("q!") || command.Cmp("ZQ")) // quit and throw away unsaved changes
+    else if(command.Cmp("q!")==0 || command.Cmp("ZQ")==0) // quit and throw away unsaved changes
     {
-
+        this->getParent()->Close();
     }
-    else if(command.Cmp("w")==0)
+    else if(command.Cmp("w")==0) // saves the file
     {
-
+        this->getParent()->saveFile();
     }
+    else 
+    {
+        this->AppendText("\n");
+        this->SetCurrentPos(this->GetLastPosition());
+
+        // for styling from here
+        int pos = this->GetCurrentPos();
+
+        // The text to append
+        wxString text = "Invalid Command";
+
+        // do style for the length of the above text
+        int length = text.length();
+
+        this->AppendText(text + _T("\n"));
+
+        // these two lines will set the style of text of length
+        // starting from pos and the style will be Style_Invalid_Command which should be set in appropriate place
+        // either in constructor or somewhere else
+        this->StartStyling(pos);
+        this->SetStyling(length, Style_Invalid_Command);
+
+        // as the above newline will set on additional line 
+        // so making the text visibile when window isn't maximized
+        this->GotoLine(this->GetLineCount() -1 ); 
+    }
+
+   
+    // set change the multicharmode back to false
+    // and get back to text area after executing the command
+    this->setInMultiCharCommandMode(false);
+    this->getParent()->SetFocus();
 
  }

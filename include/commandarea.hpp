@@ -96,7 +96,14 @@ private:
 };
 
 enum{
+    styleMask = 0, 
     Left_Margin,
+    Style_Invalid_Command = 4,
+    Style_Insertion_Mode,
+    Style_Find,
+    Style_Replace,
+    Style_MultiChar_Command,
+   
 };
 
 
