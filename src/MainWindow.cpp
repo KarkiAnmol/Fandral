@@ -286,7 +286,10 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
                 if(vectorIterator!=vectorIteratorEnd)
                 {
-                    t->Close();
+                    if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                    {
+                        t->wxWindow::Close(true);
+                    }
                     continue; // not to increment the iterator
                 }
                 else 
@@ -304,7 +307,10 @@ void MyFrame::OnClose(wxCloseEvent &event)
             vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
             if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close();
+                if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                {
+                    t->wxWindow::Close(true);
+                }
                 continue; // not to increment the iterator 
             }
             else 
@@ -326,8 +332,11 @@ void MyFrame::OnClose(wxCloseEvent &event)
             vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
             if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close(); 
-                continue; // not to increment the iterator
+                if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                {
+                    t->wxWindow::Close(true);
+                }
+                continue; // not to increment the iterator 
             }
             else 
             {
