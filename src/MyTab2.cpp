@@ -65,6 +65,7 @@ bool MyTab::Close()
    if(parentNotebook->RemovePage(parentNotebook->GetPageIndex(this)))
    {
         this->wxWindow::Close(true);
+        return 1;
    }
    return 0;
 
