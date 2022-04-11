@@ -244,11 +244,14 @@ void MyFrame::OnClose(wxCloseEvent &event)
     std::vector<MyTab*>::iterator vectorIterator = this->mainNotebook->openedTabsVector.begin();
     std::vector<MyTab*>::iterator vectorIteratorEnd = this->mainNotebook->openedTabsVector.end();
 
-    for (vectorIterator; vectorIterator!=vectorIteratorEnd; vectorIterator++)
+    while(vectorIterator!=vectorIteratorEnd)
     {
         MyTab* t = *vectorIterator;
         wxString tabFilepath = t->filePath;
         bool empty = t->textCtrl->IsEmpty();
+
+        // setting as active even if it's about to be closed
+        t->setAsActive();
         
         if((tabFilepath.Cmp("-NONE-")==0) && !empty)
         {
@@ -267,13 +270,11 @@ void MyFrame::OnClose(wxCloseEvent &event)
             //ask for save location
             if(confirm == 8)   // User clicks no
             {
-                t->setAsActive(); 
                 t->saveFile();
                 return;     // Continue as if close button wasn't pressed
             }
             else if(confirm == 16) // User cancels the dialog
             {
-                t->setAsActive();
                 return;     //Continue as if close button wasn't pressed
             }
             else if(confirm == 2)   // User clicks yes
@@ -286,6 +287,7 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 if(vectorIterator!=vectorIteratorEnd)
                 {
                     t->Close();
+                    continue; // not to increment the iterator
                 }
                 else 
                 {
@@ -302,7 +304,8 @@ void MyFrame::OnClose(wxCloseEvent &event)
             vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
             if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close(); 
+                t->Close();
+                continue; // not to increment the iterator 
             }
             else 
             {
@@ -324,12 +327,14 @@ void MyFrame::OnClose(wxCloseEvent &event)
             if(vectorIterator!=vectorIteratorEnd)
             {
                 t->Close(); 
+                continue; // not to increment the iterator
             }
             else 
             {
                 break;  // the iterator will point to the end of vector which isn't a valid tab
             }
         }
+        vectorIterator++;
     }
 
     //The control will be here only if user decides not save any files
