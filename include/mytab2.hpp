@@ -57,6 +57,7 @@ public:
     void setAsActive();
 
     // Closes the tab
+    // also removes the tab from the openedtabsvector of parent notebook
     // Returns true if the tab could be closed successfully
     bool Close();
 
