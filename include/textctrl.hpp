@@ -73,6 +73,13 @@ private:
     // (doesn't matter if shift is capslock is on, event.GetKeyCode() will give the same value)
     void keyDownEventHandler(wxKeyEvent& event);
 
+    void OnSave(wxCommandEvent& event);
+
+    void OnRedo(wxCommandEvent& event);
+
+    // any class wishing to process wxWidgets events must use this macro
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 enum{

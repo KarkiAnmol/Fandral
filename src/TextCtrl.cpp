@@ -70,7 +70,23 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
 
     this->codehighliter = new CodeHighliter(this); 
 
+
+    // key event couldn't capture control + key pressed so
+    // generating accelerator table for that
+    wxAcceleratorEntry entries[2];
+    entries[0].Set(wxACCEL_CTRL,  (int) 'R',     wxID_REDO);
+    entries[1].Set(wxACCEL_CTRL, (int) 'S', wxID_SAVE);
+    wxAcceleratorTable accel(2, entries);
+    this->SetAcceleratorTable(accel);
+
 }
+
+wxBEGIN_EVENT_TABLE(TextCtrl, wxStyledTextCtrl)
+    
+    EVT_MENU(wxID_SAVE, TextCtrl::OnSave)
+    EVT_MENU(wxID_REDO, TextCtrl::OnRedo)
+    
+wxEND_EVENT_TABLE()
 
 void TextCtrl::charEventHandler(wxKeyEvent &event)
 {
@@ -213,11 +229,6 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
             {
                 switch(uc)
                 {
-                    // Perform save opearation on ctrl + s
-                    case WXK_CONTROL_S:
-                        this->_SaveFile();
-                        break;
-
                     // If escape key is pressed, enter into command mode
                     case WXK_ESCAPE:
                         this->SetEditable(false);
@@ -317,6 +328,30 @@ bool TextCtrl::_SaveFile()
     }
 
     return returnValue;
+}
+
+void TextCtrl::OnSave(wxCommandEvent& event)
+{
+    if(this->IsEditable())
+    {
+        this->_SaveFile();
+    }
+    else
+    {
+        event.Skip();
+    }
+}
+
+void TextCtrl::OnRedo(wxCommandEvent& event)
+{
+    if(!this->IsEditable())
+    {
+        this->Redo();
+    }
+    else 
+    {
+        event.Skip();
+    }
 }
 
 bool TextCtrl::_SaveFileAs()
