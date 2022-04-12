@@ -95,7 +95,7 @@ bool MyTab::isActive()
 
 bool MyTab::saveFile()
 {
-    this->textCtrl->_SaveFile();
+    return this->textCtrl->_SaveFile();
 }
 
 wxString MyTab::updateNameLabel(const wxString &fileLocation)

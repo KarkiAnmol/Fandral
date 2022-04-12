@@ -44,6 +44,11 @@ public:
     // then set it back to non editable
     void AppendText(const wxString& text);
 
+    // appends the text to command area and applys the
+    // given style to it.
+    // Don't pass escape sequence inside of the text.
+    void AppendTextWithStyle(const wxString& text, int style);
+
     // For highliting commands
     Codehighliter* codehighliter;
 
@@ -76,6 +81,12 @@ public:
     // previous and the current line
     wxString getMultiCharCommand();
 
+    // execute the provided multichar command
+    void executeMultiCharCommand(wxString command);
+
+    // nofifies the user by appending the text in command area
+    void nofifyInsertionMode();
+
 private:
     // event handlers
 
@@ -90,19 +101,18 @@ private:
     // (doesn't matter if shift is capslock is on, event.GetKeyCode() will give the same value)
     void keyDownEventHandler(wxKeyEvent& event);
 
-    // execute the provided multichar command
-    void executeMultiCharCommand(wxString command);
 
 };
 
 enum{
     styleMask = 0, 
     Left_Margin,
-    Style_Invalid_Command = 4,
+    Style_Error = 4,
     Style_Insertion_Mode,
     Style_Find,
     Style_Replace,
     Style_MultiChar_Command,
+    Style_Operation_Successful,
    
 };
 

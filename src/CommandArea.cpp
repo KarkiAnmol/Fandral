@@ -35,9 +35,22 @@ CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID)
     // Setting margin as a line number margin
     this->SetMarginType(Left_Margin, wxSTC_MARGIN_NUMBER);
 
-    // Custom styled
-    this->StyleSetForeground(Style_Invalid_Command, *wxWHITE);
-    this->StyleSetBackground(Style_Invalid_Command, *wxRED);
+    // Custom styles
+
+    // error style
+    this->StyleSetForeground(Style_Error, *wxWHITE);
+    this->StyleSetBackground(Style_Error, *wxRED);
+
+    // multichar command style
+    this->StyleSetForeground(Style_MultiChar_Command, *wxBLUE);
+    this->StyleSetBackground(Style_MultiChar_Command, this->StyleGetBackground(wxSTC_STYLE_DEFAULT));
+
+    // insertion mode notification style
+    this->StyleSetForeground(Style_Insertion_Mode, *wxBLACK);
+    this->StyleSetBackground(Style_Insertion_Mode, *wxGREEN);
+
+    this->StyleSetForeground(Style_Operation_Successful, *wxGREEN);
+    this->StyleSetBackground(Style_Operation_Successful, this->StyleGetBackground(wxSTC_STYLE_DEFAULT));
 
 }
 
@@ -92,6 +105,10 @@ wxString CommandArea::exitMultiCharCommandMode()
 
         return command;
     }
+    else
+    {
+        return wxString("NO COMMAND FOUND");
+    }
 }
 
 
@@ -130,7 +147,7 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
         // only append the text if the command is in command mode
         if(this->isInMultiCharCommandMode())
         {
-            this->AppendText(wxString(uc));
+            this->AppendTextWithStyle(wxString(uc), Style_MultiChar_Command);
         }
         else
         {
@@ -189,6 +206,7 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
 
  void CommandArea::executeMultiCharCommand(wxString command)
  {
+    int currentLine = this->GetCurrentLine();
     if(command.Cmp("wq")==0 || command.Cmp("x")==0 || command.Cmp("ZZ")==0) // save and exit
     {
         this->getParent()->textCtrl->_SaveFile();
@@ -207,7 +225,18 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
         //ask for save location
         if(confirm == 8)   // User clicks no
         {
-            this->getParent()->saveFile();
+            this->AppendText("\n");
+            if(this->getParent()->saveFile())
+            {
+                this->AppendTextWithStyle("Saved File Successfully", Style_Operation_Successful);
+            }
+            else
+            {
+                this->AppendTextWithStyle("Couldnot Complete The Save Operation", Style_Error);
+            }
+            this->AppendText("\n");
+
+            
         }
         else if(confirm == 2)   // User clicks yes
         {   
@@ -220,33 +249,22 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
     }
     else if(command.Cmp("w")==0) // saves the file
     {
-        this->getParent()->saveFile();
+        this->AppendText("\n");
+        if(this->getParent()->saveFile())
+        {
+            this->AppendTextWithStyle("Saved File Successfully", Style_Operation_Successful);
+        }
+        else
+        {
+            this->AppendTextWithStyle("Couldn't Complete The Save Operation", Style_Error);
+        }
+        this->AppendText("\n");
     }
     else 
     {
         this->AppendText("\n");
-        this->SetCurrentPos(this->GetLastPosition());
-
-        // for styling from here
-        int pos = this->GetCurrentPos();
-
-        // The text to append
-        wxString text = "Invalid Command";
-
-        // do style for the length of the above text
-        int length = text.length();
-
-        this->AppendText(text + _T("\n"));
-
-        // these two lines will set the style of text of length
-        // starting from pos and the style will be Style_Invalid_Command which should be set in appropriate place
-        // either in constructor or somewhere else
-        this->StartStyling(pos);
-        this->SetStyling(length, Style_Invalid_Command);
-
-        // as the above newline will set on additional line 
-        // so making the text visibile when window isn't maximized
-        this->GotoLine(this->GetLineCount() -1 ); 
+        this->AppendTextWithStyle("Invalid Command", Style_Error);
+        this->AppendText("\n");
     }
 
    
@@ -255,4 +273,30 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
     this->setInMultiCharCommandMode(false);
     this->getParent()->SetFocus();
 
+ }
+
+ void CommandArea::AppendTextWithStyle(const wxString& text, int style)
+ {
+    this->SetCurrentPos(this->GetLastPosition());
+
+    // for styling from here
+    int pos = this->GetCurrentPos();
+
+    // do style for the length of the given text
+    int length = text.length();
+
+    // Adding the given text to command area
+    this->AppendText(text);
+
+    // these two lines will set the style of text of length
+    // starting from pos with the given style
+    this->StartStyling(pos);
+    this->SetStyling(length, style);
+ }
+
+ void CommandArea::nofifyInsertionMode()
+ {
+    this->AppendText("\n");
+    this->AppendTextWithStyle("Insertion Mode", Style_Insertion_Mode);
+    this->AppendText("\n");
  }
