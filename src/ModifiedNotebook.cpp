@@ -62,6 +62,10 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
     // If it is enabled on all tabs, it will create problems.
     MyTab* activeTab = this->getCurrentlyActiveTab();
 
+    // consuming the event as the close method of MyTab class 
+    // will close this window for us
+    event.Veto();
+
     if(activeTab->filePath.Cmp(_T("-NONE-"))==0)
     {
         //Only asks to save if the file isn't empty
@@ -81,70 +85,23 @@ void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
             //else veto it and ask for save location
             if(confirm == 8)   
             { 
-                event.Veto();
                 activeTab->textCtrl->_SaveFileAs();
-            }
-            else if(confirm == 16)
-            {
-                // Continue as if close button wasn't pressed if user cancels the dialog
-                event.Veto();
             }
             else if(confirm==2)
             {
-                try
-                {
-                    this->removeTabFromVector(activeTab);
-                }
-                catch(std::logic_error &error)
-                {
-                    wxMessageBox(wxString::Format("Couldn't complete the close operation."),
-                            "Error",
-                            wxOK|wxICON_INFORMATION,
-                            this);
-
-                    // discarding the close operation as there was an error
-                    event.Veto();
-                }
+                activeTab->Close();
             }
         }
-        else     // Since the event isn't vetoed, the page will close after we exit from here
+        else     
         { 
-            // Remove the tab and proceeds to close it.
-            try
-            {
-                this->removeTabFromVector(activeTab);
-            }
-            catch(std::logic_error &error)
-            {
-                wxMessageBox(wxString::Format("Couldn't complete the close operation."),
-                        "Error",
-                        wxOK|wxICON_INFORMATION,
-                        this);
-
-                // discarding the close operation as there was an error
-                event.Veto();
-            }
+            activeTab->Close();         
         }
     }
-    else    // Since the event isn't vetoed, the page will close after we exit from here
+    else
     {
-        // Closes tab only if the tab was successfully removed from the vector
-        // Not being able to remove may imply that it's isn't a proper tab object
-        try
-        {
-            this->removeTabFromVector(activeTab);
-        }
-        catch(std::logic_error &error)
-        {
-             wxMessageBox(wxString::Format("Couldn't complete the close operation."),
-                    "Error",
-                    wxOK|wxICON_INFORMATION,
-                    this);
-            return;
-        }
-        
-        // This will only execute if there wasn't error in the above try / catch block
         activeTab->textCtrl->_SaveFile();
+
+        activeTab->Close();
     }
 }
 

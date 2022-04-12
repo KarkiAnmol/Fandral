@@ -93,23 +93,29 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 case 73: // I --> 73
                     this->GotoLine(this->GetCurrentLine());
                     this->SetEditable(true);
+
+                    // Notifying the user the tab is in insertion mode
+                    associatedCommandArea->nofifyInsertionMode();
                     break;
                 
                 // enter into insertion mode at the current position
                 case 105: // i --> 105
                     this->SetEditable(true);
+                    associatedCommandArea->nofifyInsertionMode();
                     break;
 
                 // move cursor one character to right and set editable
                 case 97: // a --> 97
                     this->CharRight();
                     this->SetEditable(true);
+                    associatedCommandArea->nofifyInsertionMode();
                     break;
 
                 // move cursor to the end of line and set editable
                 case 65: // A --> 65
                     this->LineEnd();
                     this->SetEditable(true);
+                    associatedCommandArea->nofifyInsertionMode();
                     break;
 
                 // move cursor left
@@ -177,6 +183,15 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     this->SetEditable(true);
                     this->Undo();
                     this->SetEditable(false);
+                    break;
+
+                // :           for entering into multicharcommand mode
+                case 58: // : --> 58
+                    this->getParent()->commandArea->enterMultiCharCommandMode();
+                    this->getParent()->commandArea->SetFocus();
+                    
+                    // Going to last position as the colon will be on the last position
+                    this->getParent()->commandArea->GotoPos(this->getParent()->commandArea->GetLastPosition());
                     break;
 
                 default:
@@ -276,29 +291,35 @@ void TextCtrl::keyDownEventHandler(wxKeyEvent &event)
     }
 }
 
-void TextCtrl::_SaveFile()
+bool TextCtrl::_SaveFile()
 {
     wxString saveLocation;
+    bool returnValue = 0;
 
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open
      **/
     if (this->getParent()->filePath.Cmp(_T("-NONE-"))==0)
     {
-        this->_SaveFileAs();
-        return;
+        returnValue = this->_SaveFileAs();
     }
     else
     {
         // sets saveLocation to currently open file save location if it's known.
         saveLocation = this->getParent()->filePath;
+        returnValue = 1;
+        this->SaveFile(saveLocation);
     }
     
-    this->SaveFile(saveLocation);
-    this->getParent()->updateNameLabel(saveLocation);   // updating the label of the parent tab
+    if(returnValue)
+    {
+        this->getParent()->updateNameLabel(saveLocation);   // updating the label of the parent tab
+    }
+
+    return returnValue;
 }
 
-void TextCtrl::_SaveFileAs()
+bool TextCtrl::_SaveFileAs()
 {
     // Opens native file explorer dialog box to select saving location
     wxString saveLocation = wxSaveFileSelector(
@@ -307,11 +328,17 @@ void TextCtrl::_SaveFileAs()
         "Fandral",
         this);
 
-    // Modifying the filepath of the tab object
-    this->getParent()->filePath = saveLocation;
+    if(!saveLocation.IsEmpty())
+    {
+        // Modifying the filepath of the tab object
+        this->getParent()->filePath = saveLocation;
 
-    // Also updating the label of the parent tab
-    this->getParent()->updateNameLabel(saveLocation);
+        // Also updating the label of the parent tab
+        this->getParent()->updateNameLabel(saveLocation);
+        
+        return 1;
+    }
+    else return 0;
 }
 
 

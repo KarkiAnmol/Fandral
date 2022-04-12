@@ -61,10 +61,27 @@ void MyTab::setAsActive()
 
 bool MyTab::Close()
 {
+    // remove the tab from the vector
+    // we don't have to worry about dynamic allocation and deallocation here
+    // as only one tab is removed
+    try
+    {
+        this->parentNotebook->removeTabFromVector(this);
+    }
+    catch(std::logic_error &error)
+    {
+         wxMessageBox(wxString::Format("Couldn't complete the close operation."),
+                "Error",
+                wxOK|wxICON_INFORMATION,
+                this);
+        return 0; // not closing the tab as the tab couldn't be removed from the vector
+    }
+
     // Initially removing the tab from the parentnotebook
    if(parentNotebook->RemovePage(parentNotebook->GetPageIndex(this)))
    {
         this->wxWindow::Close(true);
+        return 1;
    }
    return 0;
 
@@ -78,7 +95,7 @@ bool MyTab::isActive()
 
 bool MyTab::saveFile()
 {
-    this->textCtrl->_SaveFile();
+    return this->textCtrl->_SaveFile();
 }
 
 wxString MyTab::updateNameLabel(const wxString &fileLocation)

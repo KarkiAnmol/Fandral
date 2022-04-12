@@ -12,6 +12,10 @@
 #include "textctrl.hpp"
 #include "mytab2.hpp"
 
+#include "wx/wxhtml.h"
+
+#include <wx/html/helpctrl.h>
+
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
@@ -125,17 +129,16 @@ void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-    wxMessageBox(wxString::Format(
-                     "Welcome to Fandral Editor made with %s!\n"
-                     "\n"
-                     "This is the initial build of Fandral Editor\n"
-                     "We will be adding other features soon."
-                     "\nYour os Description is %s.",
-                     wxVERSION_STRING,
-                     wxGetOsDescription()),
-                 "About Fandral Editor",
-                 wxOK | wxICON_INFORMATION,
-                 this);
+    wxDialog *aboutDialog = new wxDialog(this, wxID_ANY, "About Fandral Editor");
+
+    wxHtmlWindow *aboutWindow = new wxHtmlWindow(aboutDialog, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+
+    // This is set on runtime for now
+    // Either a webpage should be setup or the installation path must be fixed for it to function properly
+    aboutWindow->LoadPage(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/AboutUs.html"));
+
+    aboutDialog->Show(true);
+
 }
 
 void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
@@ -283,7 +286,10 @@ void MyFrame::OnClose(wxCloseEvent &event)
                 vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
                 if(vectorIterator!=vectorIteratorEnd)
                 {
-                    t->Close();
+                    if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                    {
+                        t->wxWindow::Close(true);
+                    }
                     continue; // not to increment the iterator
                 }
                 else 
@@ -301,7 +307,10 @@ void MyFrame::OnClose(wxCloseEvent &event)
             vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
             if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close();
+                if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                {
+                    t->wxWindow::Close(true);
+                }
                 continue; // not to increment the iterator 
             }
             else 
@@ -323,8 +332,11 @@ void MyFrame::OnClose(wxCloseEvent &event)
             vectorIteratorEnd = this->mainNotebook->openedTabsVector.end(); // the end of the vector might also change as the whole vector is copied
             if(vectorIterator!=vectorIteratorEnd)
             {
-                t->Close(); 
-                continue; // not to increment the iterator
+                if(this->mainNotebook->RemovePage(this->mainNotebook->GetPageIndex(this)))
+                {
+                    t->wxWindow::Close(true);
+                }
+                continue; // not to increment the iterator 
             }
             else 
             {
@@ -345,8 +357,11 @@ void MyFrame::OnClose(wxCloseEvent &event)
 
 void MyFrame::OnHelp(wxCommandEvent& event)
 {
-    wxDialog* dialog = new wxDialog(this, wxID_ANY, "Help", wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX| wxCAPTION | wxCLOSE_BOX| wxMAXIMIZE_BOX, "Help Dialog");
-    dialog->Show(true);
+
+    wxHtmlHelpController *helpController = new wxHtmlHelpController(this);
+    helpController->AddBook(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/help.hhp"));
+    helpController->Display(1);
+
 }
 
 MyTab* MyFrame::getCurrentlyActiveTab()

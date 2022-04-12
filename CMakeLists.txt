@@ -47,7 +47,7 @@ configure_file(include/AppConfig.h.in AppConfig.h)
 
 target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}" PUBLIC include)
 
-find_package(wxWidgets REQUIRED gl aui core base stc OPTIONAL_COMPONENTS net)
+find_package(wxWidgets REQUIRED gl aui core base stc html OPTIONAL_COMPONENTS net)
 
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})

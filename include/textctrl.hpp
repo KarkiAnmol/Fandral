@@ -41,11 +41,13 @@ public:
 
     //Saves the current file
     // Performs save as operation if the file wasn't saved before
-    void _SaveFile();
+    // Returns 1 if saved successfully else returns 0
+    bool _SaveFile();
 
     //Performs save as operation
     // Also modifies the file path of the parent tab
-    void _SaveFileAs();
+    // Returns 1 if valid savelocation is found else returns 0
+    bool _SaveFileAs();
 
     //for syntax highliting with one highliter object in each textctrl
     CodeHighliter* codehighliter;
