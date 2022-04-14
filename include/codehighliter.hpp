@@ -59,6 +59,8 @@ public:
 
     void highlightCSharp();
 
+    void highlightXml();
+
 };
 
 #endif // _CODE_HIGHLITER_H_

@@ -77,3 +77,12 @@ void CodeHighliter::highlightCSharp()
 {
 
 }
+
+void CodeHighliter::highlightXml()
+{
+
+    this->lex_language=wxSTC_LEX_XML;
+
+    this->textctrl->SetLexer(wxSTC_LEX_XML);
+
+}
