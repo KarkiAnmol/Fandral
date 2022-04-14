@@ -61,7 +61,7 @@ MyFrame::MyFrame(const wxString &title)
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(New_Window, "New Window");
     fileMenu->Append(New_File, "&New\tCtrl-N");
-    fileMenu->Append(Open_File, "&Open");
+    fileMenu->Append(Open_File, "&Open\tCtrl-O");
     fileMenu->Append(Save_File, "Save\tCtrl-S");
     fileMenu->Append(Save_File_As, "Save As");
     fileMenu->Append(Editor_Quit, "E&xit\tAlt-X");
@@ -145,16 +145,23 @@ void MyFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
     wxString openLocation = wxLoadFileSelector(
 
-        "a text",
-        /**Wildcard example for file selection
-          *"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
-          *Remember to put spaces between different extensions and keep the same extensions together.
-          *correct:   PNG files (*.png)|*.png
-          *incorrect: PNG files (*.png)| *.png
+        "a",
+        /** Wildcard example for file selection
+          * "BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
+          * Remember to put spaces between different extensions and keep the same extensions together.
+          * correct:   PNG files (*.png)|*.png
+          * incorrect: PNG files (*.png)| *.png
          **/
         "txt files (*.txt)|*.txt| XML files (*.xml)|*.xml| Markdown files (*.md)|*.md| CPP files (*.cpp)|*.cpp| Any Files (*.*)|*.*",
         "Fandral",
         this);
+    
+    // Don't proceed further if location isn't given
+    // This happens when the user cancels the dialog
+    if(openLocation.IsEmpty())
+    {
+        return;
+    }
 
     //For checking if the file is already open in one of the tabs
     bool alreadyOpened=0;
