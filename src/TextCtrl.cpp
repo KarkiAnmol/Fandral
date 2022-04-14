@@ -93,6 +93,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
     CommandArea* associatedCommandArea = this->getParent()->commandArea;
     wxChar uc = event.GetUnicodeKey();
     int keycode = event.GetKeyCode();
+    wxLongLong timeDifference; // since variable cannot be declared inside switch block
     if (uc != WXK_NONE)
     {
         // It's a "normal" character. Notice that this includes
@@ -213,7 +214,8 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 // cutting a line
                 // cutting line if d is pressed twice in certain interval
                 case 100: // d --> 100
-                    if(lastKeyPressesArray[0].unicodeKeycode==100 && (lastKeyPressesArray[0].pressedTime - wxGetLocalTimeMillis() < this->timeInterval))
+                    timeDifference = wxGetLocalTimeMillis() - lastKeyPressesArray[0].pressedTime;
+                    if(lastKeyPressesArray[0].unicodeKeycode==100 && timeDifference < this->timeInterval)
                     {
                         this->SetEditable(true);
                         this->LineCut();
@@ -224,7 +226,8 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 // copying a line
                 // copying a line if y is pressed twice in certain interval
                 case 121: // y --> 121
-                    if(lastKeyPressesArray[0].unicodeKeycode==121 && (lastKeyPressesArray[0].pressedTime - wxGetLocalTimeMillis() < this->timeInterval))
+                    timeDifference = wxGetLocalTimeMillis() - lastKeyPressesArray[0].pressedTime;
+                    if(lastKeyPressesArray[0].unicodeKeycode==121 &&  timeDifference < this->timeInterval)
                     {
                         this->LineCopy();
                     }
@@ -384,9 +387,9 @@ bool TextCtrl::_SaveFileAs()
 {
     // Opens native file explorer dialog box to select saving location
     wxString saveLocation = wxSaveFileSelector(
-        "the current text",
-        "TEXT files (*.txt)|*.txt| DOCX files (*.docx)|*.docx| XML files (*.xml)|*.xml",
-        "Fandral",
+        "the current ",
+        "TEXT files (*.txt)|*.txt| XML files (*.xml)|*.xml |Any files (*.*)|*.*",
+        " ",
         this);
 
     if(!saveLocation.IsEmpty())

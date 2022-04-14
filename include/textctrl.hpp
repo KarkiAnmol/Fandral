@@ -45,7 +45,7 @@ public:
     struct KeyAndTime lastKeyPressesArray[5];
 
     // for setting the time interval between key pressed for double keys
-    long timeInterval = 700;
+    long timeInterval = 500;
 
     //constructors
     TextCtrl();
