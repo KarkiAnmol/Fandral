@@ -210,6 +210,26 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     this->getParent()->commandArea->GotoPos(this->getParent()->commandArea->GetLastPosition());
                     break;
 
+                // cutting a line
+                // cutting line if d is pressed twice in certain interval
+                case 100: // d --> 100
+                    if(lastKeyPressesArray[0].unicodeKeycode==100 && (lastKeyPressesArray[0].pressedTime - wxGetLocalTimeMillis() < this->timeInterval))
+                    {
+                        this->SetEditable(true);
+                        this->LineCut();
+                        this->SetEditable(false);
+                    }
+                    break;
+
+                // copying a line
+                // copying a line if y is pressed twice in certain interval
+                case 121: // y --> 121
+                    if(lastKeyPressesArray[0].unicodeKeycode==121 && (lastKeyPressesArray[0].pressedTime - wxGetLocalTimeMillis() < this->timeInterval))
+                    {
+                        this->LineCopy();
+                    }
+                    break;
+
                 default:
                     event.Skip();
                 }
@@ -245,6 +265,15 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
     {
        event.Skip();
     }
+
+    // Adding the key to our array
+    // This is done as to capture double key presses like dd and yy
+    struct KeyAndTime t1{uc, wxGetLocalTimeMillis()};
+
+    lastKeyPressesArray[0] = t1; // since we only need the last key press,
+                                 // always adding the last key press to the first position
+
+
     return;
 };
 
@@ -346,7 +375,9 @@ void TextCtrl::OnRedo(wxCommandEvent& event)
 {
     if(!this->IsEditable())
     {
+        this->SetEditable(true);
         this->Redo();
+        this->SetEditable(false);
     }
     else 
     {

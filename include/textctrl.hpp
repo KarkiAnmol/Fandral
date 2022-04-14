@@ -15,16 +15,37 @@
 #endif
 
 #include "wx/stc/stc.h"
+#include "wx/time.h"
 
 class ModifiedNotebook;
 class CodeHighliter;
 class MyTab;
+
+// This is to store the last pressed key in an array
+struct KeyAndTime
+{
+    int unicodeKeycode;
+    wxLongLong pressedTime;
+
+};
+
+// The place used to display the text. 
+// Remember to make it editable before appending text or deleting text
+// Since, many functions leave it uneditable.
 
 class TextCtrl: public wxStyledTextCtrl{
 public:
 
     // The tab which it belongs to
     MyTab* parentTab;
+
+    // Since, we don't need much combination, 
+    // setting the maximum number of key to be stored to 5. 
+    // Only one will be used
+    struct KeyAndTime lastKeyPressesArray[5];
+
+    // for setting the time interval between key pressed for double keys
+    long timeInterval = 700;
 
     //constructors
     TextCtrl();
