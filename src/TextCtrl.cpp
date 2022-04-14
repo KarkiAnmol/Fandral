@@ -243,7 +243,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
         }
         else  // Since the the app will ignore modifiers so, this is not the correct place
               // to check for ctrl + alphabet, escape character and so on  (unicode from 1 to 31)
-              // This will be checked by keyDownEventHandler 
+              // This will be checked by keyDownEventHandler or accelerator table will be set up
         {
             if(this->IsEditable())
             {
@@ -252,6 +252,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     // If escape key is pressed, enter into command mode
                     case WXK_ESCAPE:
                         this->SetEditable(false);
+                        this->getParent()->commandArea->nofifyCommandMode();
                         break;
                 
                     default:
@@ -288,13 +289,7 @@ void TextCtrl::keyDownEventHandler(wxKeyEvent &event)
         {
             case WXK_ESCAPE:
                 this->SetEditable(false);
-                break;
-            case 83: // S --> 83
-                if(event.ControlDown()) 
-                {                       // Performs save file operation only if 
-                    this->_SaveFile();  // ctrl was hold down when s was pressed  
-                }
-                else event.Skip();                                    
+                this->getParent()->commandArea->nofifyCommandMode();
                 break;
             default:
                 event.Skip();

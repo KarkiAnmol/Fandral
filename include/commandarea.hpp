@@ -87,6 +87,9 @@ public:
     // nofifies the user by appending the text in command area
     void nofifyInsertionMode();
 
+    // nofifies the user by appending the text in command area
+    void nofifyCommandMode();
+
 private:
     // event handlers
 
@@ -113,6 +116,7 @@ enum{
     Style_Replace,
     Style_MultiChar_Command,
     Style_Operation_Successful,
+    Style_Command_Mode,
    
 };
 

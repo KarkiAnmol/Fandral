@@ -52,6 +52,13 @@ CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID)
     this->StyleSetForeground(Style_Operation_Successful, *wxGREEN);
     this->StyleSetBackground(Style_Operation_Successful, this->StyleGetBackground(wxSTC_STYLE_DEFAULT));
 
+    // command mode notification style
+    this->StyleSetForeground(Style_Command_Mode, *wxBLACK);
+    this->StyleSetBackground(Style_Command_Mode, *wxYELLOW);
+
+    // since the textctrl will be editiable initially
+    this->nofifyInsertionMode();
+
 }
 
 void CommandArea::AppendText(const wxString& text)
@@ -298,5 +305,12 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
  {
     this->AppendText("\n");
     this->AppendTextWithStyle("Insertion Mode", Style_Insertion_Mode);
+    this->AppendText("\n");
+ }
+
+ void CommandArea::nofifyCommandMode()
+ {
+    this->AppendText("\n");
+    this->AppendTextWithStyle("Command Mode", Style_Command_Mode);
     this->AppendText("\n");
  }
