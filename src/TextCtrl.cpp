@@ -42,7 +42,7 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
     this->SetCaretForeground(wxColor("#F2F2F7FF"));
 
     //font of the text inside text area
-    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(11, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    this->StyleSetFont(wxSTC_STYLE_DEFAULT, this->textFont);
 
     //clearing previous styles and setting to default ones
     this->StyleClearAll();
@@ -61,9 +61,11 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
 
     this->SetMarginWidth(MARGIN_LINE_NUMBERS, 25);
 
+    wxFont defaultFont = this->StyleGetFont(wxSTC_STYLE_DEFAULT);
+
     this->StyleSetForeground(wxSTC_STYLE_LINENUMBER, this->StyleGetForeground(wxSTC_STYLE_DEFAULT));
     this->StyleSetBackground(wxSTC_STYLE_LINENUMBER, this->StyleGetBackground(wxSTC_STYLE_DEFAULT));
-    this->StyleSetFont(wxSTC_STYLE_LINENUMBER, this->StyleGetFont(wxSTC_STYLE_DEFAULT));
+    this->StyleSetFont(wxSTC_STYLE_LINENUMBER, defaultFont);
     this->StyleSetSize(wxSTC_STYLE_LINENUMBER, 9);
 
     this->SetMarginType(MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);

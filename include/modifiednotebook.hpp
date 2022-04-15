@@ -15,6 +15,7 @@
 #endif
 
 #include <wx/aui/auibook.h>
+#include <vector>
 
 class MyTab;
 

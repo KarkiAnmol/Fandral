@@ -60,6 +60,8 @@ public:
         return parentTab;
     }
 
+    wxFont textFont =  wxFont(11, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
     //Saves the current file
     // Performs save as operation if the file wasn't saved before
     // Returns 1 if saved successfully else returns 0
