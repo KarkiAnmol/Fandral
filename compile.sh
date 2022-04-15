@@ -1,8 +1,8 @@
 #! /bin/sh
 
 #If building for the first time,  uncomment the following lines
-#mkdir build
-#cmake -B ./build -S .
+mkdir build
+cmake -B ./build -S .
 
 #Changing to build directory
 cd build
