@@ -1,0 +1,15 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: bash mkdir build; bash cmake -B build -S . && cmake --build build
+    command:  bash build/FandralEditor # this is useless since the build will be in prebuilds
+
+ports:
+  - port: 6080
+    onOpen: open-preview
+  - port: 5900
+    onOpen: ignore
+  - port: 35900
+    onOpen: ignore
+  
