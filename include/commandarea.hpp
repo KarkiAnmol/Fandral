@@ -108,7 +108,7 @@ private:
 };
 
 enum{
-    styleMask = 0, 
+    styleMask = 255, 
     Left_Margin,
     Style_Error = 4,
     Style_Insertion_Mode,
