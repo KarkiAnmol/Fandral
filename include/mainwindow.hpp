@@ -90,6 +90,10 @@ public:
     // Display new window with help items
     void OnHelp(wxCommandEvent& event);
 
+    void OnFind(wxCommandEvent& event);
+
+    void OnFindAndReplace(wxCommandEvent& event);
+
     //Setting one frame (app window) to use only one notebook
     //For now one frame will have only one notebook
     ModifiedNotebook* mainNotebook;

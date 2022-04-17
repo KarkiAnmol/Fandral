@@ -11,6 +11,7 @@
 #include "modifiednotebook.hpp"
 #include "textctrl.hpp"
 #include "mytab2.hpp"
+#include "findandreplace.hpp"
 
 #include "wx/wxhtml.h"
 
@@ -115,6 +116,8 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Open_File, MyFrame::OnOpen)
     EVT_MENU(Save_File_As, MyFrame::OnSaveAs)
     EVT_MENU(Editor_Help, MyFrame::OnHelp)
+    EVT_MENU(Find_Item, MyFrame::OnFind)
+    EVT_MENU(Find_And_Replace_Item, MyFrame::OnFindAndReplace)
     EVT_CLOSE(MyFrame::OnClose)
 wxEND_EVENT_TABLE()
 
@@ -369,6 +372,18 @@ void MyFrame::OnHelp(wxCommandEvent& event)
     helpController->AddBook(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/help.hhp"));
     helpController->Display(1);
 
+}
+
+void MyFrame::OnFind(wxCommandEvent& event)
+{
+    FindDialog* findDialog = new FindDialog(this, false,  wxID_ANY, "Find");
+    findDialog->Show(true);
+}
+
+void MyFrame::OnFindAndReplace(wxCommandEvent& event)
+{
+    FindDialog* findDialog = new FindDialog(this, true, wxID_ANY, "Find And Replace");
+    findDialog->Show(true);
 }
 
 MyTab* MyFrame::getCurrentlyActiveTab()
