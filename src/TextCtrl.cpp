@@ -303,13 +303,6 @@ void TextCtrl::keyDownEventHandler(wxKeyEvent &event)
         // Handeling the keys and other when in command mode.
         switch(keyCode)
         {
-        case 82: // R --> 82
-            if(event.ControlDown())
-            { 
-                this->Redo(); // Do redo only if shift was held down when r was pressed
-            }
-            else event.Skip();
-            break;
         case WXK_LEFT: // Left arrow key
             this->CharLeft();
             break;

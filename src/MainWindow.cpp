@@ -70,7 +70,7 @@ MyFrame::MyFrame(const wxString &title)
     // create edit menu
     wxMenu *editMenu = new wxMenu;
     editMenu->Append(Find_Item, "&Find\tCtrl-F");
-    editMenu->Append(Find_And_Replace_Item, "Find And &Replace \tCtrl-R");
+    editMenu->Append(Find_And_Replace_Item, "Find And &Replace");
 
     // create help menu
     wxMenu *helpMenu = new wxMenu;
