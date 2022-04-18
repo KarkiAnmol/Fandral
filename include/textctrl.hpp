@@ -80,8 +80,10 @@ public:
     //The highliting is done according to fileExtension
     int getAppropriateHighliter();
 
-    // find
-    void find(wxString textToFind);
+    // finds the next occurance of string
+    // selects it and makes it visible
+    // returns the position of the string
+    int find(wxString textToFind);
 
     // replace
     void replace(wxString textToFind, wxString textToReplace, bool all = false);

@@ -431,7 +431,7 @@ void TextCtrl::updateHighlighter()
 }
 
 // find
-void TextCtrl::find(wxString textToFind)
+int TextCtrl::find(wxString textToFind)
 {
     // if a selection was already present,
     // move the search anchor one position to the right
@@ -454,60 +454,44 @@ void TextCtrl::find(wxString textToFind)
     {
         this->SetCurrentPos(0);
         this->ClearSelections();
+
+        // search one more time from the beginning
+        // this is done as search is done only in one direction
+        // and when it reaches the end, the previous strings aren't searched
+        this->SearchAnchor();
+        pos = this->SearchNext(searchFlags,textToFind);
+
+        if(pos>=0)
+        {
+            this->EnsureCaretVisible();
+        }
     }
 
+    return pos;
 
-//searches for the text   
-
-    // wxStyledTextCtrl *textArea;
-    // textarea->StyleSetBackground(styleHightlightAllSelected, wxColor(80, 255, 80));
-
-//GetSelectedText returns the currently selectedd text if any
-// int maxPos = textarea->GetLastPosition();
-
-// textarea->IndicatorClearRange(0, maxPos);
-// textarea->IndicatorSetStyle(styleHightlightAllSelected, wxSTC_INDIC_ROUNDBOX);
-// textarea->IndicatorSetAlpha(styleHightlightAllSelected, 100);
-// textarea->IndicatorSetUnder(styleHightlightAllSelected, true);
-// textarea->IndicatorSetForeground(styleHightlightAllSelected, wxColor(0, 255, 0));
-
-// wxString selectedText = textarea->GetSelectedText();
-// int selSize  = selectedText.size();
-// int selStart = textarea->GetSelectionStart();
-
-// int pos    = 0;
-// int curr   = 0;
-// vector<int> selectionList;
-// while((pos = textarea->FindText(curr, maxPos, selectedText)) != -1){
-//     selectionList.push_back(pos);
-//     curr = pos + selSize;
-// }
-
-// textarea->SetIndicatorCurrent(styleHightlightAllSelected);
-// for(unsigned int i = 0; i < selectionList.size(); i++){
-//     if(selectionList[i] != selStart){
-//         textarea->IndicatorFillRange(selectionList[i], selSize);
-//     }
-// }
-//Returns true if the current selection can be copied.
-// virtual bool wxWebView::CanCut	(		)	const
-
-// //cuts the current selection
-// virtual void wxWebView::Cut	(		)
-
-// //Returns true if data can be pasted
-// virtual bool wxWebView::CanPaste	(		)	const
-
-// //Pastes the current data
-// virtual void wxWebView::Paste	(		)	
-
-
-     
 }
 
-// replace
+
 void TextCtrl::replace(wxString textToFind, wxString textToReplace, bool all)
 {
-    this->find(textToFind);
-    this->ReplaceTargetRE(textToReplace);
+    int pos;
+
+    // if there was a previous selection and the selection was matches our find text
+    // replace that
+    if(this->GetSelections() > 0 && this->GetSelectedText().Cmp(textToFind)==0)
+    {
+        pos = this->GetSelectionStart();
+    }
+    else // if there was no selections or the selection doesn't match the text to find
+        // perform find and replace that
+    {
+        pos = this->find(textToFind);
+    }
+    if(pos>=0)
+    {
+        this->Replace(pos, pos + textToFind.length(), textToReplace);
+
+        // set the selection to next match and ensure it is visible
+        this->find(textToFind);
+    }
 }
