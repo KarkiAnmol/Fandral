@@ -80,6 +80,12 @@ public:
     //The highliting is done according to fileExtension
     int getAppropriateHighliter();
 
+    // find
+    void find(wxString textToFind);
+
+    // replace
+    void replace(wxString textToFind, wxString textToReplace, bool all = false);
+
 private:
     //Event handlers
 

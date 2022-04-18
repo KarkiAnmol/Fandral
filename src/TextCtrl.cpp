@@ -429,3 +429,85 @@ void TextCtrl::updateHighlighter()
     //Updating the highliter after each label update
     this->codehighliter->setLex_Language(this->getAppropriateHighliter());
 }
+
+// find
+void TextCtrl::find(wxString textToFind)
+{
+    // if a selection was already present,
+    // move the search anchor one position to the right
+    if(this->GetSelections() > 0)
+    {
+        this->SetCurrentPos(this->GetCurrentPos() + 1);
+    }
+    this->SearchAnchor();
+
+    // searching at the start of word boundaries
+    int searchFlags = wxSTC_FIND_WORDSTART;
+    int pos = this->SearchNext(searchFlags,textToFind);
+
+    // if valid search is found, making the string visible
+    if(pos>=0)
+    {
+        this->EnsureCaretVisible();
+    }
+    else // else going to the first position and clearing the selections
+    {
+        this->SetCurrentPos(0);
+        this->ClearSelections();
+    }
+
+
+//searches for the text   
+
+    // wxStyledTextCtrl *textArea;
+    // textarea->StyleSetBackground(styleHightlightAllSelected, wxColor(80, 255, 80));
+
+//GetSelectedText returns the currently selectedd text if any
+// int maxPos = textarea->GetLastPosition();
+
+// textarea->IndicatorClearRange(0, maxPos);
+// textarea->IndicatorSetStyle(styleHightlightAllSelected, wxSTC_INDIC_ROUNDBOX);
+// textarea->IndicatorSetAlpha(styleHightlightAllSelected, 100);
+// textarea->IndicatorSetUnder(styleHightlightAllSelected, true);
+// textarea->IndicatorSetForeground(styleHightlightAllSelected, wxColor(0, 255, 0));
+
+// wxString selectedText = textarea->GetSelectedText();
+// int selSize  = selectedText.size();
+// int selStart = textarea->GetSelectionStart();
+
+// int pos    = 0;
+// int curr   = 0;
+// vector<int> selectionList;
+// while((pos = textarea->FindText(curr, maxPos, selectedText)) != -1){
+//     selectionList.push_back(pos);
+//     curr = pos + selSize;
+// }
+
+// textarea->SetIndicatorCurrent(styleHightlightAllSelected);
+// for(unsigned int i = 0; i < selectionList.size(); i++){
+//     if(selectionList[i] != selStart){
+//         textarea->IndicatorFillRange(selectionList[i], selSize);
+//     }
+// }
+//Returns true if the current selection can be copied.
+// virtual bool wxWebView::CanCut	(		)	const
+
+// //cuts the current selection
+// virtual void wxWebView::Cut	(		)
+
+// //Returns true if data can be pasted
+// virtual bool wxWebView::CanPaste	(		)	const
+
+// //Pastes the current data
+// virtual void wxWebView::Paste	(		)	
+
+
+     
+}
+
+// replace
+void TextCtrl::replace(wxString textToFind, wxString textToReplace, bool all)
+{
+    this->find(textToFind);
+    this->ReplaceTargetRE(textToReplace);
+}

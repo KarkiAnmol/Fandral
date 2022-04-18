@@ -1,5 +1,9 @@
 #include "findandreplace.hpp"
 #include "mainwindow.hpp"
+#include "mytab2.hpp"
+#include "textctrl.hpp"
+
+
 
 FindDialog::FindDialog(MyFrame *parent,
             bool replace,
@@ -83,18 +87,22 @@ FindDialog::FindDialog(MyFrame *parent,
                       parentposition.y + this->GetSize().y) );
 
 }
-
+//event handling
 wxBEGIN_EVENT_TABLE(FindDialog, wxDialog)
     EVT_BUTTON(Editor_Find, FindDialog::onFind)
     EVT_BUTTON(Editor_Replace, FindDialog::onReplace)
     EVT_BUTTON(Editor_Replace_All, FindDialog::onReplaceAll)
 wxEND_EVENT_TABLE()
-
+//Returns the text that the user has entered in the text dialog if the user
+// has pressed OK,
+// or the original value if the user has pressed Cancel.
 wxString FindDialog::getFindText()
 {
     return this->findBox->GetValue();
 }
-
+//Returns the text that the user has entered in the replace dialog if the user
+// has pressed OK,
+// or the original value if the user has pressed Cancel.
 wxString FindDialog::getReplaceText()
 {
     if(this->isReplacing)
@@ -109,11 +117,9 @@ wxString FindDialog::getReplaceText()
 
 void FindDialog::onFind(wxCommandEvent& event)
 {
-    wxString textToFind = this->getFindText();
-    /*
-        perform find operation here
-    */
-    return;
+    //stores the text entered by user in find dialog
+    wxString textToFind =this->getFindText();
+    this->parentFrame->getCurrentlyActiveTab()->textCtrl->find(textToFind);
 }
     
 void FindDialog::onReplace(wxCommandEvent& event)
@@ -128,6 +134,7 @@ void FindDialog::onReplace(wxCommandEvent& event)
     {   
         wxString oldFindText = this->getFindText();
 
+
         FindDialog* findDialog = new FindDialog(this->getParent(), true, wxID_ANY, "Find And Replace");
         findDialog->findBox->SetValue(oldFindText);
         findDialog->Show(true);
@@ -137,11 +144,10 @@ void FindDialog::onReplace(wxCommandEvent& event)
     }
     else
     {
+        wxString textToFind = this->getFindText();
         wxString textToReplace = this->getReplaceText();
 
-        /*
-            preform replace operation here
-        */
+        this->parentFrame->getCurrentlyActiveTab()->textCtrl->replace(textToFind, textToReplace, false);
     }
 
     return;
@@ -149,10 +155,10 @@ void FindDialog::onReplace(wxCommandEvent& event)
 
 void FindDialog::onReplaceAll(wxCommandEvent& event)
 {
+    wxString textToFind = this->getFindText();
     wxString textToReplace = this->getReplaceText();
         
-        /*
-            preform replace all operation here
-        */
+    this->parentFrame->getCurrentlyActiveTab()->textCtrl->replace(textToFind, textToReplace, true);
+
     return;
 }
