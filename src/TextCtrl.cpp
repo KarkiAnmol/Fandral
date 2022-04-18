@@ -474,24 +474,31 @@ int TextCtrl::find(wxString textToFind)
 
 void TextCtrl::replace(wxString textToFind, wxString textToReplace, bool all)
 {
-    int pos;
+    if(!all) // if only one is to be replaced
+    {
+        int pos;
 
-    // if there was a previous selection and the selection was matches our find text
-    // replace that
-    if(this->GetSelections() > 0 && this->GetSelectedText().Cmp(textToFind)==0)
-    {
-        pos = this->GetSelectionStart();
-    }
-    else // if there was no selections or the selection doesn't match the text to find
-        // perform find and replace that
-    {
-        pos = this->find(textToFind);
-    }
-    if(pos>=0)
-    {
-        this->Replace(pos, pos + textToFind.length(), textToReplace);
+        // if there was a previous selection and the selection was matches our find text
+        // replace that
+        if(this->GetSelections() > 0 && this->GetSelectedText().Cmp(textToFind)==0)
+        {
+            pos = this->GetSelectionStart();
+        }
+        else // if there was no selections or the selection doesn't match the text to find
+            // perform find and replace that
+        {
+            pos = this->find(textToFind);
+        }
+        if(pos>=0)
+        {
+            this->Replace(pos, pos + textToFind.length(), textToReplace);
 
-        // set the selection to next match and ensure it is visible
-        this->find(textToFind);
+            // set the selection to next match and ensure it is visible
+            this->find(textToFind);
+        }
+    }
+    else // if all the occurances is to be replaced
+    {
+
     }
 }
