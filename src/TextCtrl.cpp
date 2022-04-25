@@ -1,6 +1,6 @@
 
 #ifdef __WXMSW__
-    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#include <wx/msw/msvcrt.h> // redefines the new() operator
 #endif
 
 #include "wx/stc/stc.h"
@@ -13,9 +13,8 @@
 #include "wx/splitter.h"
 #include "commandarea.hpp"
 
-TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name)
-    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(200, 100), wxRESIZE_BORDER | wxNO_BORDER)
-    , parentTab(parentTab)
+TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const wxString name)
+    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(200, 100), wxRESIZE_BORDER | wxNO_BORDER), parentTab(parentTab)
 {
     this->SetInitialSize(wxSize(400, 200));
 
@@ -32,28 +31,27 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
 
     // Setting the default style, this will also be set when all styles are cleared
 
-    //background color of the text area
+    // background color of the text area
     this->StyleSetBackground(wxSTC_STYLE_DEFAULT, wxColour(21, 21, 24, 0.2));
 
-    //foreground color of the text area
+    // foreground color of the text area
     this->StyleSetForeground(wxSTC_STYLE_DEFAULT, wxColor("#F2F2F7FF"));
 
-    //foreground color of the caret
+    // foreground color of the caret
     this->SetCaretForeground(wxColor("#F2F2F7FF"));
 
-    //font of the text inside text area
-    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(11, wxFONTFAMILY_SCRIPT , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    // font of the text inside text area
+    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(11, wxFONTFAMILY_SCRIPT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
-    //clearing previous styles and setting to default ones
+    // clearing previous styles and setting to default ones
     this->StyleClearAll();
 
-
     // setting the selection color
-    this->SetSelBackground(true, wxColour(200,200,200) );
-    this->SetSelForeground(true, wxColour(0,0,0) );
+    this->SetSelBackground(true, wxColour(200, 200, 200));
+    this->SetSelForeground(true, wxColour(0, 0, 0));
 
-    this->SetAdditionalSelBackground( wxColor(200,200,200) );
-    this->SetAdditionalSelForeground( wxColour(0,0,0) );
+    this->SetAdditionalSelBackground(wxColor(200, 200, 200));
+    this->SetAdditionalSelForeground(wxColour(0, 0, 0));
     this->SetAdditionalCaretsVisible(false);
 
     // creating line numbers margin to the left
@@ -68,29 +66,27 @@ TextCtrl::TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const w
 
     this->SetMarginType(MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
 
-    this->codehighliter = new CodeHighliter(this); 
-
+    this->codehighliter = new CodeHighliter(this);
 
     // key event couldn't capture control + key pressed so
     // generating accelerator table for that
     wxAcceleratorEntry entries[2];
-    entries[0].Set(wxACCEL_CTRL,  (int) 'R',     wxID_REDO);
-    entries[1].Set(wxACCEL_CTRL, (int) 'S', wxID_SAVE);
+    entries[0].Set(wxACCEL_CTRL, (int)'R', wxID_REDO);
+    entries[1].Set(wxACCEL_CTRL, (int)'S', wxID_SAVE);
     wxAcceleratorTable accel(2, entries);
     this->SetAcceleratorTable(accel);
-
 }
 
 wxBEGIN_EVENT_TABLE(TextCtrl, wxStyledTextCtrl)
-    
-    EVT_MENU(wxID_SAVE, TextCtrl::OnSave)
-    EVT_MENU(wxID_REDO, TextCtrl::OnRedo)
-    
-wxEND_EVENT_TABLE()
 
-void TextCtrl::charEventHandler(wxKeyEvent &event)
+    EVT_MENU(wxID_SAVE, TextCtrl::OnSave)
+        EVT_MENU(wxID_REDO, TextCtrl::OnRedo)
+
+            wxEND_EVENT_TABLE()
+
+                void TextCtrl::charEventHandler(wxKeyEvent &event)
 {
-    CommandArea* associatedCommandArea = this->getParent()->commandArea;
+    CommandArea *associatedCommandArea = this->getParent()->commandArea;
     wxChar uc = event.GetUnicodeKey();
     int keycode = event.GetKeyCode();
     wxLongLong timeDifference; // since variable cannot be declared inside switch block
@@ -114,7 +110,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     // Notifying the user the tab is in insertion mode
                     associatedCommandArea->nofifyInsertionMode();
                     break;
-                
+
                 // enter into insertion mode at the current position
                 case 105: // i --> 105
                     this->SetEditable(true);
@@ -154,7 +150,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 case 108: // l--> 108
                     this->CharRight();
                     break;
-                
+
                 // open a new line below the current line
                 case 111: // o --> 111
                     this->SetEditable(true);
@@ -162,14 +158,14 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     this->SetEditable(false);
                     break;
 
-                // open a new line above the current line 
+                // open a new line above the current line
                 case 79: // O --> 79
                     this->LineUp();
                     this->SetEditable(true);
                     this->NewLine();
                     this->SetEditable(false);
                     break;
-                
+
                 // cut a character right to the cursor
                 case 120: // x --> 120
                     this->SetSelection(this->GetCurrentPos(), this->GetCurrentPos() + 1);
@@ -178,7 +174,8 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     this->SetEditable(false);
 
                     // moves the caret one position to left if it is the end of the line
-                    if(this->GetCurrentPos() == this->GetLineEndPosition(this->GetCurrentLine()))  this->CharLeft();
+                    if (this->GetCurrentPos() == this->GetLineEndPosition(this->GetCurrentLine()))
+                        this->CharLeft();
                     break;
 
                 // paste after the cursor
@@ -189,12 +186,12 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                     break;
 
                 // paste before the cursor
-                case 80: // P --> 80
+                case 80:                      // P --> 80
                     this->SetEditable(true);  // Implementation is incomplete, performs same operation as the above case (112)
                     this->Paste();            // Setting changing position is selecting the pasted text
-                    this->SetEditable(false); // and clearing the selection is brining the caret to the first place 
+                    this->SetEditable(false); // and clearing the selection is brining the caret to the first place
                     break;
-                
+
                 // undo
                 case 117: // u --> 117
                     this->SetEditable(true);
@@ -206,7 +203,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 case 58: // : --> 58
                     this->getParent()->commandArea->enterMultiCharCommandMode();
                     this->getParent()->commandArea->SetFocus();
-                    
+
                     // Going to last position as the colon will be on the last position
                     this->getParent()->commandArea->GotoPos(this->getParent()->commandArea->GetLastPosition());
                     break;
@@ -215,7 +212,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 // cutting line if d is pressed twice in certain interval
                 case 100: // d --> 100
                     timeDifference = wxGetLocalTimeMillis() - lastKeyPressesArray[0].pressedTime;
-                    if(lastKeyPressesArray[0].unicodeKeycode==100 && timeDifference < this->timeInterval)
+                    if (lastKeyPressesArray[0].unicodeKeycode == 100 && timeDifference < this->timeInterval)
                     {
                         this->SetEditable(true);
                         this->LineCut();
@@ -227,7 +224,7 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
                 // copying a line if y is pressed twice in certain interval
                 case 121: // y --> 121
                     timeDifference = wxGetLocalTimeMillis() - lastKeyPressesArray[0].pressedTime;
-                    if(lastKeyPressesArray[0].unicodeKeycode==121 &&  timeDifference < this->timeInterval)
+                    if (lastKeyPressesArray[0].unicodeKeycode == 121 && timeDifference < this->timeInterval)
                     {
                         this->LineCopy();
                     }
@@ -239,27 +236,26 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
             }
             else // When the textctrl is editable
             {
-                
+
                 event.Skip();
-   
-            }  
+            }
         }
-        else  // Since the the app will ignore modifiers so, this is not the correct place
-              // to check for ctrl + alphabet, escape character and so on  (unicode from 1 to 31)
-              // This will be checked by keyDownEventHandler or accelerator table will be set up
+        else // Since the the app will ignore modifiers so, this is not the correct place
+             // to check for ctrl + alphabet, escape character and so on  (unicode from 1 to 31)
+             // This will be checked by keyDownEventHandler or accelerator table will be set up
         {
-            if(this->IsEditable())
+            if (this->IsEditable())
             {
-                switch(uc)
+                switch (uc)
                 {
-                    // If escape key is pressed, enter into command mode
-                    case WXK_ESCAPE:
-                        this->SetEditable(false);
-                        this->getParent()->commandArea->nofifyCommandMode();
-                        break;
-                
-                    default:
-                        event.Skip();
+                // If escape key is pressed, enter into command mode
+                case WXK_ESCAPE:
+                    this->SetEditable(false);
+                    this->getParent()->commandArea->nofifyCommandMode();
+                    break;
+
+                default:
+                    event.Skip();
                 }
             }
         }
@@ -267,63 +263,57 @@ void TextCtrl::charEventHandler(wxKeyEvent &event)
     else // No Unicode equivalent.
          // Might be handled by keyDownEventHandler
     {
-       event.Skip();
+        event.Skip();
     }
 
     // Adding the key to our array
     // This is done as to capture double key presses like dd and yy
-    struct KeyAndTime t1{uc, wxGetLocalTimeMillis()};
+    struct KeyAndTime t1
+    {
+        uc, wxGetLocalTimeMillis()
+    };
 
     lastKeyPressesArray[0] = t1; // since we only need the last key press,
                                  // always adding the last key press to the first position
 
-
     return;
 };
-
 
 void TextCtrl::keyDownEventHandler(wxKeyEvent &event)
 {
     int keyCode = event.GetKeyCode();
 
-    if(this->IsEditable()) // when editable
+    if (this->IsEditable()) // when editable
     {
         switch (keyCode)
         {
-            case WXK_ESCAPE:
-                this->SetEditable(false);
-                this->getParent()->commandArea->nofifyCommandMode();
-                break;
-            default:
-                event.Skip();
+        case WXK_ESCAPE:
+            this->SetEditable(false);
+            this->getParent()->commandArea->nofifyCommandMode();
+            break;
+        default:
+            event.Skip();
         }
     }
     else // when not editable
     {
         // Handeling the keys and other when in command mode.
-        switch(keyCode)
+        switch (keyCode)
         {
-        case 82: // R --> 82
-            if(event.ControlDown())
-            { 
-                this->Redo(); // Do redo only if shift was held down when r was pressed
-            }
-            else event.Skip();
-            break;
         case WXK_LEFT: // Left arrow key
             this->CharLeft();
             break;
         case WXK_RIGHT: // Right arrow key
             this->CharRight();
             break;
-        case WXK_UP:    // Up arrow key
+        case WXK_UP: // Up arrow key
             this->LineUp();
             break;
-        case WXK_DOWN:  // Down arrow key
+        case WXK_DOWN: // Down arrow key
             this->LineDown();
             break;
 
-        default: 
+        default:
             event.Skip();
         }
     }
@@ -337,7 +327,7 @@ bool TextCtrl::_SaveFile()
     /**Opens native file explorer dialog box to select saving location
      * if the file isn't saved previously or new file is open
      **/
-    if (this->getParent()->filePath.Cmp(_T("-NONE-"))==0)
+    if (this->getParent()->filePath.Cmp(_T("-NONE-")) == 0)
     {
         returnValue = this->_SaveFileAs();
     }
@@ -348,18 +338,18 @@ bool TextCtrl::_SaveFile()
         returnValue = 1;
         this->SaveFile(saveLocation);
     }
-    
-    if(returnValue)
+
+    if (returnValue)
     {
-        this->getParent()->updateNameLabel(saveLocation);   // updating the label of the parent tab
+        this->getParent()->updateNameLabel(saveLocation); // updating the label of the parent tab
     }
 
     return returnValue;
 }
 
-void TextCtrl::OnSave(wxCommandEvent& event)
+void TextCtrl::OnSave(wxCommandEvent &event)
 {
-    if(this->IsEditable())
+    if (this->IsEditable())
     {
         this->_SaveFile();
     }
@@ -369,15 +359,15 @@ void TextCtrl::OnSave(wxCommandEvent& event)
     }
 }
 
-void TextCtrl::OnRedo(wxCommandEvent& event)
+void TextCtrl::OnRedo(wxCommandEvent &event)
 {
-    if(!this->IsEditable())
+    if (!this->IsEditable())
     {
         this->SetEditable(true);
         this->Redo();
         this->SetEditable(false);
     }
-    else 
+    else
     {
         event.Skip();
     }
@@ -392,36 +382,36 @@ bool TextCtrl::_SaveFileAs()
         " ",
         this);
 
-    if(!saveLocation.IsEmpty())
+    if (!saveLocation.IsEmpty())
     {
         // Modifying the filepath of the tab object
         this->getParent()->filePath = saveLocation;
 
         // Also updating the label of the parent tab
         this->getParent()->updateNameLabel(saveLocation);
-        
+
         return 1;
     }
-    else return 0;
+    else
+        return 0;
 }
-
 
 int TextCtrl::getAppropriateHighliter()
 {
     wxString lowercaseFileExtension = this->getParent()->getFileExtension();
     lowercaseFileExtension.LowerCase();
 
-    if(lowercaseFileExtension.compare(_T("cpp"))==0 || lowercaseFileExtension.compare(_T("cxx"))==0 ||
-    lowercaseFileExtension.compare(_T("hpp"))==0 || lowercaseFileExtension.compare(_T("c++"))==0 || lowercaseFileExtension.compare(_T("cc"))==0 || 
-    lowercaseFileExtension.compare(_T("c++"))==0 || lowercaseFileExtension.compare(_T("h++"))==0 )
+    if (lowercaseFileExtension.compare(_T("cpp")) == 0 || lowercaseFileExtension.compare(_T("cxx")) == 0 ||
+        lowercaseFileExtension.compare(_T("hpp")) == 0 || lowercaseFileExtension.compare(_T("c++")) == 0 || lowercaseFileExtension.compare(_T("cc")) == 0 ||
+        lowercaseFileExtension.compare(_T("c++")) == 0 || lowercaseFileExtension.compare(_T("h++")) == 0)
     {
         return wxSTC_LEX_CPP;
     }
-    else if((lowercaseFileExtension.compare(_T("py"))==0))
+    else if ((lowercaseFileExtension.compare(_T("py")) == 0))
     {
         return wxSTC_LEX_PYTHON;
     }
-    else if((lowercaseFileExtension.compare(_T("c"))==0))
+    else if ((lowercaseFileExtension.compare(_T("c")) == 0))
     {
         return wxSTC_LEX_CPP; // since syntax for c and cpp are same for most of the cases
     }
@@ -433,6 +423,91 @@ int TextCtrl::getAppropriateHighliter()
 
 void TextCtrl::updateHighlighter()
 {
-    //Updating the highliter after each label update
+    // Updating the highliter after each label update
     this->codehighliter->setLex_Language(this->getAppropriateHighliter());
+}
+
+// find
+int TextCtrl::find(wxString textToFind)
+{
+    // if a selection was already present,
+    // move the search anchor one position to the right
+    if (this->GetSelections() > 0)
+    {
+        this->SetCurrentPos(this->GetCurrentPos() + 1);
+    }
+    this->SearchAnchor();
+
+    // searching at the start of word boundaries
+    int searchFlags = wxSTC_FIND_WORDSTART;
+    int pos = this->SearchNext(searchFlags, textToFind);
+
+    // if valid search is found, making the string visible
+    if (pos >= 0)
+    {
+        this->EnsureCaretVisible();
+    }
+    else // else going to the first position and clearing the selections
+    {
+        this->SetCurrentPos(0);
+        this->ClearSelections();
+
+        // search one more time from the beginning
+        // this is done as search is done only in one direction
+        // and when it reaches the end, the previous strings aren't searched
+        this->SearchAnchor();
+        pos = this->SearchNext(searchFlags, textToFind);
+
+        if (pos >= 0)
+        {
+            this->EnsureCaretVisible();
+        }
+    }
+
+    return pos;
+}
+
+void TextCtrl::replace(wxString textToFind, wxString textToReplace, bool all)
+{
+    if (!all) // if only one is to be replaced
+    {
+        int pos;
+
+        // if there was a previous selection and the selection was matches our find text
+        // replace that
+        if (this->GetSelections() > 0 && this->GetSelectedText().Cmp(textToFind) == 0)
+        {
+            pos = this->GetSelectionStart();
+        }
+        else // if there was no selections or the selection doesn't match the text to find
+             // perform find and replace that
+        {
+            pos = this->find(textToFind);
+        }
+        if (pos >= 0)
+        {
+            this->Replace(pos, pos + textToFind.length(), textToReplace);
+
+            // set the selection to next match and ensure it is visible
+            this->find(textToFind);
+        }
+    }
+    else // if all the occurances is to be replaced
+    {        
+        // searching at the start of word boundaries
+        int searchFlags = wxSTC_FIND_WORDSTART;
+
+        int minPos = 0;
+        int maxPos = this->GetLastPosition();
+        while (minPos != -1)
+        {
+            minPos = this->FindText(minPos, maxPos, textToFind, searchFlags);
+            if(minPos >=0 )
+            {
+                this->Replace(minPos, minPos + textToFind.length(), textToReplace);
+                minPos = minPos + textToFind.length();
+                maxPos=this->GetLastPosition();
+            }
+        }
+    }
 }
