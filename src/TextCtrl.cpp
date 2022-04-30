@@ -154,6 +154,8 @@ wxBEGIN_EVENT_TABLE(TextCtrl, wxStyledTextCtrl)
                 // open a new line below the current line
                 case 111: // o --> 111
                     this->SetEditable(true);
+                    // go to the end of the line before appending a new line
+                    this->GotoPos(this->GetLineEndPosition(this->GetCurrentLine())); 
                     this->NewLine();
                     this->SetEditable(false);
                     break;
