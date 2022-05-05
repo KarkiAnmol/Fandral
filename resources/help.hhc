@@ -5,28 +5,28 @@
             <param name="Local" value="HelpPages/insert.html">
         </object>
     <li><object type="text/sitemap">
-            <param name="Name" value="Move">
+            <param name="Name" value="Copy, Cut And Paste">
             <param name="ID" value=2>
-            <param name="Local" value="HelpPages/move.html">
-        </object>
-    <li><object type="text/sitemap">
-            <param name="Name" value="Append">
-            <param name="ID" value=3>
-            <param name="Local" value="HelpPages/append.html">
-        </object>
-    <li><object type="text/sitemap">
-            <param name="Name" value="Paste">
-            <param name="ID" value=4>
-            <param name="Local" value="HelpPages/paste.html">
-        </object>
-    <li><object type="text/sitemap">
-            <param name="Name" value="Remove">
-            <param name="ID" value=5>
-            <param name="Local" value="HelpPages/remove.html">
+            <param name="Local" value="HelpPages/copyandpaste.html">
         </object>
     <li><object type="text/sitemap">
             <param name="Name" value="Find And Replace">
-            <param name="ID" value=6>
+            <param name="ID" value=3>
             <param name="Local" value="HelpPages/findandreplace.html">
         </object>
+    <li><object type="text/sitemap">
+            <param name="Name" value="Movement">
+            <param name="ID" value=4>
+            <param name="Local" value="HelpPages/movement.html">
+        </object>
+    <li><object type="text/sitemap">
+            <param name="Name" value="Undo and Redo">
+            <param name="ID" value=5>
+            <param name="Local" value="HelpPages/undoredo.html">
+        </object>
+    <li><object type="text/sitemap">
+            <param name="Name" value="Multi Character Command">
+            <param name="ID" value=6>
+            <param name="Local" value="HelpPages/multicharcommand.html">
+        </object>    
 </ul>
