@@ -12,6 +12,12 @@ Jokes aside, Fandral integrates command line like featues of [vim](https://www.v
 vscode has it's own place. If you're a person who does text editing a lot and want to do so more efficiently without leaving the comfort zone, then this is for you. We're not saying, vscode coupled with extension won't do the same job but seriously, what can't the vscode do coupled with the extension. Also, Fandral is faster and has different colors.
 And Fandral text editor isn't intended for complex programming, it's intended for tasks which notepad does the best, smaller day to day stuffs.
 
+## Building instructions
+[BUILDING.md](https://github.com/Ciper100/Fandral/blob/gitpod/BUILDING.md)
+
+## Can i install it ?
+Not yet. Due to library limitation for static builds, the shipped version won't function properly so, there are no releases yet.
+
 ## How to use it ?
 You can learn about the featues and how to use command line in the help section. There isn't much to learn if you're a little familiar with vim. Only few features are implemented for now, at to make it easier to use for most repeated tasks like copy-paste, delete, save etc.
 
