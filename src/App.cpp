@@ -47,6 +47,7 @@ bool App::OnInit()
     wxPoint windowTopLeft = wxPoint(left.x + 0.1 * screen.GetWidth(), left.y - 10); // placing it 10% to the left
 
     frame->SetPosition(windowTopLeft);
+    frame->SetMinSize(wxSize(-1, -1)); // making it resizeable beyond minimal size
     
 
     // success: wxApp::OnRun() will be called which will enter the main message
