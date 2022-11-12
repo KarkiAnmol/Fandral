@@ -18,6 +18,9 @@ TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const w
 {
     this->SetInitialSize(wxSize(400, 200));
 
+    // this can also be changed to apply monospace
+    this->textFont = this->parentTab->GetFont();
+
     // dynamically binding event handlers
     Bind(wxEVT_CHAR, &TextCtrl::charEventHandler, this);
     Bind(wxEVT_KEY_DOWN, &TextCtrl::keyDownEventHandler, this);
@@ -41,7 +44,7 @@ TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const w
     this->SetCaretForeground(wxColor("#F2F2F7FF"));
 
     // font of the text inside text area
-    this->StyleSetFont(wxSTC_STYLE_DEFAULT, wxFont(11, wxFONTFAMILY_SCRIPT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   //  this->StyleSetFont(wxSTC_STYLE_DEFAULT, textFont);
 
     // clearing previous styles and setting to default ones
     this->StyleClearAll();
@@ -75,6 +78,12 @@ TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const w
     entries[1].Set(wxACCEL_CTRL, (int)'S', wxID_SAVE);
     wxAcceleratorTable accel(2, entries);
     this->SetAcceleratorTable(accel);
+
+    // hiding the scroll bar when unnecessary
+    this->AlwaysShowScrollbars(false);
+
+    // hiding the horizontal scroll bar
+    this->SetUseHorizontalScrollBar(false);
 }
 
 wxBEGIN_EVENT_TABLE(TextCtrl, wxStyledTextCtrl)

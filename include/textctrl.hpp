@@ -106,6 +106,9 @@ private:
 
     void OnRedo(wxCommandEvent& event);
 
+    // font
+     wxFont textFont;
+
     // any class wishing to process wxWidgets events must use this macro
     wxDECLARE_EVENT_TABLE();
 
