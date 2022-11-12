@@ -13,11 +13,9 @@
 #include "wx/splitter.h"
 #include "commandarea.hpp"
 
-TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const wxString name)
-    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, wxSize(200, 100), wxRESIZE_BORDER | wxNO_BORDER), parentTab(parentTab)
+TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const wxString name, wxSize size)
+    : wxStyledTextCtrl(window, wx_ID, wxDefaultPosition, size, wxRESIZE_BORDER | wxNO_BORDER), parentTab(parentTab)
 {
-    this->SetInitialSize(wxSize(400, 200));
-
     // this can also be changed to apply monospace
     this->textFont = this->parentTab->GetFont();
 

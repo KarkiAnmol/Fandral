@@ -7,6 +7,8 @@
 #include "wx/sizer.h"
 #include "commandarea.hpp"
 
+#include <wx/display.h>
+
 MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxString filePath, bool load)
 :wxWindow(parentNotebook, wxID_ANY), parentNotebook(parentNotebook), tabTitle(tabTitle), filePath(filePath)
 {
@@ -14,9 +16,24 @@ MyTab::MyTab(ModifiedNotebook *parentNotebook, const wxString &tabTitle, wxStrin
     // For splitting the textctrl and commandarea
     tabSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_BORDER|wxSP_LIVE_UPDATE);
 
+    // calculating sizes for the components of the tab
+    wxDisplay currentDisplay(wxDisplay::GetFromWindow(this));
+    wxRect screen = currentDisplay.GetGeometry();
+
+    wxUint16 height = screen.GetHeight();
+    wxUint16 width = screen.GetWidth();
+
+    // setting width to 80% of the width and aspect ratio to 16:10
+    wxUint16 tabWidth = 0.8 * width;
+    wxUint16 tabHeight = width * 10/16;
+
+    // sizing textctrl as to occupy 90% of available height
+    wxUint16 textCtrlHeight = 0.8 * tabHeight;
+    wxUint16 commandAreaHeight = tabHeight - textCtrlHeight;
+
     // Adding these controls as children of the splitter as to spit it later on
-    this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle);
-    this->commandArea = new CommandArea(tabSplitter, this);
+    this->textCtrl = new TextCtrl(tabSplitter, this, wxID_ANY, tabTitle, wxSize(tabWidth, textCtrlHeight));
+    this->commandArea = new CommandArea(tabSplitter, this), wxSize(tabWidth, commandAreaHeight);
 
     // Splitting the window horizontally into textctrl and commandarea
     tabSplitter->SplitHorizontally(textCtrl, commandArea);

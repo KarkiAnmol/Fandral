@@ -31,7 +31,7 @@ public:
     bool inMultiCharCommandMode = false;
 
     // ctor
-    CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID=wxID_ANY);
+    CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID=wxID_ANY, wxSize size=wxSize(400, 60));
 
     // Returns the tab which it is contained in
     MyTab* getParent()

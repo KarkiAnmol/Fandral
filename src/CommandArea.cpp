@@ -2,14 +2,12 @@
 #include "mytab2.hpp"
 #include "textctrl.hpp"
 
-CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID)
-: wxStyledTextCtrl(parent, wx_ID, wxDefaultPosition, wxSize(400, 60), wxNO_BORDER), parentTab(parentTab)
+CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID, wxSize size)
+: wxStyledTextCtrl(parent, wx_ID, wxDefaultPosition, size, wxNO_BORDER), parentTab(parentTab)
 {
     // dynamically binding event handlers
     Bind(wxEVT_CHAR, &CommandArea::charEventHandler, this);
     Bind(wxEVT_KEY_DOWN, &CommandArea::keyDownEventHandler, this);
-
-    this->SetInitialSize(wxSize(400, 60));
 
     // Setting it to be non editable
     this->SetEditable(false);
@@ -59,6 +57,9 @@ CommandArea::CommandArea(wxWindow* parent, MyTab* parentTab, wxWindowID wx_ID)
     // since the textctrl will be editiable initially
     this->nofifyInsertionMode();
 
+    // hiding the horizontal scroll bar
+    this->SetUseHorizontalScrollBar(false);
+    this->SetUseVerticalScrollBar(false);
 }
 
 void CommandArea::AppendText(const wxString& text)

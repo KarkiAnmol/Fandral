@@ -22,8 +22,8 @@
 // ----------------------------------------------------------------------------
 
 // frame constructor
-MyFrame::MyFrame(const wxString &title)
-    : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxDefaultSize)
+MyFrame::MyFrame(const wxString &title, wxPoint position)
+    : wxFrame(NULL, wxID_ANY, title, position, wxDefaultSize)
 {
 
     //The main panel on top of the main window

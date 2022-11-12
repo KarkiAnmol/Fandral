@@ -41,7 +41,7 @@ class MyFrame : public wxFrame
 {
 public:
     // constructor(s)
-    MyFrame(const wxString &title);
+    MyFrame(const wxString &title, wxPoint position = wxDefaultPosition);
 
     //for exiting the app
     void OnQuit(wxCommandEvent& event);

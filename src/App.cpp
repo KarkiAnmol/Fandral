@@ -7,6 +7,8 @@
     #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
+#include <wx/display.h>
+
 // ============================================================================
 // implementation
 // ============================================================================
@@ -23,6 +25,7 @@ bool App::OnInit()
     /*if ( !wxApp::OnInit() )
         return false;*/
 
+
     wxString title;
     title = wxString::Format("Fandral Editor  V %d.%d    ",
         (int)Fandral_Editor_VERSION_MAJOR,
@@ -34,6 +37,17 @@ bool App::OnInit()
     // show the application window (the frames, unlike simple controls, are not shown when
     // created initially)
     frame->Show(true);
+
+    // determining the position to place the whole window
+
+    wxDisplay currentDisplay(wxDisplay::GetFromWindow(frame));
+    wxRect screen = currentDisplay.GetClientArea();
+
+    wxPoint left = screen.GetTopLeft(); // leftmost position
+    wxPoint windowTopLeft = wxPoint(left.x + 0.1 * screen.GetWidth(), left.y - 10); // placing it 10% to the left
+
+    frame->SetPosition(windowTopLeft);
+    
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the

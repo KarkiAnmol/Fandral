@@ -50,7 +50,7 @@ public:
     //constructors
     TextCtrl();
 
-    TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name);
+    TextCtrl(wxWindow* window, MyTab* parentTab, wxWindowID wx_ID, const wxString name, wxSize size=wxSize(200, 100));
 
     //methods
 
