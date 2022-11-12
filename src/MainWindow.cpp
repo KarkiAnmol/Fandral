@@ -376,7 +376,10 @@ void MyFrame::OnHelp(wxCommandEvent& event)
 
 void MyFrame::OnFind(wxCommandEvent& event)
 {
-    FindDialog* findDialog = new FindDialog(this, false,  wxID_ANY, "Find");
+    FindDialog* findDialog = new FindDialog(this, false,  wxID_ANY, "Find",
+                                     wxDefaultPosition, wxDefaultSize,
+                                     // making the dialog box resizeable
+                                      wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
     findDialog->Show(true);
 }
 

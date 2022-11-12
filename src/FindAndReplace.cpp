@@ -19,66 +19,83 @@ FindDialog::FindDialog(MyFrame *parent,
     wxPoint parentposition =  parent->GetPosition();
     wxSize parentSize = parent->GetSize();
 
+    // calculating the sizes for various values
+    wxSize fontSize = parent->GetFont().GetPixelSize();
+
+    wxSize labelSize = wxSize(fontSize.x * 8, fontSize.y * 1.2);
+    wxSize buttonSize = wxSize(labelSize.x * 1.3, fontSize.y * 2 );
+    wxSize findAndReplaceBoxSize = wxSize(buttonSize.x * 2 * 1.1, buttonSize.y * 1.1);
+
+    wxUint8 verticalSpacing = fontSize.y;
+    wxUint8 horizontalSpacing = fontSize.x;
+
+    // this sizer will contain all the other sizers
     this->findDialogSizer = new wxBoxSizer(wxVERTICAL);
 
     // for find row
     wxBoxSizer* findRowSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    wxStaticText* findLabel = new wxStaticText(this, wxID_ANY, "Find", wxDefaultPosition, wxSize(50, 25), wxALIGN_CENTRE_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-    this->findBox = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(150, 25));
+    wxStaticText* findLabel = new wxStaticText(this, wxID_ANY, "Find", wxDefaultPosition, labelSize, wxALIGN_CENTRE_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+    this->findBox = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, findAndReplaceBoxSize);
 
+    // the children of the find row
     findRowSizer->Add(findLabel);
-    findRowSizer->AddSpacer(20);
+    findRowSizer->AddSpacer(horizontalSpacing);
     findRowSizer->Add(findBox);
-    findRowSizer->AddSpacer(10);
+    findRowSizer->AddSpacer(horizontalSpacing);
 
     wxBoxSizer* replaceRowSizer;
     if(replace)
     {
         replaceRowSizer = new wxBoxSizer(wxHORIZONTAL);
 
-        wxStaticText* replaceLabel = new wxStaticText(this, wxID_ANY, "Replace", wxDefaultPosition, wxSize(50, 25), wxALIGN_CENTRE_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
-        this->replaceBox = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(150, 25));
+        wxStaticText* replaceLabel = new wxStaticText(this, wxID_ANY, "Replace", wxDefaultPosition, labelSize, wxALIGN_CENTRE_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+        this->replaceBox = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, findAndReplaceBoxSize);
         
+        // the children of the replace row
         replaceRowSizer->Add(replaceLabel);
-        replaceRowSizer->AddSpacer(20);
+        replaceRowSizer->AddSpacer(horizontalSpacing);
         replaceRowSizer->Add(replaceBox);
-        replaceRowSizer->AddSpacer(10);
+        replaceRowSizer->AddSpacer(horizontalSpacing);
     }
 
     // for the button row
     wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    wxButton* findButton = new wxButton(this, Editor_Find, "Find", wxDefaultPosition, wxSize(75, 25));
-    wxButton* replaceButton = new wxButton(this, Editor_Replace, "Replace", wxDefaultPosition, wxSize(75, 25));
+    wxButton* findButton = new wxButton(this, Editor_Find, "Find", wxDefaultPosition, buttonSize);
+    wxButton* replaceButton = new wxButton(this, Editor_Replace, "Replace", wxDefaultPosition, buttonSize);
 
     if(!replace)
-    {
-        buttonRowSizer->AddSpacer(70);
+    {   // trying to center the find button
+        buttonRowSizer->AddSpacer(7 * horizontalSpacing);
     }
     else
     {
-        buttonRowSizer->AddSpacer(10);
+        buttonRowSizer->AddSpacer(horizontalSpacing);
     }
 
+    // the children of the button row
     buttonRowSizer->Add(findButton);
-    buttonRowSizer->AddSpacer(10);
+    buttonRowSizer->AddSpacer(horizontalSpacing);
     buttonRowSizer->Add(replaceButton);
     if(replace)
     {
-        wxButton* replaceAllButton = new wxButton(this, Editor_Replace_All, "Replace All", wxDefaultPosition, wxSize(70, 25));
-        buttonRowSizer->AddSpacer(10);
+        wxButton* replaceAllButton = new wxButton(this, Editor_Replace_All, "Replace All", wxDefaultPosition, buttonSize);
+        buttonRowSizer->AddSpacer(horizontalSpacing);
         buttonRowSizer->Add(replaceAllButton);
-        buttonRowSizer->AddSpacer(10);
+        buttonRowSizer->AddSpacer(horizontalSpacing);
     }
 
     // adding to the parent sizer of the dialog
     findDialogSizer->Add(findRowSizer);
+    findDialogSizer->AddSpacer(verticalSpacing);
     if(replace)
     {
         findDialogSizer->Add(replaceRowSizer);
+        findDialogSizer->AddSpacer(verticalSpacing);
     }
     findDialogSizer->Add(buttonRowSizer);
+    findDialogSizer->AddSpacer(verticalSpacing);
 
     this->SetSizerAndFit(findDialogSizer);
 
