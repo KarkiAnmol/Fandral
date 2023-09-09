@@ -119,7 +119,7 @@ wxString MyTab::updateNameLabel(const wxString &fileLocation)
 {
     wxString tempFileLocation = fileLocation.Clone();
 
-// The file separator in windows will be '\\' so it is replaced with '\'
+// The file separator in windows will be '\\' so it is replaced with '/'
 #if defined __WXMSW__
     // this will be file name only
     tempFileLocation.Replace("\\", "/", true);
