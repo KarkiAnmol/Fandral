@@ -85,13 +85,11 @@ TextCtrl::TextCtrl(wxWindow *window, MyTab *parentTab, wxWindowID wx_ID, const w
 }
 
 wxBEGIN_EVENT_TABLE(TextCtrl, wxStyledTextCtrl)
-
     EVT_MENU(wxID_SAVE, TextCtrl::OnSave)
-        EVT_MENU(wxID_REDO, TextCtrl::OnRedo)
+    EVT_MENU(wxID_REDO, TextCtrl::OnRedo)
+wxEND_EVENT_TABLE()
 
-            wxEND_EVENT_TABLE()
-
-                void TextCtrl::charEventHandler(wxKeyEvent &event)
+void TextCtrl::charEventHandler(wxKeyEvent &event)
 {
     CommandArea *associatedCommandArea = this->getParent()->commandArea;
     wxChar uc = event.GetUnicodeKey();
@@ -346,11 +344,6 @@ bool TextCtrl::_SaveFile()
         saveLocation = this->getParent()->filePath;
         returnValue = 1;
         this->SaveFile(saveLocation);
-    }
-
-    if (returnValue)
-    {
-        this->getParent()->updateNameLabel(saveLocation); // updating the label of the parent tab
     }
 
     return returnValue;
