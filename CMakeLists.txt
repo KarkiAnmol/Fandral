@@ -23,7 +23,7 @@ endif()
 #create a list to keep source files in a place
 set(SRCS "src/App.cpp")
 
-#append lists to add files for main window
+#append lists to add source files
 list(APPEND SRCS "src/MainWindow.cpp")
 list(APPEND SRCS "src/MyTab2.cpp")
 list(APPEND SRCS "src/TextCtrl.cpp")
@@ -52,6 +52,9 @@ find_package(wxWidgets REQUIRED gl aui core base stc html OPTIONAL_COMPONENTS ne
 
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
-    #For building statically: target_link_libraries(${PROJECT_NAME}  "-static" ${wxWidgets_LIBRARIES})
+    #For building statically: 
+    #target_link_libraries(${PROJECT_NAME}  "-static" ${wxWidgets_LIBRARIES})
+    
+    # for building dynamically
     target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 endif()
