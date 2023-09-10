@@ -88,5 +88,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION_MAJOR ${FandralEditor_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${FandralEditor_VERSION_MINOR})
+set(CPACK_PACKAGE_CONTACT "https://github.com/KarkiAnmol/Fandral")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxbase3.0-0v5(>= 3.0.5), libwxgtk3.0-gtk3-0v5(>=3.0.5), wx-common(>= 3.0.5)")
 
 include(CPack)
