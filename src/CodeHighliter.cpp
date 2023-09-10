@@ -42,7 +42,7 @@ void CodeHighliter::highlightCPP()
     this->textctrl->StyleSetForeground (wxSTC_C_COMMENTDOC,             CODEHIGHLITER_CORN_SILK);
     this->textctrl->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORD,      CODEHIGHLITER_BLUE_VIOLET);
     this->textctrl->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORDERROR, CODEHIGHLITER_RED);
-    this->textctrl->StyleSetForeground (wxSTC_C_USERLITERAL,            CODEHIGHLITER_DARK_BLUE);
+    // this->textctrl->StyleSetForeground (wxSTC_C_USERLITERAL,            CODEHIGHLITER_DARK_BLUE);
 
     // sample list of keywords
     this->textctrl->SetKeyWords(0, "alignas asm auto bool char char16_t char32_t class clock_t concept const consteval constexpr constinit decltype double enum explicit export extern final float friend inline int int8_t int16_t int32_t int64_t int_fast8_t int_fast16_t int_fast32_t int_fast64_t intmax_t intptr_t long mutable noexcept override private protected ptrdiff_t public register requires short signed size_t ssize_t static struct template thread_local time_t typename uint8_t uint16_t uint32_t uint64_t uint_fast8_t uint_fast16_t uint_fast32_t uint_fast64_t uintmax_t uintptr_t union unsigned virtual void volatile wchar_t");

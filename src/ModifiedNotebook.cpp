@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <vector>
+#include <bits/stdc++.h>
 
 #include <iostream>
 #include <stdexcept>

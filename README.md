@@ -16,13 +16,13 @@ And Fandral text editor isn't intended for complex programming, it's intended fo
 [BUILDING.md](https://github.com/Ciper100/Fandral/blob/gitpod/BUILDING.md)
 
 ## Can i install it ?
-Not yet. Due to library limitation for static builds, the shipped version won't function properly. So, there are no releases yet.
+Not yet. Due to library limitation for static builds, the shipped version won't function properly so, there are no releases yet.
 
 ## How to use it ?
-You can learn about the featues and how to use command line in the help section. There isn't much to learn if you're a little familiar with vim. Only few features are implemented for now, as to make it easier to use for most repeated tasks like copy-paste, delete, save etc.
+You can learn about the featues and how to use command line in the help section. There isn't much to learn if you're a little familiar with vim. Only few features are implemented for now, at to make it easier to use for most repeated tasks like copy-paste, delete, save etc.
 
 ## Why is it incomplete ?
-It is a semester project which was carried out in a very short period of time and in much hurry. Different parts of this project is awaiting research. Such problems combined with problems imposed by library and platforms is the reason for current state of this project. 
+It is a semester project which was carried out in a very short period and in much hurry. Different parts of this project is awaiting research. Such problems combined by problems imposed by library and platforms is the reason for current state of this project. 
 
 
 ## What doesn't work ?
@@ -30,4 +30,4 @@ It is a semester project which was carried out in a very short period of time an
 - Code highliting isn't implemented for many languages.
 - The dark theme isn't applied proplerly in windows because of win32 api limitation of wxWidgets.
 - wxWidgets library needs to be installed separately.
-- help section maynot function properly if help pages aren't present in resources folder.
+- help pages maynot function properly if help pages aren't present in resources folder.
