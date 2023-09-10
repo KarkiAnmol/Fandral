@@ -16,6 +16,7 @@
 #include "wx/wxhtml.h"
 
 #include <wx/html/helpctrl.h>
+#include "AppConfig.h"
 
 // ----------------------------------------------------------------------------
 // main frame
@@ -138,8 +139,7 @@ void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 
     // This is set on runtime for now
     // Either a webpage should be setup or the installation path must be fixed for it to function properly
-    aboutWindow->LoadPage(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/AboutUs.html"));
-
+    aboutWindow->LoadPage(wxString(Fandral_DATA_DIR) + wxString::Format("/resources/AboutUs.html"));
     aboutDialog->Show(true);
 
 }
@@ -369,7 +369,7 @@ void MyFrame::OnHelp(wxCommandEvent& event)
 {
 
     wxHtmlHelpController *helpController = new wxHtmlHelpController(this);
-    helpController->AddBook(wxString(Fandral_PROJECT_ABSOLUTE_PATH) + wxString("/resources/help.hhp"));
+    helpController->AddBook(wxString(Fandral_DATA_DIR) + wxString::Format("/resources/help.hhp"));
     helpController->Display(1);
 
 }

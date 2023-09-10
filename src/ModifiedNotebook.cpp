@@ -55,6 +55,7 @@ MyTab* ModifiedNotebook::getCurrentlyActiveTab()
             return tab;
         }
     }
+    return nullptr;
 }
 
 void ModifiedNotebook::OnClose(wxAuiNotebookEvent &event)
@@ -121,6 +122,7 @@ std::vector<MyTab*>::iterator ModifiedNotebook::iteratorAt(MyTab* tab)
             return openedTabsVector[i];
         }
     }
+    return nullptr;
  }
 
  std::vector<MyTab *>::iterator ModifiedNotebook::removeTabFromVector(MyTab* tabToBeRemoved)

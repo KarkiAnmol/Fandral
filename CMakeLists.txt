@@ -5,13 +5,6 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-#For getting absolute path to the project directory inside of the app
-get_filename_component(PROJECT_ABSOLUTE_PATH "${PROJECT_DIR}" ABSOLUTE CACHE)
-
-#set build type as debug
-set(CMAKE_BUILD_TYPE Debug)
-set(wxWidgets_CONFIGURATION mswud)
-
 # set the project name
 project("FandralEditor" VERSION 0.3 LANGUAGES CXX C)
 
@@ -20,10 +13,37 @@ if (DEFINED ENV_WX_CONFIG)
     set (ENV{WX_CONFIG} ${ENV_WX_CONFIG})
 endif()
 
+message(STATUS "The build type is set as ${CMAKE_BUILD_TYPE}.")
+#set build type as debug
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+set(wxWidgets_CONFIGURATION mswud CACHE STRING "")
+
+# the data directory
+if (NOT DEFINED ENV{DATA_DIR})
+    message(STATUS "Environment variable DATA_DIR not defined.")
+    if (LINUX OR APPLE)
+        set(DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}")
+    elseif(WINDOWS)
+        set(DATA_DIR "${CMAKE_INSTALL_PREFIX}")  # for windows, the default CMAKE_INSTALL_PREFIX is “<SystemDrive>/Program Files/<ProjectName>
+    endif()
+else()
+    message(STATUS "Setting DATA_DIR to " $ENV{DATA_DIR} " as per the environment variable DATA_DIR")
+    set(DATA_DIR $ENV{DATA_DIR})
+endif()
+
+if (DEFINED DATA_DIR AND NOT DEFINED ENV{DATA_DIR})
+    message(STATUS "Setting DATA_DIR to " ${DATA_DIR} " as per default configuration.")
+elseif(NOT DEFINED DATA_DIR)
+    message(FATAL_ERROR "Default value for DATA_DIR not available.")
+endif()
+
 #create a list to keep source files in a place
 set(SRCS "src/App.cpp")
 
-#append lists to add files for main window
+#append lists to add source files
 list(APPEND SRCS "src/MainWindow.cpp")
 list(APPEND SRCS "src/MyTab2.cpp")
 list(APPEND SRCS "src/TextCtrl.cpp")
@@ -52,6 +72,23 @@ find_package(wxWidgets REQUIRED gl aui core base stc html OPTIONAL_COMPONENTS ne
 
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
-    #For building statically: target_link_libraries(${PROJECT_NAME}  "-static" ${wxWidgets_LIBRARIES})
+    #For building statically: 
+    #target_link_libraries(${PROJECT_NAME}  "-static" ${wxWidgets_LIBRARIES})
+    
+    # for building dynamically
     target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 endif()
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT RUNTIME)
+install(DIRECTORY resources DESTINATION ${DATA_DIR} USE_SOURCE_PERMISSIONS)  # copying the files under resources to DATA_DIR
+
+
+# For packaging
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VERSION_MAJOR ${FandralEditor_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${FandralEditor_VERSION_MINOR})
+set(CPACK_PACKAGE_CONTACT "https://github.com/KarkiAnmol/Fandral")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxbase3.0-0v5(>= 3.0.5), libwxgtk3.0-gtk3-0v5(>=3.0.5), wx-common(>= 3.0.5)")
+
+include(CPack)
