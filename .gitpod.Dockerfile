@@ -1,6 +1,6 @@
 
 #vnc image for GUI
-FROM gitpod/workspace-full-vnc:2022-04-12-01-45-16
+FROM gitpod/workspace-full-vnc:latest
 
 USER gitpod
 
