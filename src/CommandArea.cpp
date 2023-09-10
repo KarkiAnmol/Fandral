@@ -298,7 +298,7 @@ void CommandArea::charEventHandler(wxKeyEvent& event)
 
     // these two lines will set the style of text of length
     // starting from pos with the given style
-    this->StartStyling(pos, styleMask);
+    this->StartStyling(pos, 0);
     this->SetStyling(length, style);
  }
 
